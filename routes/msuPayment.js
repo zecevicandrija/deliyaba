@@ -549,14 +549,15 @@ router.all('/callback-redirect', async (req, res) => {
                             // Kreiraj recurring subscription
                             await db.query(
                                 `INSERT INTO recurring_subscriptions 
-                                (korisnik_id, kurs_id, card_token, trace_id, amount, currency, 
+                                (korisnik_id, kurs_id, card_token, trace_id, msu_customer_id, amount, currency, 
                                 frequency, occurrence, subscription_months, is_active, next_billing_date, last_billing_date) 
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
                                 [
                                     userId,
                                     transaction.kurs_id,
                                     responseData.cardToken,
                                     traceID,
+                                    responseData.customerId || userId.toString(), // CUSTOMER koji je kori\u0161\u0107en u CIT-u
                                     transaction.amount,
                                     transaction.currency || 'RSD',
                                     1, // frequency

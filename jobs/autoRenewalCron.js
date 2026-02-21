@@ -18,6 +18,7 @@ async function processRenewal(subscription) {
         kurs_id: kursId,
         card_token: cardToken,
         trace_id: traceID,
+        msu_customer_id: msuCustomerId,  // ID koji je korišćen u originalnom CIT-u
         amount: rawAmount,  // Dolazi kao string iz MySQL-a
         subscription_months: subscriptionMonths
     } = subscription;
@@ -27,6 +28,7 @@ async function processRenewal(subscription) {
 
     console.log(`\n🔄 Processing renewal for subscription ID: ${subscriptionId}, User ID: ${userId}`);
     console.log(`   Amount to charge: ${amount} (type: ${typeof amount})`);
+    console.log(`   MSU Customer ID (za CUSTOMER param): ${msuCustomerId}`);
 
     try {
         // Dohvati korisnika
@@ -45,9 +47,13 @@ async function processRenewal(subscription) {
         // Generiši unique merchantPaymentId za renewal
         const merchantPaymentId = `RENEW_${Date.now()}_${userId}_${subscriptionId}`;
 
+        // CUSTOMER mora biti ISTI kao u originalnom CIT-u!
+        // Ako msu_customer_id nije sačuvan (stare pretplate), fallback na email korisnika
+        const customerForMIT = msuCustomerId || user.email;
+
         // Pozovi MIT SALE API
         const mitResponse = await msuService.executeMITSale({
-            customerId: userId.toString(),
+            customerId: customerForMIT,
             merchantPaymentId,
             amount,  // Sada je Number
             cardToken,
