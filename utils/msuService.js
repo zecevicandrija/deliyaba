@@ -281,6 +281,19 @@ async function executeMITSale(params) {
         EXTRA: encodeURI(JSON.stringify(extraParams))
     });
 
+    // DEBUG: Loguj sve parametre pre slanja
+    console.log('\n🔍 DEBUG executeMITSale - Request params:');
+    console.log(`   ACTION: SALE`);
+    console.log(`   MERCHANT: ${MERCHANT_NAME}`);
+    console.log(`   CUSTOMER: ${customerId}`);
+    console.log(`   CARDTOKEN: ${cardToken}`);
+    console.log(`   CARDTOKEN length: ${cardToken ? cardToken.length : 'NULL'}`);
+    console.log(`   AMOUNT: ${amount.toFixed(2)}`);
+    console.log(`   EXTRA: ${encodeURI(JSON.stringify(extraParams))}`);
+    console.log(`   EXTRA (raw): ${JSON.stringify(extraParams)}`);
+    console.log(`   Full postData: ${postData.toString()}`);
+    console.log('');
+
     try {
         const response = await axios.post(MSU_API_URL, postData, {
             headers: {
@@ -288,6 +301,7 @@ async function executeMITSale(params) {
             }
         });
 
+        console.log('🔍 DEBUG executeMITSale - Full response:', JSON.stringify(response.data, null, 2));
         return response.data;
     } catch (error) {
         console.error('MSU executeMITSale error:', error.message);
