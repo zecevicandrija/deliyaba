@@ -87,7 +87,7 @@ async function sendMsuWelcomeEmail(toEmail, plainPassword, firstName = 'Korisnik
                       <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0;">
                         <tr>
                           <td align="center">
-                            <a href="https://localhost:3000/login" style="display:inline-block;padding:16px 40px;background:linear-gradient(135deg, #ff4500 0%, #ff6b35 100%);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:700;letter-spacing:0.5px;box-shadow:0 10px 30px rgba(255,69,0,0.3);text-transform:uppercase;">
+                            <a href="https://motionakademija.com/login" style="display:inline-block;padding:16px 40px;background:linear-gradient(135deg, #ff4500 0%, #ff6b35 100%);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:700;letter-spacing:0.5px;box-shadow:0 10px 30px rgba(255,69,0,0.3);text-transform:uppercase;">
                               🚀 Prijavite se sada
                             </a>
                           </td>
