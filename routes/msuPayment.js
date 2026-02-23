@@ -9,7 +9,8 @@ const bcrypt = require('bcryptjs');
 const db = require('../db');
 const msuService = require('../utils/msuService');
 const generateRandomPassword = require('../utils/passwordGenerator');
-const { sendMsuWelcomeEmail } = require('../utils/msuEmailHelper');
+const { sendMsuWelcomeEmail, sendInvoiceEmail } = require('../utils/msuEmailHelper');
+const { createInvoice } = require('../utils/invoiceService');
 
 /**
  * POST /api/msu/create-session
@@ -480,6 +481,64 @@ router.all('/callback-redirect', async (req, res) => {
                         console.warn('Failed to add purchase:', purchaseErr.message);
                     }
                 }
+            }
+
+
+            // ✅ FISKALIZACIJA: Kreiraj račun i pošalji mejl
+            try {
+                // Dohvati podatke za račun
+                let invoiceItemName = 'Motion Akademija - Pretplata';
+                let invoiceAmount = parseFloat(transaction.amount);
+
+                // Pokušaj dobiti ime kursa/paketa
+                if (mergedRawData.packageData && mergedRawData.packageData.name) {
+                    invoiceItemName = mergedRawData.packageData.name;
+                } else if (transaction.kurs_id) {
+                    const [kursData] = await db.query(
+                        'SELECT naziv FROM kursevi WHERE id = ?',
+                        [transaction.kurs_id]
+                    );
+                    if (kursData.length > 0) {
+                        invoiceItemName = kursData[0].naziv;
+                    }
+                }
+
+                console.log('📄 Creating fiscal invoice...');
+                const invoiceResult = await createInvoice({
+                    itemName: invoiceItemName,
+                    price: invoiceAmount,
+                    quantity: 1,
+                    paymentType: 2 // Plaćanje karticom
+                });
+
+                if (invoiceResult && invoiceResult.invoice_pdf) {
+                    // Dohvati email i ime korisnika za slanje
+                    let invoiceEmail = mergedRawData.customerEmail;
+                    let invoiceName = mergedRawData.customerName || 'Korisnik';
+
+                    if (!invoiceEmail && userId) {
+                        const [userData] = await db.query(
+                            'SELECT email, ime FROM korisnici WHERE id = ?',
+                            [userId]
+                        );
+                        if (userData.length > 0) {
+                            invoiceEmail = userData[0].email;
+                            invoiceName = userData[0].ime || invoiceName;
+                        }
+                    }
+
+                    if (invoiceEmail) {
+                        await sendInvoiceEmail(
+                            invoiceEmail,
+                            invoiceName.split(/\s+/)[0], // Samo prvo ime
+                            invoiceResult.invoice_pdf,
+                            invoiceAmount
+                        );
+                        console.log(`✅ Invoice email sent to ${invoiceEmail}`);
+                    }
+                }
+            } catch (invoiceErr) {
+                console.error('⚠️ Invoice creation/email failed (non-blocking):', invoiceErr.message);
             }
 
 

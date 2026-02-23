@@ -396,8 +396,162 @@ async function sendSubscriptionPaymentFailedEmail(toEmail, firstName) {
   }
 }
 
+/**
+ * Send invoice email with PDF link
+ * @param {string} toEmail - User email
+ * @param {string} firstName - User first name
+ * @param {string} invoicePdfUrl - URL to the invoice PDF
+ * @param {number} amount - Amount charged in RSD
+ * @returns {Promise<boolean>}
+ */
+async function sendInvoiceEmail(toEmail, firstName, invoicePdfUrl, amount) {
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY nije postavljen - preskačem slanje mejla sa računom.');
+    return false;
+  }
+
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const formattedDate = new Date().toLocaleDateString('sr-RS', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin:0;padding:0;background-color:#0a0a0a;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
+          
+          <!-- Main Container -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0a0a0a;padding:40px 20px;">
+            <tr>
+              <td align="center">
+                
+                <!-- Content Wrapper -->
+                <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:linear-gradient(135deg, rgba(76,175,80,0.05) 0%, rgba(56,142,60,0.05) 100%);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+                  
+                  <!-- Header -->
+                  <tr>
+                    <td style="background:linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);padding:40px 30px;text-align:center;">
+                      <h1 style="margin:0;color:#fff;font-size:32px;font-weight:800;letter-spacing:-0.5px;">
+                        📄 Vaš Račun
+                      </h1>
+                    </td>
+                  </tr>
+                  
+                  <!-- Body -->
+                  <tr>
+                    <td style="padding:40px 30px;background-color:#1a1a1a;">
+                      
+                      <!-- Welcome Message -->
+                      <p style="margin:0 0 30px 0;color:#e0e0e0;font-size:18px;line-height:1.6;text-align:center;">
+                        Pozdrav <strong style="color:#4CAF50;">${firstName}</strong>! 👋
+                      </p>
+                      
+                      <p style="margin:0 0 30px 0;color:#b0b0b0;font-size:15px;line-height:1.6;text-align:center;">
+                        Hvala na kupovini! U nastavku se nalazi Vaš fiskalni račun.
+                      </p>
+                      
+                      <!-- Invoice Details Card -->
+                      <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(0,0,0,0.4);border:1px solid rgba(76,175,80,0.3);border-radius:16px;margin:30px 0;overflow:hidden;">
+                        <tr>
+                          <td style="padding:25px;">
+                            <h3 style="margin:0 0 20px 0;color:#4CAF50;font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:1px;text-align:center;">
+                              📋 Detalji Računa
+                            </h3>
+                            
+                            <!-- Amount -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:15px;">
+                              <tr>
+                                <td style="padding:12px 15px;background:rgba(76,175,80,0.1);border-radius:8px;">
+                                  <p style="margin:0;color:#999;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Iznos</p>
+                                  <p style="margin:5px 0 0 0;color:#fff;font-size:20px;font-weight:700;">${amount} RSD</p>
+                                </td>
+                              </tr>
+                            </table>
+                            
+                            <!-- Date -->
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td style="padding:12px 15px;background:rgba(76,175,80,0.1);border-radius:8px;">
+                                  <p style="margin:0;color:#999;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Datum</p>
+                                  <p style="margin:5px 0 0 0;color:#4CAF50;font-size:16px;font-weight:600;">${formattedDate}</p>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                      
+                      <!-- Download PDF Button -->
+                      <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0;">
+                        <tr>
+                          <td align="center">
+                            <a href="${invoicePdfUrl}" style="display:inline-block;padding:16px 40px;background:linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:700;letter-spacing:0.5px;box-shadow:0 10px 30px rgba(76,175,80,0.3);text-transform:uppercase;">
+                              📥 Preuzmi Račun (PDF)
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                      
+                      <!-- Info Note -->
+                      <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0 0 0;">
+                        <tr>
+                          <td style="padding:20px;background:rgba(76,175,80,0.05);border-left:4px solid #4CAF50;border-radius:8px;">
+                            <p style="margin:0;color:#4CAF50;font-size:13px;line-height:1.6;">
+                              <strong>💡 Info:</strong> Ovo je Vaš fiskalni račun izdat u skladu sa zakonom. Možete ga preuzeti klikom na dugme iznad.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                      
+                    </td>
+                  </tr>
+                  
+                  <!-- Footer -->
+                  <tr>
+                    <td style="padding:30px;background-color:#0f0f0f;text-align:center;border-top:1px solid rgba(76,175,80,0.1);">
+                      <p style="margin:0 0 10px 0;color:#666;font-size:13px;line-height:1.6;">
+                        © 2026 Motion Akademija. Sva prava zadržana.
+                      </p>
+                      <p style="margin:0;color:#555;font-size:12px;">
+                        <a href="https://motionakademija.com" style="color:#4CAF50;text-decoration:none;">motionakademija.com</a>
+                      </p>
+                    </td>
+                  </tr>
+                  
+                </table>
+                
+              </td>
+            </tr>
+          </table>
+          
+        </body>
+      </html>
+    `;
+
+    await resend.emails.send({
+      from: 'MotionAkademija <office@motionakademija.com>',
+      to: toEmail,
+      subject: '📄 Vaš račun - Motion Akademija',
+      html
+    });
+
+    return true;
+  } catch (err) {
+    console.error('Greška pri slanju email-a sa računom (Resend):', err.message);
+    return false;
+  }
+}
+
 module.exports = {
   sendMsuWelcomeEmail,
   sendSubscriptionRenewalEmail,
-  sendSubscriptionPaymentFailedEmail
+  sendSubscriptionPaymentFailedEmail,
+  sendInvoiceEmail
 };

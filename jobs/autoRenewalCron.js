@@ -6,7 +6,8 @@
 const cron = require('node-cron');
 const db = require('../db');
 const msuService = require('../utils/msuService');
-const { sendSubscriptionRenewalEmail, sendSubscriptionPaymentFailedEmail } = require('../utils/msuEmailHelper');
+const { sendSubscriptionRenewalEmail, sendSubscriptionPaymentFailedEmail, sendInvoiceEmail } = require('../utils/msuEmailHelper');
+const { createInvoice } = require('../utils/invoiceService');
 
 /**
  * Process a single subscription renewal
@@ -129,6 +130,41 @@ async function processRenewal(subscription) {
                 console.log(`✅ Renewal email sent to ${user.email}`);
             } catch (emailErr) {
                 console.warn('⚠️ Failed to send renewal email:', emailErr);
+            }
+
+            // ✅ FISKALIZACIJA: Kreiraj račun i pošalji mejl za renewal
+            try {
+                // Dohvati naziv kursa
+                let invoiceItemName = 'Motion Akademija - Produženje pretplate';
+                if (kursId) {
+                    const [kursData] = await db.query(
+                        'SELECT naziv FROM kursevi WHERE id = ?',
+                        [kursId]
+                    );
+                    if (kursData.length > 0) {
+                        invoiceItemName = `${kursData[0].naziv} - Produženje`;
+                    }
+                }
+
+                console.log('📄 Creating fiscal invoice for renewal...');
+                const invoiceResult = await createInvoice({
+                    itemName: invoiceItemName,
+                    price: amount,
+                    quantity: 1,
+                    paymentType: 2 // Plaćanje karticom
+                });
+
+                if (invoiceResult && invoiceResult.invoice_pdf) {
+                    await sendInvoiceEmail(
+                        user.email,
+                        user.ime || 'Korisnik',
+                        invoiceResult.invoice_pdf,
+                        amount
+                    );
+                    console.log(`✅ Invoice email sent to ${user.email}`);
+                }
+            } catch (invoiceErr) {
+                console.error('⚠️ Invoice creation/email failed for renewal (non-blocking):', invoiceErr.message);
             }
 
         } else {
