@@ -13,7 +13,7 @@
  * NAPOMENA: Pokreni DIREKTNO na VPS-u da bi izbegli mrežni latency.
  */
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'https://test-api.zecevicdev.com';
 
 // ——— Pomoćne funkcije ———
 
