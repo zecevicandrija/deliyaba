@@ -27,8 +27,7 @@ router.get('/', authMiddleware, requireAdmin, async (req, res) => {
 
 // Endpoint za dodavanje novog korisnika (SAMO ADMIN)
 router.post('/', authMiddleware, requireAdmin, async (req, res) => {
-    // Uklonili smo 'adresa' i 'telefon' jer više ne postoje u bazi
-    const { ime, prezime, email, sifra, uloga } = req.body;
+    const { ime, prezime, email, sifra, uloga, subscription_expires_at, subscription_status } = req.body;
 
     try {
         if (!ime || !prezime || !email || !sifra || !uloga) {
@@ -37,8 +36,12 @@ router.post('/', authMiddleware, requireAdmin, async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(sifra, 10);
         
-        const query = 'INSERT INTO korisnici (ime, prezime, email, sifra, uloga) VALUES (?, ?, ?, ?, ?)';
-        const [results] = await db.query(query, [ime, prezime, email, hashedPassword, uloga]);
+        const query = 'INSERT INTO korisnici (ime, prezime, email, sifra, uloga, subscription_expires_at, subscription_status) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const [results] = await db.query(query, [
+            ime, prezime, email, hashedPassword, uloga,
+            subscription_expires_at || null,
+            subscription_status || 'active'
+        ]);
         
         res.status(201).json({ message: 'Korisnik uspešno dodat', userId: results.insertId });
     } catch (error) {
