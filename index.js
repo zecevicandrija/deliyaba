@@ -78,6 +78,12 @@ app.use('/api/msu', msuPaymentRouter);
 app.use('/api/subscription', subscriptionStatusRouter);
 app.use('/api/subscription', subscriptionRenewalRouter);
 
+// === Global Error Handler (Express middleware) ===
+app.use((err, req, res, next) => {
+    console.error('⚠️ Unhandled Express error:', err.stack);
+    res.status(500).json({ error: 'Interna greška servera' });
+});
+
 // === Cron Jobs ===
 const { startSubscriptionCleanupJob } = require('./jobs/subscriptionCleanup');
 const { startAutoRenewalJob } = require('./jobs/autoRenewalCron');
@@ -92,4 +98,15 @@ const server = app.listen(port, () => {
     // Pokreni auto renewal job
     startAutoRenewalJob();
 });
-server.timeout = 1800000;
+server.timeout = 30000; // 30 sekundi (bilo 30 minuta - opasno za server pod opterećenjem)
+
+// === Global Process Error Handlers ===
+// Sprečavaju da server tiho padne na neuhvaćenim greškama
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('❌ Unhandled Promise Rejection:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('❌ Uncaught Exception:', error);
+    // Ne radimo process.exit() jer to bi ugasilo server - samo logujemo
+});

@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const { cacheMiddleware, invalidateCache } = require('../middleware/cacheMiddleware');
 
-// Endpoint za dobavljanje završenih lekcija po korisniku
-router.get('/korisnik/:korisnikId', async (req, res) => {
+// Endpoint za dobavljanje završenih lekcija po korisniku (keširano 60s)
+router.get('/korisnik/:korisnikId', cacheMiddleware(60), async (req, res) => {
     try {
         const korisnikId = req.params.korisnikId;
         const query = 'SELECT * FROM kompletirane_lekcije WHERE korisnik_id = ?';
@@ -36,6 +37,7 @@ router.post('/', async (req, res) => {
         const [results] = await db.query(insertQuery, [korisnik_id, kurs_id, lekcija_id]);
         
         res.status(201).json({ message: 'Lekcija uspešno dodata', kompletiranaLekcijaId: results.insertId });
+        invalidateCache('/api/kompletirane_lekcije'); // Obriši keš
     } catch (err) {
         console.error('Database error:', err);
         res.status(500).json({ error: 'Database error' });
@@ -62,14 +64,15 @@ router.delete('/', async (req, res) => {
         }
 
         res.status(200).json({ message: 'Lekcija uspešno obeležena kao nezavršena.' });
+        invalidateCache('/api/kompletirane_lekcije'); // Obriši keš
     } catch (err) {
         console.error('Database error on un-complete:', err);
         res.status(500).json({ error: 'Greška na serveru prilikom brisanja progresa.' });
     }
 });
 
-// Endpoint za dobavljanje završenih lekcija po korisniku i kursu
-router.get('/user/:korisnikId/course/:kursId', async (req, res) => {
+// Endpoint za dobavljanje završenih lekcija po korisniku i kursu (keširano 60s)
+router.get('/user/:korisnikId/course/:kursId', cacheMiddleware(60), async (req, res) => {
     try {
         const { korisnikId, kursId } = req.params;
         const query = 'SELECT lekcija_id FROM kompletirane_lekcije WHERE korisnik_id = ? AND kurs_id = ?';

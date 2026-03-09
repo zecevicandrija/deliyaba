@@ -2,9 +2,18 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const bcrypt = require('bcryptjs');
+const authMiddleware = require('../middleware/token');
 
-// Endpoint za dobavljanje svih korisnika
-router.get('/', async (req, res) => {
+// Middleware: Samo admin može pristupiti
+const requireAdmin = (req, res, next) => {
+    if (req.user.uloga !== 'admin') {
+        return res.status(403).json({ error: 'Samo admin ima pristup ovoj ruti.' });
+    }
+    next();
+};
+
+// Endpoint za dobavljanje svih korisnika (SAMO ADMIN)
+router.get('/', authMiddleware, requireAdmin, async (req, res) => {
     try {
         // Iz bezbednosnih razloga, nikada ne šaljemo lozinke na frontend
         const query = 'SELECT id, ime, prezime, email, uloga FROM korisnici';
@@ -16,8 +25,8 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Endpoint za dodavanje novog korisnika
-router.post('/', async (req, res) => {
+// Endpoint za dodavanje novog korisnika (SAMO ADMIN)
+router.post('/', authMiddleware, requireAdmin, async (req, res) => {
     // Uklonili smo 'adresa' i 'telefon' jer više ne postoje u bazi
     const { ime, prezime, email, sifra, uloga } = req.body;
 
@@ -42,8 +51,8 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Endpoint za ažuriranje korisnika
-router.put('/:id', async (req, res) => {
+// Endpoint za ažuriranje korisnika (SAMO ADMIN)
+router.put('/:id', authMiddleware, requireAdmin, async (req, res) => {
     try {
         const userId = req.params.id;
         const { ime, prezime, email, sifra } = req.body;
@@ -87,8 +96,8 @@ router.put('/:id', async (req, res) => {
 });
 
 
-// Endpoint za brisanje korisnika
-router.delete('/:id', async (req, res) => {
+// Endpoint za brisanje korisnika (SAMO ADMIN)
+router.delete('/:id', authMiddleware, requireAdmin, async (req, res) => {
     try {
         const userId = req.params.id;
         const query = 'DELETE FROM korisnici WHERE id = ?';

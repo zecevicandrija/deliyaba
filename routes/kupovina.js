@@ -3,6 +3,14 @@ const router = express.Router();
 const db = require('../db');
 const authMiddleware = require('../middleware/token');
 
+// Middleware: Samo admin može pristupiti
+const requireAdmin = (req, res, next) => {
+    if (req.user.uloga !== 'admin') {
+        return res.status(403).json({ error: 'Samo admin ima pristup ovoj ruti.' });
+    }
+    next();
+};
+
 // Endpoint to fetch purchased courses for a user
 // Korisnik treba da VIDI svoje kurseve čak i kada je subscription istekao
 router.get('/user/:korisnikId', authMiddleware, async (req, res) => {
@@ -39,8 +47,8 @@ router.get('/user/:korisnikId', authMiddleware, async (req, res) => {
     }
 });
 
-// Endpoint za dodavanje kupovine
-router.post('/', async (req, res) => {
+// Endpoint za dodavanje kupovine (SAMO ADMIN)
+router.post('/', authMiddleware, requireAdmin, async (req, res) => {
     try {
         const { korisnik_id, kurs_id, popust_id } = req.body;
         const query = 'INSERT INTO kupovina (korisnik_id, kurs_id, popust_id) VALUES (?, ?, ?)';
@@ -52,8 +60,8 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Endpoint to get the number of purchases for each course
-router.get('/popularity', async (req, res) => {
+// Endpoint to get the number of purchases for each course (SAMO ADMIN)
+router.get('/popularity', authMiddleware, requireAdmin, async (req, res) => {
     try {
         const query = `
             SELECT 
@@ -73,8 +81,8 @@ router.get('/popularity', async (req, res) => {
     }
 });
 
-// Endpoint to get students who purchased a specific course
-router.get('/studenti/:kursId', async (req, res) => {
+// Endpoint to get students who purchased a specific course (SAMO ADMIN)
+router.get('/studenti/:kursId', authMiddleware, requireAdmin, async (req, res) => {
     try {
         const kursId = req.params.kursId;
         const query = `
@@ -91,8 +99,8 @@ router.get('/studenti/:kursId', async (req, res) => {
     }
 });
 
-// Endpoint to get revenue grouped by date
-router.get('/zarada-po-danu', async (req, res) => {
+// Endpoint to get revenue grouped by date (SAMO ADMIN)
+router.get('/zarada-po-danu', authMiddleware, requireAdmin, async (req, res) => {
     try {
         const query = `
             SELECT 
@@ -116,8 +124,8 @@ module.exports = router;
 
 // U fajlu: backend/routes/kupovina.js
 
-// NOVA RUTA ZA STATISTIKU KURSA
-router.get('/statistika/:kursId', async (req, res) => {
+// NOVA RUTA ZA STATISTIKU KURSA (SAMO ADMIN)
+router.get('/statistika/:kursId', authMiddleware, requireAdmin, async (req, res) => {
     try {
         const { kursId } = req.params;
         const { startDate, endDate } = req.query;
