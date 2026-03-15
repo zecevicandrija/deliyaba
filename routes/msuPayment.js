@@ -90,7 +90,7 @@ router.post('/create-session', createSessionLimiter, validate(createMsuSessionSc
             merchantPaymentId,
             amount: totalAmount,
             orderItems,
-            returnUrl: 'https://test-api.zecevicdev.com/api/msu/callback-redirect'
+            returnUrl: 'http://localhost:5000/api/msu/callback-redirect'
         };
 
         // Koristi CIT session za automatic recurring payments
