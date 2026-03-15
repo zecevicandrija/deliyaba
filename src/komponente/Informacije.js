@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiUser, FiMail, FiTag, FiArrowRight, FiPackage, FiCheck, FiAlertCircle } from 'react-icons/fi';
 import { useAuth } from '../login/auth';
-import axios from 'axios';
+import api from '../login/api';
 import './Informacije.css';
 import Footer from '../pocetna/Footer.js';
 
@@ -103,7 +103,7 @@ const Informacije = () => {
         setDiscountError('');
 
         try {
-            const response = await axios.post('https://test-api.zecevicdev.com/api/popusti/validate', {
+            const response = await api.post('/api/popusti/validate', {
                 code: discountCode
             });
 
@@ -171,7 +171,7 @@ const Informacije = () => {
                 requestData.discountCode = discountApplied.code;
             }
 
-            const response = await axios.post('https://test-api.zecevicdev.com/api/msu/create-session', requestData);
+            const response = await api.post('/api/msu/create-session', requestData);
 
             if (response.data.success && response.data.redirectUrl) {
                 // Preusmeri korisnika na Chipcard payment stranicu

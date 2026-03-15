@@ -28,11 +28,26 @@ const MojProfil = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [cancelLoading, setCancelLoading] = useState(false);
 
-    // Provera da li je trenutna pretplata aktivna
-    const imaAktivnuPretplatu = user && user.subscription_expires_at && new Date(user.subscription_expires_at) > new Date();
+    // Provera da li korisnik ima pristup pretplati
+    // Pristup ima ako: datum nije istekao I status NIJE 'expired' ili 'payment_failed'
+    // Status 'cancelled' ili 'active' dozvoljavaju pristup do datuma isteka
+    const imaAktivnuPretplatu = user &&
+        user.subscription_expires_at &&
+        new Date(user.subscription_expires_at) > new Date() &&
+        user.subscription_status !== 'expired' &&
+        user.subscription_status !== 'payment_failed';
 
     const fetchData = useCallback(async () => {
         if (user) {
+            // Osvježi user podatke sa servera da imaAktivnuPretplatu bude tačan
+            try {
+                const meResponse = await api.get('/api/auth/me');
+                setAuthUser(meResponse.data);
+                localStorage.setItem('user', JSON.stringify(meResponse.data));
+            } catch (e) {
+                console.error('Failed to refresh user:', e);
+            }
+
             setFormData({
                 ime: user.ime || '',
                 prezime: user.prezime || '',
@@ -40,37 +55,33 @@ const MojProfil = () => {
                 currentPassword: '',
                 newPassword: ''
             });
-            try {
-                // Dohvatamo sve kurseve koje je korisnik ikada kupio
-                const response = await api.get(`/api/kupovina/user/${user.id}`);
-                setKupljeniKursevi(response.data);
-            } catch (error) {
-                // Ako je 403 error - subscription je istekao, ali prikaži kurseve sa isteklom pretplatom
-                if (error.response?.status === 403) {
+
+            // OPTIMIZOVANO: Oba poziva idu PARALELNO umesto sekvencijalno
+            const [kupovinaResult, subResult] = await Promise.allSettled([
+                api.get(`/api/kupovina/user/${user.id}`),
+                api.get(`/api/subscription/details/${user.id}`)
+            ]);
+
+            // Obradi kupljene kurseve
+            if (kupovinaResult.status === 'fulfilled') {
+                setKupljeniKursevi(kupovinaResult.value.data);
+            } else {
+                const error = kupovinaResult.reason;
+                if (error?.response?.status === 403) {
                     console.log('Subscription expired - showing courses with expired status');
-                    // Postavi prazan array - komponenta će pokazati da nema aktivnih pretplata
-                    // Ali korisnik vidi subscription info u profilu
-                    setKupljeniKursevi([]);
-                } else {
-                    console.error('Greška pri dohvatanju kupljenih kurseva:', error);
-                    setKupljeniKursevi([]);
                 }
+                setKupljeniKursevi([]);
             }
 
-            // NOVO: Dohvati recurring subscription details
-            try {
-                const subResponse = await api.get(`/api/subscription/details/${user.id}`);
-                if (subResponse.data.hasRecurring) {
-                    setSubscriptionDetails(subResponse.data.subscription);
-                } else {
-                    setSubscriptionDetails(null);
-                }
-            } catch (subError) {
-                console.error('Greška pri dohvatanju subscription detalja:', subError);
+            // Obradi subscription details
+            if (subResult.status === 'fulfilled' && subResult.value.data.hasRecurring) {
+                setSubscriptionDetails(subResult.value.data.subscription);
+            } else {
                 setSubscriptionDetails(null);
             }
         }
-    }, [user]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.id, setAuthUser]);
 
     useEffect(() => {
         fetchData();
@@ -302,8 +313,8 @@ const MojProfil = () => {
                             <input id="prezime" name="prezime" type="text" value={formData.prezime} onChange={handleInputChange} required />
                         </div>
                         <div className="profil-form-group">
-                            <label htmlFor="email">Email</label>
-                            <input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} required />
+                            <label htmlFor="email">Email <span style={{fontSize: '0.8em', color: '#888'}}>(Ne može se menjati)</span></label>
+                            <input id="email" name="email" type="email" value={formData.email} disabled className="disabled-input" />
                         </div>
                         <hr className="profil-divider" />
                         <h3 className="profil-subheader">Promena Lozinke</h3>
@@ -343,7 +354,7 @@ const MojProfil = () => {
                                                 </span>
                                             ) : (
                                                 <div className="status-expired">
-                                                    <span>Pretplata istekla!</span>
+                                                    <span>Istekla: {new Date(user.subscription_expires_at).toLocaleDateString()}</span>
                                                     <button onClick={() => navigate('/produzivanje')} className="produzi-pretplatu-btn">
                                                         Produži
                                                     </button>
@@ -409,7 +420,8 @@ const MojProfil = () => {
                                         💡 Možete otkazati u bilo kom trenutku. Zadržaćete pristup do {new Date(user.subscription_expires_at).toLocaleDateString('en-GB')}.
                                     </p>
                                 </div>
-                            ) : (
+                            ) : imaAktivnuPretplatu ? (
+                                // Prikaži opciju za reaktivaciju samo ako korisnik još uvek ima pristup
                                 <div className="renewal-cancelled-info">
                                     <p className="cancelled-message">
                                         ⚠️ Automatsko produžavanje je otkazano.
@@ -425,7 +437,7 @@ const MojProfil = () => {
                                         {cancelLoading ? 'Aktivacija...' : 'Ponovo Aktiviraj Automatsko Produžavanje'}
                                     </button>
                                 </div>
-                            )}
+                            ) : null}
                         </div>
                     )}
                 </div>

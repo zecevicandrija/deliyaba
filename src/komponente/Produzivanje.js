@@ -3,7 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { FiCheck, FiStar, FiZap, FiTag, FiAlertCircle } from "react-icons/fi";
 import { useAuth } from '../login/auth';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../login/api';
 import "./Produzivanje.css";
 
 import banner from '../images/motionakademijabanner.jpg';
@@ -89,7 +89,7 @@ const Produzivanje = () => {
         setDiscountError('');
 
         try {
-            const response = await axios.post('https://test-api.zecevicdev.com/api/popusti/validate', {
+            const response = await api.post('/api/popusti/validate', {
                 code: discountCode
             });
 
@@ -150,7 +150,7 @@ const Produzivanje = () => {
 
             console.log('Sending renewal request:', requestData);
 
-            const response = await axios.post('https://test-api.zecevicdev.com/api/msu/create-session', requestData);
+            const response = await api.post('/api/msu/create-session', requestData);
 
             if (response.data.success && response.data.redirectUrl) {
                 // Preusmeri korisnika na MSU HPP stranicu

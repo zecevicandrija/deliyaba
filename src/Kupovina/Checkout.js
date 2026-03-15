@@ -64,7 +64,7 @@ const Checkout = () => {
                 requestData.korisnikId = korisnikId;
             }
 
-            const response = await axios.post('https://test-api.zecevicdev.com/api/msu/create-session', requestData);
+            const response = await axios.post('http://localhost:5000/api/msu/create-session', requestData);
 
             if (response.data.success && response.data.redirectUrl) {
                 // Preusmeri korisnika na MSU HPP stranicu

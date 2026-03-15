@@ -64,7 +64,8 @@ const KupljenKurs = () => {
             }
         };
         fetchKupljeneKurseve();
-    }, [user]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.id]); // Koristi user?.id umesto user da se ne trigeruje na svaki re-render
 
     // Dohvata progres za automatski selektovani kurs
     useEffect(() => {
@@ -85,7 +86,8 @@ const KupljenKurs = () => {
             }
         };
         fetchProgresPoSekcijama();
-    }, [selektovaniKursId, user]); // Ovaj hook se pokreće kada se `selektovaniKursId` postavi
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selektovaniKursId, user?.id]); // Koristi user?.id umesto user
 
 
     if (isLoading) {

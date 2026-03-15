@@ -13,8 +13,7 @@ const Lekcije = () => {
         course_id: '',
         title: '',
         content: '',
-        sekcija_id: '',
-        assignment: ''
+        sekcija_id: ''
     });
 
     const [video, setVideo] = useState(null);
@@ -71,6 +70,10 @@ const Lekcije = () => {
 
     // Funkcija za direktan upload na Bunny putem TUS protokola
     const uploadVideoDirectly = (file, credentials) => {
+        console.log('=== TUS UPLOAD DEBUG ===');
+        console.log('File name:', file.name, 'File size:', file.size, 'File type:', file.type);
+        console.log('Credentials:', JSON.stringify(credentials));
+
         return new Promise((resolve, reject) => {
             const upload = new tus.Upload(file, {
                 endpoint: 'https://video.bunnycdn.com/tusupload',
@@ -85,29 +88,35 @@ const Lekcije = () => {
                     filetype: file.type,
                     title: newLekcija.title,
                 },
+                onBeforeRequest: (req) => {
+                    console.log(`TUS Request: ${req._method} ${req._url}`);
+                    console.log('TUS Request headers:', JSON.stringify(req._headers));
+                },
+                onAfterResponse: (req, res) => {
+                    console.log(`TUS Response: ${res.getStatus()} for ${req._method} ${req._url}`);
+                    console.log('TUS Response headers - Upload-Offset:', res.getHeader('Upload-Offset'));
+                    console.log('TUS Response headers - Location:', res.getHeader('Location'));
+                },
                 onError: (error) => {
                     console.error('TUS upload error:', error);
                     reject(error);
                 },
                 onProgress: (bytesUploaded, bytesTotal) => {
                     const percentage = Math.round((bytesUploaded / bytesTotal) * 100);
+                    console.log(`TUS Progress: ${bytesUploaded}/${bytesTotal} (${percentage}%)`);
                     setUploadProgress(percentage);
                     setUploadStatus(`Uploading video: ${percentage}%`);
                 },
                 onSuccess: () => {
-                    console.log('Video upload successful!');
+                    console.log('Video upload successful! Upload URL:', upload.url);
                     setUploadStatus('Video uspešno uploadovan!');
                     resolve(credentials.videoId);
                 }
             });
 
-            // Proveri da li postoje prethodni uploadovi za nastavak
-            upload.findPreviousUploads().then((previousUploads) => {
-                if (previousUploads.length) {
-                    upload.resumeFromPreviousUpload(previousUploads[0]);
-                }
-                upload.start();
-            });
+            // Direktno započni upload (svaki upload ima novi video ID,
+            // pa nema smisla tražiti prethodne uploadove)
+            upload.start();
         });
     };
 
@@ -142,14 +151,13 @@ const Lekcije = () => {
                 title: newLekcija.title,
                 content: newLekcija.content,
                 sekcija_id: newLekcija.sekcija_id,
-                assignment: newLekcija.assignment,
                 video_guid: videoGuid
             });
 
             alert('Lekcija uspešno dodata!');
 
             // Resetovanje forme
-            setNewLekcija({ course_id: '', title: '', content: '', sekcija_id: '', assignment: '' });
+            setNewLekcija({ course_id: '', title: '', content: '', sekcija_id: '' });
             setVideo(null);
             setSections([]);
             setUploadProgress(0);

@@ -1,0 +1,532 @@
+/* === Edit Korisnika — Dark Dashboard Theme === */
+
+.ek-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 2rem 2rem;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 40px;
+}
+
+.ek-container {
+    width: 100%;
+    max-width: 1100px;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Back Button --- */
+.ek-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: 1px solid #444;
+    color: #ccc;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 1.5rem;
+    align-self: flex-start;
+}
+
+.ek-back-btn:hover {
+    border-color: #ffa500;
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.05);
+}
+
+/* --- Header --- */
+.ek-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #ffa500;
+}
+
+.ek-header-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #ffa500, #ff6a00);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem auto;
+    font-size: 1.6rem;
+    color: #1a1a1a;
+}
+
+.ek-header h1 {
+    font-size: 2rem;
+    color: #ffa500;
+    margin: 0 0 0.5rem 0;
+    font-weight: bold;
+}
+
+.ek-header p {
+    font-size: 1rem;
+    color: #aaa;
+    margin: 0;
+}
+
+/* --- Search Bar --- */
+.ek-search-container {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ek-search-box {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.ek-search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 1.1rem;
+}
+
+.ek-search-input {
+    width: 100%;
+    padding: 0.85rem 1rem 0.85rem 2.8rem;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.ek-search-input:focus {
+    border-color: #ffa500;
+    box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.15);
+}
+
+/* --- Table Styles --- */
+.ek-table-responsive {
+    overflow-x: auto;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background-color: #242424;
+}
+
+.ek-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.ek-table th {
+    background-color: #2a2a2a;
+    color: #ffa500;
+    padding: 1rem;
+    font-weight: 600;
+    border-bottom: 2px solid #333;
+    white-space: nowrap;
+}
+
+.ek-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #333;
+    color: #ddd;
+    vertical-align: middle;
+}
+
+.ek-table tr:last-child td {
+    border-bottom: none;
+}
+
+.ek-table tr:hover {
+    background-color: #2d2d2d;
+}
+
+.ek-no-results {
+    text-align: center !important;
+    padding: 2rem !important;
+    color: #888 !important;
+    font-style: italic;
+}
+
+/* --- Status Badges --- */
+.ek-status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.ek-status-badge.active {
+    background-color: rgba(39, 174, 96, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(39, 174, 96, 0.3);
+}
+
+.ek-status-badge.cancelled {
+    background-color: rgba(243, 156, 18, 0.15);
+    color: #f39c12;
+    border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+.ek-status-badge.expired {
+    background-color: rgba(149, 165, 166, 0.15);
+    color: #95a5a6;
+    border: 1px solid rgba(149, 165, 166, 0.3);
+}
+
+.ek-status-badge.payment_failed {
+    background-color: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.ek-status-badge.unknown {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* --- Action Buttons --- */
+.ek-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.ek-action-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+}
+
+.ek-edit-btn {
+    background-color: rgba(52, 152, 219, 0.15);
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.ek-edit-btn:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+.ek-delete-btn {
+    background-color: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.ek-delete-btn:hover {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* --- MODALS --- */
+.ek-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.ek-modal-content {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    animation: modalSlideUp 0.3s ease;
+}
+
+@keyframes modalSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ek-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.ek-close-btn:hover {
+    color: #ff4a4a;
+}
+
+.ek-modal-content h2 {
+    color: #ffa500;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+}
+
+/* Modal Info Header */
+.ek-modal-header-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    background-color: #242424;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+.ek-avatar {
+    width: 45px;
+    height: 45px;
+    background-color: #333;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #ffa500;
+}
+
+.ek-modal-header-info h3 {
+    margin: 0 0 0.2rem 0;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.ek-modal-header-info span {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Modal Form */
+.ek-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.ek-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.ek-field label {
+    font-size: 0.85rem;
+    color: #aaa;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.ek-field label i {
+    color: #ffa500;
+}
+
+.ek-field input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.ek-field input:focus {
+    border-color: #ffa500;
+    box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.15);
+}
+
+.ek-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #ffa500, #ff6a00);
+    color: #1a1a1a;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.ek-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 165, 0, 0.4);
+}
+
+/* Delete Modal Specific */
+.ek-delete-modal {
+    text-align: center;
+}
+
+.ek-warning-icon {
+    font-size: 4rem;
+    color: #e74c3c;
+    margin-bottom: 1rem;
+}
+
+.ek-delete-modal h2 {
+    color: #fff;
+    border: none;
+    padding-bottom: 0px;
+    margin-bottom: 0.5rem;
+}
+
+.ek-delete-name {
+    color: #ffa500;
+    font-size: 1.5rem;
+    margin: 0.5rem 0 1.5rem 0;
+}
+
+.ek-warning-box {
+    background-color: rgba(231, 76, 60, 0.15);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    color: #e74c3c;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-align: left;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.ek-modal-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.ek-cancel-btn, .ek-confirm-delete-btn {
+    flex: 1;
+    padding: 0.85rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ek-cancel-btn {
+    background-color: transparent;
+    border: 1px solid #666;
+    color: #ccc;
+}
+
+.ek-cancel-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #888;
+}
+
+.ek-confirm-delete-btn {
+    background-color: #e74c3c;
+    border: none;
+    color: white;
+}
+
+.ek-confirm-delete-btn:hover {
+    background-color: #c0392b;
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+}
+
+.ek-feedback {
+    margin: 1rem 0;
+    padding: 0.75rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.ek-feedback.error {
+    background-color: rgba(231, 76, 60, 0.15);
+    border: 1px solid rgba(231, 76, 60, 0.4);
+    color: #e74c3c;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .ek-page {
+        padding: 1rem;
+        margin-top: 60px;
+    }
+
+    .ek-container {
+        padding: 1.5rem;
+    }
+
+    .ek-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .ek-search-container {
+        justify-content: center;
+    }
+
+    .ek-search-box {
+        max-width: 100%;
+    }
+
+    .ek-modal-content {
+        padding: 1.5rem;
+        width: 90%;
+    }
+}

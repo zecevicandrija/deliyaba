@@ -7,7 +7,7 @@ const DodajKurs = () => {
     const { user } = useAuth();
     const [naziv, setNaziv] = useState('');
     const [opis, setOpis] = useState('');
-    const [slika, setSlika] = useState(null);
+    const [slika, setSlika] = useState('');
     const [cena, setCena] = useState('');
     // NOVO: Stanje za dinamičko dodavanje sekcija
     const [sekcije, setSekcije] = useState(['']); // Počinjemo sa jednim praznim poljem
@@ -39,36 +39,22 @@ const DodajKurs = () => {
             return;
         }
 
-        const formData = new FormData();
-        formData.append('naziv', naziv);
-        formData.append('opis', opis);
-        formData.append('instruktor_id', user.id);
-        formData.append('cena', cena);
-        if (slika) {
-            formData.append('slika', slika);
-        }
-
-        // Dodaj sve neprazne sekcije u formData
-        sekcije
-            .filter(s => s.trim() !== '') // Ukloni prazna polja
-            .forEach(sekcija => {
-                formData.append('sekcije[]', sekcija); // `[]` je bitno za backend
-            });
-
         try {
-            const response = await api.post('/api/kursevi', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            const response = await api.post('/api/kursevi', {
+                naziv,
+                opis,
+                instruktor_id: user.id,
+                cena,
+                slika,
+                sekcije: sekcije.filter(s => s.trim() !== '')
             });
 
             if (response.status === 201) {
                 alert('Kurs je uspešno dodat!');
-                // Resetuj formu
                 setNaziv('');
                 setOpis('');
                 setCena('');
-                setSlika(null);
+                setSlika('');
                 setSekcije(['']);
             } else {
                 alert('Greška pri dodavanju kursa');
@@ -79,9 +65,6 @@ const DodajKurs = () => {
         }
     };
 
-    const handleFileChange = (e) => {
-        setSlika(e.target.files[0]);
-    };
 
     return (
         <div className="dodaj-kurs-container">
@@ -147,11 +130,13 @@ const DodajKurs = () => {
                 </div>
                 
                 <div className="form-group">
-                    <label className="form-label">Izaberi Naslovnu Sliku:</label>
+                    <label className="form-label">URL Naslovne Slike:</label>
                     <input
-                        className="form-file-input"
-                        type="file"
-                        onChange={handleFileChange}
+                        className="form-input"
+                        type="url"
+                        placeholder="https://primer.com/slika-kursa.jpg"
+                        value={slika}
+                        onChange={(e) => setSlika(e.target.value)}
                         required
                     />
                 </div>

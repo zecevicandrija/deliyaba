@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import * as tus from 'tus-js-client';
 import api from '../login/api';
 import './EditKursa.css';
 
@@ -16,6 +17,9 @@ const EditKursa = () => {
     const [editingLesson, setEditingLesson] = useState(null);
     const [editForm, setEditForm] = useState({ title: '', content: '', sekcija_id: '' });
     const [videoFile, setVideoFile] = useState(null);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadStatus, setUploadStatus] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
 
     // Stanja za izmenu sekcije
     const [editingSekcijaId, setEditingSekcijaId] = useState(null);
@@ -152,29 +156,87 @@ const EditKursa = () => {
     const handleEditFormChange = (e) => setEditForm({ ...editForm, [e.target.name]: e.target.value });
     const handleVideoChange = (e) => setVideoFile(e.target.files[0]);
 
+    // TUS direktan upload na Bunny CDN
+    const uploadVideoDirectly = (file, credentials) => {
+        return new Promise((resolve, reject) => {
+            const upload = new tus.Upload(file, {
+                endpoint: 'https://video.bunnycdn.com/tusupload',
+                retryDelays: [0, 3000, 5000, 10000, 20000, 60000],
+                headers: {
+                    AuthorizationSignature: credentials.authorizationSignature,
+                    AuthorizationExpire: credentials.authorizationExpire,
+                    VideoId: credentials.videoId,
+                    LibraryId: credentials.libraryId,
+                },
+                metadata: {
+                    filetype: file.type,
+                    title: editForm.title,
+                },
+                onError: (error) => {
+                    console.error('TUS upload error:', error);
+                    reject(error);
+                },
+                onProgress: (bytesUploaded, bytesTotal) => {
+                    const percentage = Math.round((bytesUploaded / bytesTotal) * 100);
+                    setUploadProgress(percentage);
+                    setUploadStatus(`Upload videa: ${percentage}%`);
+                },
+                onSuccess: () => {
+                    setUploadStatus('Video uspešno uploadovan!');
+                    resolve(credentials.videoId);
+                }
+            });
+
+            upload.findPreviousUploads().then((previousUploads) => {
+                if (previousUploads.length) {
+                    upload.resumeFromPreviousUpload(previousUploads[0]);
+                }
+                upload.start();
+            });
+        });
+    };
+
     const handleEditSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('title', editForm.title);
-        formData.append('content', editForm.content);
-        formData.append('course_id', editingLesson.course_id);
-        formData.append('sekcija_id', editForm.sekcija_id);
-
-        if (videoFile) {
-            formData.append('video', videoFile);
-        } else if (editingLesson.video_url) {
-            // Ako ne šaljemo novi video, šaljemo stari URL da se ne bi obrisao
-            formData.append('video_url', editingLesson.video_url);
-        }
+        setIsUploading(true);
+        setUploadProgress(0);
+        setUploadStatus('');
 
         try {
-            await api.put(`/api/lekcije/${editingLesson.id}`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
+            let videoGuid = null;
+
+            // Ako je izabran novi video, uploaduj ga direktno na Bunny
+            if (videoFile) {
+                setUploadStatus('Priprema uploada...');
+                const credentialsResponse = await api.post('/api/lekcije/prepare-upload', {
+                    title: editForm.title
+                });
+                const credentials = credentialsResponse.data;
+
+                setUploadStatus('Započinjem upload videa...');
+                videoGuid = await uploadVideoDirectly(videoFile, credentials);
+            }
+
+            // Šaljemo JSON umesto FormData
+            setUploadStatus('Čuvanje izmena...');
+            await api.put(`/api/lekcije/${editingLesson.id}`, {
+                title: editForm.title,
+                content: editForm.content,
+                course_id: editingLesson.course_id,
+                sekcija_id: editForm.sekcija_id,
+                video_guid: videoGuid // null ako nema novog videa — backend zadržava stari
             });
+
             setIsEditModalOpen(false);
+            setUploadStatus('');
+            setUploadProgress(0);
+            setVideoFile(null);
             await fetchData();
         } catch (error) {
             console.error("Greška pri ažuriranju lekcije:", error);
+            alert(`Greška: ${error.response?.data?.error || error.message}`);
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -300,7 +362,17 @@ const EditKursa = () => {
                                 </select>
                             </label>
                             <label>Zameni Video (opciono): <input type="file" accept="video/*" onChange={handleVideoChange} /></label>
-                            <button type="submit" className="save-button">Sačuvaj Izmene</button>
+                            {isUploading && (
+                                <div className="upload-progress-container">
+                                    <div className="upload-progress-bar">
+                                        <div className="upload-progress-fill" style={{ width: `${uploadProgress}%` }} />
+                                    </div>
+                                    <p className="upload-status">{uploadStatus}</p>
+                                </div>
+                            )}
+                            <button type="submit" className="save-button" disabled={isUploading}>
+                                {isUploading ? 'Čuvanje...' : 'Sačuvaj Izmene'}
+                            </button>
                         </form>
                     </div>
                 </div>

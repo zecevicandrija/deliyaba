@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import api from '../login/api';
 import './Instruktor.css';
 import Zarada from './Zarada';
-import Popust from '../Kupovina/Popust';
 
 const Instruktor = () => {
     const [kursevi, setKursevi] = useState([]);
@@ -110,6 +109,21 @@ const Instruktor = () => {
             <header className="dashboard-header">
                 <h1>Instruktorska Tabla</h1>
                 <p>Dobrodošli, {user?.ime}! Upravljajte svojim kursevima i pratite zaradu.</p>
+                <div style={{display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '15px'}}>
+                    <button className="dodaj-korisnika-btn" onClick={() => navigate('/dodajkorisnika')} style={{margin: 0}}>
+                        <i className="ri-user-add-line"></i> Dodaj Korisnika
+                    </button>
+                    {user?.uloga === 'admin' && (
+                        <>
+                            <button className="dodaj-korisnika-btn" onClick={() => navigate('/edit-korisnika')} style={{margin: 0, backgroundColor: '#34495e'}}>
+                                <i className="ri-group-line"></i> Upravljaj Korisnicima
+                            </button>
+                            <button className="dodaj-korisnika-btn" onClick={() => navigate('/popusti')} style={{margin: 0, backgroundColor: '#007BFF'}}>
+                                <i className="ri-percent-line"></i> Upravljaj Popustima
+                            </button>
+                        </>
+                    )}
+                </div>
             </header>
 
             <div className="dashboard-main-content">
@@ -137,7 +151,6 @@ const Instruktor = () => {
 
                 <div className="dashboard-side-content">
                     <div className="dashboard-widget"><Zarada kursevi={kursevi} /></div>
-                    <div className="dashboard-widget"><Popust /></div>
                 </div>
             </div>
 

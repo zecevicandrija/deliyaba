@@ -13,7 +13,9 @@ import Lekcije from './komponente/Lekcije';
 import MojProfil from './login/MojProfil';
 import KupljenKurs from './komponente/KupljenKurs';
 import Instruktor from './Instruktori/Instruktor';
+import Editkorisnika from './Instruktori/Editkorisnika';
 import ProtectedRoute from './komponente/ProtectedRoutes';
+import PopustDashboard from './Instruktori/PopustDashboard';
 import Nepostojeca from './komponente/Nepostojeca';
 import Studenti from './Instruktori/Studenti';
 import Korpa from './Kupovina/Korpa';
@@ -46,6 +48,8 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             {/* <Route path="/signup" element={<SignUpPage />} /> */}
             <Route path="/dodajkorisnika" element={<ProtectedRoute element={<DodajKorisnika />} allowedRoles={['admin']} />} />
+            <Route path="/edit-korisnika" element={<ProtectedRoute element={<Editkorisnika />} allowedRoles={['admin']} />} />
+            <Route path="/popusti" element={<ProtectedRoute element={<PopustDashboard />} allowedRoles={['admin']} />} />
             <Route path="/kurs/:id" element={<KursDetalj />} />
             <Route path="/lekcije" element={<ProtectedRoute element={<Lekcije />} allowedRoles={['admin', 'instruktor']} />} />
             <Route path="/profil" element={<MojProfil />} />

@@ -1,74 +1,268 @@
-/* Container for the form */
-.dodaj-korisnika-container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
+/* === Dodaj Korisnika — Dark Dashboard Theme === */
+
+.dk-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 2rem 2rem;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 40px;
+}
+
+.dk-container {
+    width: 100%;
+    max-width: 720px;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
     border-radius: 12px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-    background-color: #f9f9f9;
-    transition: background-color 0.3s ease;
+    padding: 2.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    position: relative;
 }
 
-/* Title */
-.dodaj-korisnika-title {
-    font-size: 2rem;
-    color: #333;
+/* --- Back Button --- */
+.dk-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: 1px solid #444;
+    color: #ccc;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 1.5rem;
+}
+
+.dk-back-btn:hover {
+    border-color: #ffa500;
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.05);
+}
+
+/* --- Header --- */
+.dk-header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #ffa500;
 }
 
-/* Form */
-.dodaj-korisnika-form {
+.dk-header-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #ffa500, #ff6a00);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem auto;
+    font-size: 1.6rem;
+    color: #1a1a1a;
+}
+
+.dk-header h1 {
+    font-size: 2rem;
+    color: #ffa500;
+    margin: 0 0 0.5rem 0;
+    font-weight: bold;
+}
+
+.dk-header p {
+    font-size: 1rem;
+    color: #aaa;
+    margin: 0;
+}
+
+/* --- Form --- */
+.dk-form {
     display: flex;
     flex-direction: column;
+    gap: 1.5rem;
 }
 
-/* Input fields */
-.dodaj-korisnika-input {
-    margin-bottom: 20px;
+.dk-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
 }
 
-.dodaj-korisnika-input input {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    background-color: #fff;
+.dk-full-width {
+    grid-column: 1 / -1;
 }
 
-.dodaj-korisnika-input label {
-    color: #555;
-    font-size: 0.9rem;
+/* --- Input Fields --- */
+.dk-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
 }
 
-/* Dropdown select */
-.dodaj-korisnika-select-control {
-    margin-bottom: 20px;
-}
-
-.dodaj-korisnika-select {
-    padding: 12px;
-    border-radius: 8px;
-    background-color: #fff;
-}
-
-/* Button */
-.dodaj-korisnika-submit {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    font-size: 1.1rem;
+.dk-field label {
+    font-size: 0.85rem;
+    color: #aaa;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.dk-field label i {
+    font-size: 1rem;
+    color: #ffa500;
+}
+
+.dk-field input,
+.dk-field select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.dk-field input::placeholder {
+    color: #666;
+}
+
+.dk-field input:focus,
+.dk-field select:focus {
+    border-color: #ffa500;
+    box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.15);
+}
+
+.dk-field select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+}
+
+.dk-field select option {
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+}
+
+/* Date input specific */
+.dk-field input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7);
+    cursor: pointer;
+}
+
+/* --- Feedback --- */
+.dk-feedback {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.dk-feedback.success {
+    background-color: rgba(39, 174, 96, 0.15);
+    border: 1px solid rgba(39, 174, 96, 0.4);
+    color: #2ecc71;
+}
+
+.dk-feedback.error {
+    background-color: rgba(231, 76, 60, 0.15);
+    border: 1px solid rgba(231, 76, 60, 0.4);
+    color: #e74c3c;
+}
+
+/* --- Submit Button --- */
+.dk-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #ffa500, #ff6a00);
+    color: #1a1a1a;
     border: none;
     border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
 }
 
-.dodaj-korisnika-submit:hover {
-    background-color: #0056b3;
+.dk-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 165, 0, 0.4);
 }
 
-/* Form hover effect */
-.dodaj-korisnika-container:hover {
-    background-color: #f0f0f0;
+.dk-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Spinner animation */
+@keyframes dk-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.dk-spin {
+    animation: dk-spin 1s linear infinite;
+}
+
+/* === Responsive === */
+
+@media (max-width: 768px) {
+    .dk-page {
+        padding: 1rem;
+        margin-top: 60px;
+    }
+
+    .dk-container {
+        padding: 1.5rem;
+    }
+
+    .dk-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dk-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .dk-header p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .dk-container {
+        padding: 1rem;
+    }
+
+    .dk-field input,
+    .dk-field select {
+        padding: 0.75rem 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    .dk-submit-btn {
+        font-size: 1rem;
+        padding: 0.85rem;
+    }
 }
