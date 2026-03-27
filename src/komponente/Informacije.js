@@ -5,7 +5,6 @@ import { FiUser, FiMail, FiTag, FiArrowRight, FiPackage, FiCheck, FiAlertCircle 
 import { useAuth } from '../login/auth';
 import api from '../login/api';
 import './Informacije.css';
-import Footer from '../pocetna/Footer.js';
 
 // Logotipi
 import visaSecure from '../images/logotipi/visa-secure_blu_72dpi.jpg';
@@ -452,7 +451,6 @@ const Informacije = () => {
                     </motion.div>
                 </div>
             </div>
-            <Footer />
         </>
     );
 };

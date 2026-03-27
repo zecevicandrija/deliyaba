@@ -8,6 +8,7 @@ import SignUpPage from './login/SignUpPage';
 import DodajKorisnika from './login/DodajKorisnika';
 import { AuthProvider } from './login/auth';
 import Navbar from './Navigacija/Navbar';
+import Footer from './pocetna/Footer';
 import KursDetalj from './komponente/KursDetalj';
 import Lekcije from './komponente/Lekcije';
 import MojProfil from './login/MojProfil';
@@ -73,6 +74,7 @@ const App = () => {
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/nevazeca" element={<Nepostojeca />} />
           </Routes>
+          <Footer />
         </ThemeProvider>
       </AuthProvider>
     </Router>

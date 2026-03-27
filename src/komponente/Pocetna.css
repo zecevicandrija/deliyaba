@@ -35,8 +35,8 @@
 .pocetna-page {
     flex-grow: 1;
     color: var(--tekst-primarni);
-    font-family: "Josefin Sans", sans-serif;
-    overflow-x: hidden;
+    font-family: 'Outfit', sans-serif;
+    overflow-x: clip;
 }
 
 /* CONTAINER (Koristi se kao globalna klasa u svim modulima) */

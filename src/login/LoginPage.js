@@ -48,7 +48,7 @@ const LoginPage = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.2, duration: 0.6 }}
                 >
-                    <img src={animatedbanner} alt="Motion Akademija" className="lpage-banner" />
+                    <img src={animatedbanner} alt="Deliya Barber Academy" className="lpage-banner" />
                     <div className="lpage-banner-overlay" />
                 </motion.div>
 
@@ -63,7 +63,7 @@ const LoginPage = () => {
                         Dobro <span className="lpage-gradient-text">došli</span>
                     </h1>
                     <p className="lpage-subtitle">
-                        Uđite u svet video editinga
+                        Uđite u svet premium frizerstva
                     </p>
                 </motion.div>
 

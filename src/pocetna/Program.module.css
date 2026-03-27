@@ -1,0 +1,341 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+.programsSection {
+  background-color: #FFFFFF;
+  padding: 150px 5%;
+  /* Masivni whitespace odozgo i odozdo */
+  font-family: 'Montserrat', sans-serif;
+  color: #111111;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.sectionHeader {
+  margin-bottom: 30px;
+  opacity: 1;
+  /* Promenjeno na 1 da se uvek vidi dok ne resimo okidac */
+  transform: translateY(0);
+}
+
+.sectionHeader.isVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sectionTitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 700;
+  color: #111111;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.accordionList {
+  width: 100%;
+  border-top: 1px solid #E5E5E5;
+}
+
+.row {
+  border-bottom: 1px solid #E5E5E5;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  /* Promenjeno na 1 da se uvek vidi */
+  transform: translateY(0);
+  clip-path: none;
+}
+
+.row.isVisible {
+  opacity: 1;
+  transform: translateY(0);
+  clip-path: inset(0% 0 0 0);
+}
+
+.row:nth-child(1).isVisible {
+  transition-delay: 0.0s;
+}
+
+.row:nth-child(2).isVisible {
+  transition-delay: 0.1s;
+}
+
+.row:nth-child(3).isVisible {
+  transition-delay: 0.2s;
+}
+
+.row:nth-child(4).isVisible {
+  transition-delay: 0.3s;
+}
+
+.rowHeader {
+  display: flex;
+  align-items: flex-start;
+  padding: 40px 0;
+  position: relative;
+  width: 100%;
+  transition: padding 0.3s ease;
+}
+
+.row:hover .rowHeader {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.index {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  color: #555555;
+  width: 80px;
+  flex-shrink: 0;
+  line-height: 1;
+  padding-top: 0.5rem;
+}
+
+.rowTitle {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 6.5rem);
+  font-weight: 700;
+  color: #111111;
+  margin: 0;
+  text-transform: uppercase;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  transition: color 0.4s ease;
+  flex-grow: 1;
+  word-break: break-word;
+  /* Omogucava lomljenje predugih reci na telefonu */
+  padding-right: 15px;
+  /* Bezbedan prostor do ikonice */
+  will-change: color;
+}
+
+.row:hover .rowTitle {
+  color: #0047AB;
+  /* Kraljevsko plava na hover */
+}
+
+.meta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #555555;
+  margin-left: 20px;
+  margin-right: 20px;
+  text-align: right;
+  padding-top: 0.5rem;
+  /* da bude u ravni sa naslovom */
+}
+
+.toggleIcon {
+  font-size: 2rem;
+  font-weight: 300;
+  color: #111111;
+  transition: transform 0.4s ease, color 0.3s ease;
+  flex-shrink: 0;
+  line-height: 1;
+  padding-top: 0.5rem;
+}
+
+/* Kada je red otvoren nista se ne menja sa ikonicom (na slici je '-' i za otvorene i za zatvorene)  
+   Ako zelimo da reaguje: .row.isOpen .toggleIcon { ... } */
+
+.row:hover .toggleIcon {
+  color: #0047AB;
+}
+
+@media (max-width: 1024px) {
+  .meta {
+    display: none;
+  }
+
+  .rowHeader {
+    padding: 25px 0;
+  }
+
+  .index {
+    width: 50px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .programsSection {
+    padding: 80px 5%;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .rowHeader {
+    padding: 20px 0;
+  }
+
+  .rowTitle {
+    font-size: 2.2rem;
+  }
+
+  .index {
+    width: 40px;
+    font-size: 1rem;
+    padding-top: 0.35rem;
+    /* Bolje poravnanje za manji mobilni font */
+  }
+
+  .toggleIcon {
+    font-size: 1.6rem;
+    padding-top: 0.2rem;
+  }
+}
+
+/* Accordion Content */
+.accordionContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: grid-template-rows;
+}
+
+.accordionContent.isOpen {
+  grid-template-rows: 1fr;
+}
+
+.accordionInner {
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+.contentWrapper {
+  display: grid;
+  grid-template-columns: 4.5fr 5.5fr;
+  gap: 60px;
+  padding-bottom: 50px;
+  padding-left: 80px;
+  /* u ravni sa naslovom (preskace index width) */
+  padding-right: 40px;
+  padding-top: 20px;
+}
+
+@media (max-width: 1024px) {
+  .contentWrapper {
+    grid-template-columns: 1fr;
+    padding-left: 0;
+    padding-right: 0;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .contentWrapper {
+    padding-bottom: 30px;
+    gap: 20px;
+    padding-top: 10px;
+  }
+}
+
+.imageContainer {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #f7f7f7;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(1.2);
+  /* Ostra crno bela tekstura, nema osmeha */
+  border-radius: 0;
+}
+
+.detailsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #111111;
+  margin: 0 0 30px 0;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .desc {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+}
+
+.featureList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 40px 0;
+}
+
+.featureList li {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  color: #333333;
+  padding: 15px 0;
+  border-bottom: 1px solid #E5E5E5;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .featureList {
+    margin: 0 0 25px 0;
+  }
+
+  .featureList li {
+    padding: 12px 0;
+    font-size: 0.95rem;
+  }
+}
+
+.prijaviSe {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #111111;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.3s ease;
+  width: fit-content;
+}
+
+.prijaviSe .arrow {
+  margin-left: 8px;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.prijaviSe:hover {
+  color: #0047AB;
+  /* Plava jedino na interakciju */
+}
+
+.prijaviSe:hover .arrow {
+  transform: translate(5px, -5px);
+}

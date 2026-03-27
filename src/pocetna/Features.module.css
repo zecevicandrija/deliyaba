@@ -1,211 +1,466 @@
-/* Features.module.css */
+/* Features.module.css - ULTRA PREMIUM EDITORIAL LAYOUT */
 
 .section {
     position: relative;
-    padding: 6rem 0;
-    /* Tamna pozadina ali ne crna, da se razlikuje od Hero sekcije */
-    background: linear-gradient(to bottom, transparent 0%, rgba(10, 10, 10, 0.8) 50%, transparent 100%);
+    width: 100%;
+    background: #050505;
+    color: #ffffff;
+    padding: 6rem 0 5rem 0;
     overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+    border-top: 1px solid rgba(20, 94, 173, 0.15);
 }
 
-/* Suptilna mreza u pozadini samo ove sekcije */
-.bgGrid {
+.centralGlow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70vw;
+    height: 70vw;
+    max-width: 900px;
+    max-height: 900px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(10, 25, 60, 0.7) 0%, transparent 60%);
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.globalNoise {
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 30px 30px;
-    opacity: 0.5;
-    z-index: 1;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     pointer-events: none;
+    mix-blend-mode: multiply;
+    z-index: 1;
 }
+
+
+
+.container {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    z-index: 2;
+}
+
+/* =========================================
+   HEADER (EDITORIAL)
+   ========================================= */
 
 .headerWrapper {
-    text-align: center;
-    margin-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto 6rem auto;
 }
 
-/* Naslovi se nasleđuju iz globalnih stilova, ali ih ovde preciziramo */
-.headerWrapper h2 {
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    font-weight: 900;
-    color: white;
-    margin-bottom: 1rem;
-    letter-spacing: -1px;
-}
-
-.headerWrapper p {
-    color: #888;
-    font-size: 1.1rem;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.featuresGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2.5rem;
-    margin-bottom: 4rem;
-}
-
-/* --- THE CARD --- */
-
-.featureCard {
-    position: relative;
-    background: rgba(20, 20, 20, 0.6);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 2.5rem 2rem;
-    overflow: hidden;
-    transition: all 0.4s ease;
-    /* Clip-path za tech oblik (odsecen donji desni ugao) */
-    clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
-}
-
-.featureCard:hover {
-    transform: translateY(-10px);
-    background: rgba(30, 30, 30, 0.8);
-    border-color: rgba(255, 69, 0, 0.3);
-    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
-}
-
-/* Dekorativni broj (01, 02...) */
-.bgNumber {
-    position: absolute;
-    top: -10px;
-    right: 10px;
-    font-size: 6rem;
-    font-weight: 900;
-    color: rgba(255, 255, 255, 0.03);
-    font-family: "Josefin Sans", sans-serif;
-    z-index: 0;
-    transition: transform 0.4s;
-}
-
-.featureCard:hover .bgNumber {
-    transform: scale(1.1) translateX(-10px);
-    color: rgba(255, 69, 0, 0.05);
-}
-
-/* Tech Corners (Cyberpunk detalji) */
-.cornerTopLeft {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20px;
-    height: 20px;
-    border-top: 2px solid rgba(255, 255, 255, 0.2);
-    border-left: 2px solid rgba(255, 255, 255, 0.2);
-    transition: 0.3s;
-}
-
-.cornerBottomRight {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 20px;
-    height: 20px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    border-right: 2px solid rgba(255, 255, 255, 0.2);
-    transition: 0.3s;
-}
-
-.featureCard:hover .cornerTopLeft,
-.featureCard:hover .cornerBottomRight {
-    border-color: var(--narandzasta);
-    width: 100%;
-    /* Linije se sire na hover */
-    height: 100%;
-    opacity: 0.1;
-}
-
-/* Icon Styling */
-.iconWrapper {
-    position: relative;
-    width: 70px;
-    height: 70px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
+.badgeWrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.2rem;
-    color: var(--narandzasta);
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(255, 69, 0, 0.2);
-    z-index: 1;
-    transition: transform 0.3s;
+    align-self: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.featureCard:hover .iconWrapper {
-    transform: scale(1.1) rotate(5deg);
-    background: rgba(255, 69, 0, 0.1);
-    box-shadow: 0 0 20px rgba(255, 69, 0, 0.2);
+.starIcon {
+    color: #3a7fd5;
+    font-size: 0.7rem;
+    opacity: 0.8;
+}
+
+.luxuryTag {
+    display: inline-block;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 8px;
+    color: #3a7fd5;
+    border: 1px solid rgba(20, 94, 173, 0.3);
+    padding: 10px 24px;
+    border-radius: 100px;
+    backdrop-filter: blur(8px);
+    background: rgba(20, 94, 173, 0.05);
+    text-transform: uppercase;
+}
+
+.mainHeading {
+    font-family: 'Bebas Neue Pro Bold', sans-serif;
+    font-size: clamp(5rem, 16vw, 14rem);
+    font-weight: 500;
+    line-height: 1.02;
+    color: #ffffff;
+    letter-spacing: 0em;
+    text-transform: uppercase;
+    margin: 0;
+    text-align: left;
+    position: relative;
+    z-index: 2;
+}
+
+.titleAccent {
+    display: block;
+    font-weight: 500;
+    color: #1c68c2;
+    background: none;
+    font-style: italic;
+    margin-left: 4vw;
+    text-shadow: 0 0 15px rgba(28, 104, 194, 0.6), 0 0 30px rgba(28, 104, 194, 0.4), 0 0 50px rgba(28, 104, 194, 0.2);
+}
+
+
+
+.subtitle {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.05em;
+    max-width: 560px;
+    line-height: 2;
+    font-weight: 400;
+    align-self: center;
+    text-align: center;
+    margin: 2rem auto 0 auto;
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid rgba(58, 127, 213, 0.15);
+    padding-top: 2rem;
+}
+
+.subtitle em {
+    font-style: italic;
+    color: rgba(120, 180, 255, 0.85);
+    font-weight: 500;
+}
+
+/* =========================================
+   GRID & CARDS
+   ========================================= */
+
+.featuresGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+    margin-bottom: 6rem;
+}
+
+.cardWrapper {
+    position: relative;
+    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.05));
+    transition: filter 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    height: 100%;
+}
+
+.cardWrapper:hover {
+    filter: drop-shadow(0 25px 50px rgba(20, 94, 173, 0.15));
+    transform: translateY(-8px);
+}
+
+.featureCard {
+    position: relative;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 3.5rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 360px;
+    height: 100%;
+    /* Subtle inner shadow for depth against dark void */
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Premium Asymmetrical Cutouts */
+.cardWrapper:nth-child(1) .featureCard {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%);
+    border-radius: 12px 12px 0 12px;
+}
+
+.cardWrapper:nth-child(2) .featureCard {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 40px 100%, 0 calc(100% - 40px));
+    border-radius: 12px 12px 12px 0;
+}
+
+.cardWrapper:nth-child(3) .featureCard {
+    clip-path: polygon(40px 0, 100% 0, 100% 100%, 0 100%, 0 40px);
+    border-radius: 0 12px 12px 12px;
+}
+
+.cardWrapper:nth-child(4) .featureCard {
+    clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 0 100%);
+    border-radius: 12px 0 12px 12px;
+}
+
+.cardNoise {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    z-index: 1;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 3rem;
+}
+
+.cardNumber {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    transition: all 0.4s ease;
+}
+
+.cardWrapper:hover .cardNumber {
+    color: #3a7fd5;
+    border-color: rgba(20, 94, 173, 0.4);
+}
+
+.tagLineWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tagLine {
+    height: 1px;
+    width: 30px;
+    background: #3a7fd5;
+    transition: width 0.4s ease;
+}
+
+.cardWrapper:hover .tagLine {
+    width: 50px;
+}
+
+.tag {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.cardContent {
+    position: relative;
+    z-index: 2;
 }
 
 .title {
-    position: relative;
-    z-index: 1;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: white;
+    font-family: 'Bebas Neue Pro Bold', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.95);
     margin-bottom: 1rem;
-    letter-spacing: 0.5px;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    transition: color 0.4s ease;
+}
+
+.cardWrapper:hover .title {
+    color: #3a7fd5;
 }
 
 .text {
-    position: relative;
-    z-index: 1;
-    color: #a0a0a0;
+    color: rgba(255, 255, 255, 0.55);
     font-size: 0.95rem;
-    line-height: 1.6;
+    line-height: 1.7;
+    font-weight: 500;
 }
 
-/* --- CTA BUTTON --- */
+.decorCircle {
+    position: absolute;
+    bottom: -60px;
+    right: -60px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(20, 94, 173, 0.08) 0%, transparent 60%);
+    filter: blur(25px);
+    z-index: 0;
+    transition: all 0.6s ease;
+}
+
+.cardWrapper:hover .decorCircle {
+    transform: scale(1.3);
+    background: radial-gradient(circle, rgba(20, 94, 173, 0.15) 0%, transparent 60%);
+}
+
+/* =========================================
+   CTA BUTTON (EDITORIAL STYLE)
+   ========================================= */
 
 .ctaWrapper {
     display: flex;
     justify-content: center;
-    margin-top: 2rem;
 }
 
 .ctaButton {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    padding: 1rem 3rem;
-    background: transparent;
-    color: var(--narandzasta);
-    border: 1px solid var(--narandzasta);
-    font-weight: 700;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    gap: 1.5rem;
+    padding: 0.6rem 0.6rem 0.6rem 2.5rem;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 100px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.ctaText {
+    font-family: 'Bebas Neue Pro Bold', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.ctaIconCircle {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #3a7fd5;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: transform 0.4s ease;
 }
 
 .ctaButton:hover {
-    background: var(--narandzasta);
-    color: white;
-    box-shadow: 0 0 30px rgba(255, 69, 0, 0.4);
-    transform: translateY(-2px);
+    background: #1a1a1a;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(20, 94, 173, 0.3);
+    transform: translateY(-3px);
 }
 
-/* Responsive */
+.ctaButton:hover .ctaIconCircle {
+    transform: scale(1.05) translateX(2px);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 1024px) {
+    .section {
+        padding: 8rem 0;
+    }
+
+    .featuresGrid {
+        gap: 2rem;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mainHeading {
+        font-size: clamp(4.5rem, 14vw, 8rem);
+    }
+}
 
 @media (max-width: 768px) {
+    .section {
+        padding: 6rem 0;
+    }
+
     .featuresGrid {
         grid-template-columns: 1fr;
-        padding: 0 1rem;
+    }
+
+    .cardWrapper:nth-child(n) .featureCard {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
+        border-radius: 12px 12px 0 12px;
     }
 
     .featureCard {
-        padding: 2rem 1.5rem;
+        padding: 2.5rem 2rem;
+        min-height: auto;
     }
 
-    .bgNumber {
-        font-size: 4rem;
-        top: 0;
+    .badgeWrapper {
+        gap: 0.8rem;
+    }
+
+    .starIcon {
+        font-size: 0.6rem;
+    }
+
+    .headerWrapper {
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .mainHeading {
+        font-size: clamp(3.5rem, 16vw, 8rem);
+        letter-spacing: 0em;
+        text-align: center;
+        line-height: 1.05;
+    }
+
+    .titleAccent {
+        margin-left: 0;
+    }
+
+    .luxuryTag {
+        font-size: 0.6rem;
+        letter-spacing: 4px;
+        padding: 8px 18px;
+    }
+
+    .subtitle {
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+    }
+
+    .ctaButton {
+        padding: 0.5rem 0.5rem 0.5rem 2rem;
+        gap: 1rem;
+    }
+
+    .ctaIconCircle {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mainHeading {
+        font-size: clamp(3rem, 18vw, 5.5rem);
+    }
+
+    .title {
+        font-size: 1.6rem;
+    }
+
+    .cardNumber {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .mainHeading {
+        font-size: clamp(2.5rem, 18vw, 4.5rem);
     }
 }

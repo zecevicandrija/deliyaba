@@ -1,375 +1,330 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { FiPlay, FiScissors, FiMonitor, FiArrowRight, FiAward, FiClock, FiUsers, FiZap, FiChevronDown } from 'react-icons/fi';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { FiChevronDown } from 'react-icons/fi';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Hero.module.css';
 
+gsap.registerPlugin(ScrollTrigger);
+
+const FRAME_COUNT = 81;
+
+function getFramePath(index) {
+    const num = String(index).padStart(3, '0');
+    return require(`../images/deliyaframes2/ezgif-frame-${num}.jpg`);
+}
+
+function lerp(start, end, factor) {
+    return start + (end - start) * factor;
+}
+
 const Hero = ({ navigate }) => {
-    const targetRef = useRef(null);
-    const statsRef = useRef(null);
-    const featuresRef = useRef(null);
-    const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+    const canvasRef = useRef(null);
+    const containerRef = useRef(null);
+    const imagesRef = useRef([]);
+    const targetFrameRef = useRef(0);
+    const currentFrameRef = useRef(0);
+    const rafIdRef = useRef(null);
 
-    // Intersection Observer za scroll animacije
-    const statsInView = useInView(statsRef, { once: true, margin: "-100px" });
-    const featuresInView = useInView(featuresRef, { once: true, margin: "-50px" });
+    const [loadProgress, setLoadProgress] = useState(0);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-
-
-    const { scrollYProgress } = useScroll({
-        target: targetRef,
-        offset: ["start start", "end start"]
-    });
-
-    const yContent = useTransform(scrollYProgress, [0, 1], [0, -80]);
-    const yVideo = useTransform(scrollYProgress, [0, 1], [0, 50]);
-    const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
-    const scale = useTransform(scrollYProgress, [0, 0.3], [1, 0.98]);
-    const parallaxY = useTransform(scrollYProgress, [0, 1], [0, 200]);
-
-    // Animacije za elemente
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.15, delayChildren: 0.2 }
+    // Preload all frames
+    useEffect(() => {
+        let loaded = 0;
+        const images = [];
+        for (let i = 1; i <= FRAME_COUNT; i++) {
+            const img = new Image();
+            img.src = getFramePath(i);
+            img.onload = () => {
+                loaded++;
+                setLoadProgress(Math.round((loaded / FRAME_COUNT) * 100));
+                if (loaded === FRAME_COUNT) setIsLoaded(true);
+            };
+            img.onerror = () => {
+                loaded++;
+                setLoadProgress(Math.round((loaded / FRAME_COUNT) * 100));
+                if (loaded === FRAME_COUNT) setIsLoaded(true);
+            };
+            images.push(img);
         }
-    };
+        imagesRef.current = images;
+    }, []);
 
-    const itemVariants = {
-        hidden: { y: 60, opacity: 0, filter: 'blur(12px)' },
-        visible: {
-            y: 0,
-            opacity: 1,
-            filter: 'blur(0px)',
-            transition: { type: "spring", stiffness: 70, damping: 20 }
+    // Canvas render — DPR + object-fit COVER
+    const renderFrame = useCallback((index) => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const img = imagesRef.current[Math.round(Math.min(Math.max(index, 0), FRAME_COUNT - 1))];
+        if (!img || !img.complete || !img.naturalWidth) return;
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 3);
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
+
+        // Cover algorithm
+        const imgRatio = img.naturalWidth / img.naturalHeight;
+        const canvasRatio = w / h;
+        let dw, dh, dx, dy;
+        if (canvasRatio > imgRatio) {
+            dw = w; dh = w / imgRatio;
+            dx = 0; dy = (h - dh) / 2;
+        } else {
+            dh = h; dw = h * imgRatio;
+            dx = (w - dw) / 2; dy = 0;
         }
-    };
+        ctx.drawImage(img, dx, dy, dw, dh);
+    }, []);
 
-    const videoRevealVariants = {
-        hidden: { scale: 0.8, opacity: 0, rotateX: 15 },
-        visible: {
-            scale: 1,
-            opacity: 1,
-            rotateX: 0,
-            transition: {
-                type: "spring",
-                stiffness: 50,
-                damping: 20,
-                delay: 0.4
-            }
+    useEffect(() => {
+        if (isLoaded) {
+            // Animacija ulaska teksta odozdo sa Clip Path-om
+            gsap.fromTo([`.${styles.titleLayer1}`, `.${styles.titleLayer2}`, `.${styles.topLabel}`, `.${styles.canvasSubtitle}`],
+                { y: 100, opacity: 0, clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)' },
+                {
+                    y: 0,
+                    opacity: 1,
+                    clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+                    duration: 1.2,
+                    ease: 'expo.out',
+                    delay: 0.2 
+                }
+            );
         }
-    };
+    }, [isLoaded]);
 
-    const statVariants = {
-        hidden: { scale: 0, opacity: 0 },
-        visible: (i) => ({
-            scale: 1,
-            opacity: 1,
-            transition: {
-                type: "spring",
-                stiffness: 100,
-                delay: i * 0.1
+    // LERP loop
+    useEffect(() => {
+        if (!isLoaded) return;
+
+        const isMobile = window.innerWidth <= 1024;
+        const lerpFactor = isMobile ? 0.02 : 0.01;
+
+        const tick = () => {
+            const diff = Math.abs(currentFrameRef.current - targetFrameRef.current);
+            if (diff > 0.01) {
+                currentFrameRef.current = lerp(currentFrameRef.current, targetFrameRef.current, lerpFactor);
+                renderFrame(currentFrameRef.current);
             }
-        })
-    };
+            rafIdRef.current = requestAnimationFrame(tick);
+        };
 
-    const featureVariants = {
-        hidden: { x: -50, opacity: 0 },
-        visible: (i) => ({
-            x: 0,
-            opacity: 1,
-            transition: {
-                type: "spring",
-                stiffness: 80,
-                delay: i * 0.15
+        rafIdRef.current = requestAnimationFrame(tick);
+
+        return () => {
+            if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+        };
+    }, [isLoaded, renderFrame]);
+
+    // GSAP ScrollTrigger
+    useEffect(() => {
+        if (!isLoaded) return;
+        renderFrame(0);
+
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: 1.5,
+                    onUpdate: (self) => {
+                        targetFrameRef.current = self.progress * (FRAME_COUNT - 1);
+                    },
+                }
+            });
+
+            // Title fades out from 0% to 15% progress
+            tl.fromTo(`.${styles.overlayTitle}`,
+                { opacity: 1, scale: 1, filter: 'blur(0px)' },
+                {
+                    opacity: 0,
+                    scale: 1.3,
+                    filter: 'blur(12px)',
+                    duration: 0.15,
+                    ease: 'power2.in'
+                },
+                0
+            );
+
+            // Mid fades in from 25% to 40%
+            tl.fromTo(`.${styles.overlayMid}`,
+                { opacity: 0, y: 60 },
+                { opacity: 1, y: 0, duration: 0.15, ease: 'power1.out' },
+                0.25
+            );
+
+            // Mid fades out from 45% to 55%
+            tl.to(`.${styles.overlayMid}`,
+                { opacity: 0, y: -60, duration: 0.10, ease: 'power1.in' },
+                0.45
+            );
+
+            // End fades in from 60% to 75%
+            tl.fromTo(`.${styles.overlayEnd}`,
+                { opacity: 0, y: 60 },
+                { opacity: 1, y: 0, duration: 0.15, ease: 'power1.out' },
+                0.60
+            );
+        }, containerRef);
+
+        let lastWidth = window.innerWidth;
+        const handleResize = () => {
+            renderFrame(currentFrameRef.current);
+            if (window.innerWidth !== lastWidth) {
+                lastWidth = window.innerWidth;
+                ScrollTrigger.refresh();
             }
-        })
-    };
+        };
+        window.addEventListener('resize', handleResize);
 
-
-
-    const particles = Array.from({ length: 20 }, (_, i) => i);
-
-    const stats = [
-        { number: "40+", label: "Video Lekcija", icon: FiPlay },
-        { number: "Pro", label: "Premiere & AE", icon: FiAward },
-        { number: "2", label: "LIVE Poziva", icon: FiUsers },
-        { number: "24/7", label: "Podrška", icon: FiClock }
-    ];
-
-    const features = [
-        { icon: FiZap, text: "Od početnika do profesionalca" },
-        { icon: FiScissors, text: "Praktični projekti i vežbe" },
-        { icon: FiMonitor, text: "Pristup sa svih uređaja" }
-    ];
+        return () => {
+            ctx.revert();
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [isLoaded, renderFrame]);
 
     return (
-        <section className={styles.heroSection} ref={targetRef}>
-
-            {/* === LUXURY ANIMATED BACKGROUND === */}
-            <div className={styles.luxuryBackground}>
-                {/* Animated gradient orbs */}
-                <motion.div className={styles.gradientOrb1} style={{ y: parallaxY }} />
-                <motion.div className={styles.gradientOrb2} style={{ y: parallaxY }} />
-                <motion.div className={styles.gradientOrb3} style={{ y: parallaxY }} />
-
-                {/* Grid overlay */}
-                <div className={styles.gridOverlay}></div>
-
-                {/* Floating particles */}
-                <div className={styles.particleField}>
-                    {particles.map((i) => (
-                        <div key={i} className={styles.luxuryParticle}></div>
-                    ))}
-                </div>
-
-                {/* Scan line effect */}
-                <div className={styles.scanEffect}></div>
-
-                {/* Noise texture */}
-                <div className={styles.noiseTexture}></div>
-
-                {/* Edge glow */}
-                <div className={styles.edgeGlowTop}></div>
-                <div className={styles.edgeGlowBottom}></div>
-            </div>
-
-            <div className="container" style={{ position: 'relative', zIndex: 10 }}>
-                <motion.div
-                    className={styles.heroContent}
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    style={{ opacity, scale }}
-                >
-                    {/* === TOP BADGE === */}
-                    <motion.div
-                        variants={itemVariants}
-                        className={styles.luxuryBadge}
-                    >
-                        <span className={styles.badgePulse}></span>
-                        <span className={styles.badgeText}>MOTION AKADEMIJA</span>
-                        <span className={styles.badgeGlow}></span>
-                    </motion.div>
-
-                    {/* === MAIN TITLE === */}
-                    <motion.h1
-                        variants={itemVariants}
-                        className={styles.heroTitle}
-                    >
-                        UNOVČI SVOJU
-                        <br />
-                        <span className={styles.titleHighlight}>KREATIVNOST</span>
-                    </motion.h1>
-
-                    {/* === SUBTITLE === */}
-                    <motion.p variants={itemVariants} className={styles.heroSubtitle}>
-                        Jedan korak te deli od karijere video editora koja ti daje
-                        <span className={styles.textGlow}> slobodu </span>
-                        i život kakav želiš.
-                    </motion.p>
-
-                    {/* === CENTERED VIDEO SHOWCASE === */}
-                    <motion.div
-                        className={styles.videoShowcase}
-                        variants={videoRevealVariants}
-                        style={{ y: yVideo }}
-                    >
-                        <div className={styles.videoContainer}>
-                            {/* Outer glow ring */}
-                            <div className={styles.videoGlowRing}></div>
-
-                            {/* Video card */}
-                            <motion.div
-                                className={styles.videoCard}
-                                onClick={() => !isVideoPlaying && setIsVideoPlaying(true)}
-                                whileHover={!isVideoPlaying ? { scale: 1.02 } : {}}
-                                whileTap={!isVideoPlaying ? { scale: 0.98 } : {}}
-                            >
-                                {isVideoPlaying ? (
-                                    <iframe
-                                        width="100%"
-                                        height="100%"
-                                        src="https://www.youtube.com/embed/CnHr9cZlSBU?si=CAXspSr-SuqgOpUv&autoplay=1"
-                                        title="Video Uvod"
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        className={styles.videoIframe}
-                                    ></iframe>
-                                ) : (
-                                    <>
-                                        <img
-                                            src="https://andrijatest.b-cdn.net/slika-kursa-1752491711321-motionacademybanner.png"
-                                            alt="Uvodni video"
-                                            className={styles.videoThumbnail}
-                                        />
-
-                                        <div className={styles.videoOverlay}>
-                                            <motion.div
-                                                className={styles.playButton}
-                                                animate={{
-                                                    boxShadow: [
-                                                        "0 0 0 0 rgba(255, 69, 0, 0.7)",
-                                                        "0 0 0 30px rgba(255, 69, 0, 0)",
-                                                        "0 0 0 0 rgba(255, 69, 0, 0)"
-                                                    ]
-                                                }}
-                                                transition={{
-                                                    duration: 2,
-                                                    repeat: Infinity,
-                                                    ease: "easeOut"
-                                                }}
-                                            >
-                                                <FiPlay className={styles.playIcon} />
-                                            </motion.div>
-                                            <span className={styles.watchText}>POGLEDAJ UVOD</span>
-                                            <span className={styles.videoDuration}>05:32</span>
-                                        </div>
-
-                                        {/* Scan effect on video */}
-                                        <div className={styles.videoScan}></div>
-                                    </>
-                                )}
-
-                                {/* Corner decorations */}
-                                <div className={`${styles.cornerBracket} ${styles.cornerTL}`}></div>
-                                <div className={`${styles.cornerBracket} ${styles.cornerTR}`}></div>
-                                <div className={`${styles.cornerBracket} ${styles.cornerBL}`}></div>
-                                <div className={`${styles.cornerBracket} ${styles.cornerBR}`}></div>
-                            </motion.div>
-
+        <>
+            {/* LOADING SCREEN */}
+            {!isLoaded && (
+                <div className={styles.loadingScreen}>
+                    <div className={styles.loaderContent}>
+                        <div className={styles.loaderLogo}>DELIYA</div>
+                        <div className={styles.progressBar}>
+                            <div
+                                className={styles.progressFill}
+                                style={{ width: `${loadProgress}%` }}
+                            />
                         </div>
-
-                        {/* Floating tech elements - always visible below video */}
-                        <div className={styles.floatingCardsContainer}>
-                            <motion.div
-                                className={styles.floatingCard}
-                                animate={{ y: [0, -8, 0] }}
-                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                            >
-                                <FiMonitor />
-                                <span>After Effects</span>
-                            </motion.div>
-
-                            <motion.div
-                                className={styles.floatingCard}
-                                animate={{ y: [0, -8, 0] }}
-                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                            >
-                                <FiScissors />
-                                <span>Premiere</span>
-                            </motion.div>
-
-                            <motion.div
-                                className={styles.floatingCard}
-                                animate={{ y: [0, -8, 0] }}
-                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                            >
-                                <FiZap />
-                                <span>Personal Brand</span>
-                            </motion.div>
-                        </div>
-                    </motion.div>
-
-                    {/* === CTA BUTTONS === */}
-                    <motion.div variants={itemVariants} className={styles.ctaSection}>
-                        <motion.button
-                            className={styles.primaryCta}
-                            onClick={() => navigate('/paket')}
-                            whileHover={{ scale: 1.03, y: -4 }}
-                            whileTap={{ scale: 0.97 }}
-                        >
-                            <span>PRIDRUŽI SE ODMAH</span>
-                            <FiArrowRight className={styles.ctaIcon} />
-                            <div className={styles.ctaShine}></div>
-                        </motion.button>
-
-                        <motion.button
-                            className={styles.secondaryCta}
-                            whileHover={{ scale: 1.02, borderColor: 'var(--narandzasta)' }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <span>POGLEDAJ PROGRAM</span>
-                            <FiChevronDown className={styles.ctaIconSecondary} />
-                        </motion.button>
-                    </motion.div>
-
-                    {/* === FEATURES ROW === */}
-                    <motion.div
-                        ref={featuresRef}
-                        className={styles.featuresRow}
-                    >
-                        {features.map((feature, i) => (
-                            <motion.div
-                                key={i}
-                                className={styles.featureItem}
-                                custom={i}
-                                initial="hidden"
-                                animate={featuresInView ? "visible" : "hidden"}
-                                variants={featureVariants}
-                            >
-                                <feature.icon className={styles.featureIcon} />
-                                <span>{feature.text}</span>
-                            </motion.div>
-                        ))}
-                    </motion.div>
-                </motion.div>
-
-                {/* === STATS SECTION (SCROLL REVEAL) === */}
-                <motion.div
-                    ref={statsRef}
-                    className={styles.statsSection}
-                    style={{ y: yContent }}
-                >
-                    <div className={styles.statsGrid}>
-                        {stats.map((stat, i) => (
-                            <motion.div
-                                key={i}
-                                className={styles.statCard}
-                                custom={i}
-                                initial="hidden"
-                                animate={statsInView ? "visible" : "hidden"}
-                                variants={statVariants}
-                                whileHover={{
-                                    y: -8,
-                                    scale: 1.05,
-                                    boxShadow: "0 20px 40px rgba(255, 69, 0, 0.2)"
-                                }}
-                            >
-                                <div className={styles.statIconWrapper}>
-                                    <stat.icon className={styles.statIcon} />
-                                </div>
-                                <h3 className={styles.statNumber}>{stat.number}</h3>
-                                <p className={styles.statLabel}>{stat.label}</p>
-                                <div className={styles.statGlow}></div>
-                            </motion.div>
-                        ))}
+                        <span className={styles.progressText}>{loadProgress}%</span>
                     </div>
-                </motion.div>
+                </div>
+            )}
 
-                {/* === SCROLL INDICATOR === */}
-                <motion.div
-                    className={styles.scrollIndicator}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.5 }}
-                >
-                    <motion.div
-                        className={styles.scrollMouse}
-                        animate={{ y: [0, 8, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                        <div className={styles.scrollWheel}></div>
-                    </motion.div>
-                    <span>SKROLUJ</span>
-                </motion.div>
+            {/* SCROLLYTELLING — tall container, sticky canvas */}
+            <div className={styles.scrollContainer} ref={containerRef}>
+                <div className={styles.canvasWrapper}>
+
+                    <canvas ref={canvasRef} className={styles.stickyCanvas} />
+
+                    {/* PREMIJUM OVERLAY ZA BOLJU ČITLJIVOST TEKSTA */}
+                    <div className={styles.canvasOverlay} />
+                    {/* FILM GRAIN - DODATNA TEKSTURA */}
+                    <div className={styles.noiseOverlay} />
+
+                    {/* DEKORATIVNI EKRANSKI OKVIR */}
+                    <div className={styles.frameDecoration}>
+                        <div className={`${styles.frameCorner} ${styles.topLeft}`} />
+                        <div className={`${styles.frameCorner} ${styles.topRight}`} />
+                        <div className={`${styles.frameCorner} ${styles.bottomLeft}`} />
+                        <div className={`${styles.frameCorner} ${styles.bottomRight}`} />
+                        <div className={styles.frameBorderLeft} />
+                        <div className={styles.frameBorderRight} />
+                    </div>
+
+                    {/* TEXT STACK: ISPRED MAŠINICE (Z-Index 10) */}
+                    <div className={styles.overlayTitle}>
+                        <div className={styles.heroTextContainer}>
+                            <div className={styles.topLabelWrapper}>
+                                <span className={styles.topLabel}>DELIYA MASTERCLASS</span>
+                            </div>
+                            <h1 className={styles.titleLayer1}>
+                                OVLADAJ
+                            </h1>
+                            <h1 className={styles.titleLayer2}>
+                                ZANATOM.
+                            </h1>
+                            <p className={styles.canvasSubtitle}>
+                                Od početnika do sigurnog barbera kroz jasan sistem rada i praksu.
+                            </p>
+                        </div>
+                        <div className={styles.scrollArrowWrapper}>
+                            <motion.div
+                                animate={{ y: [0, 15, 0] }}
+                                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                                <FiChevronDown />
+                            </motion.div>
+                        </div>
+                    </div>
+
+                    <div className={styles.overlayMid}>
+                        <div className={`${styles.glossyCard} ${styles.cardTopLeft}`}>
+                            <div className={styles.cardHeader}>
+                                <div className={styles.cardDot}></div>
+                                <h3 className={styles.cardTitle}>BEZ KOMPROMISA</h3>
+                            </div>
+                            <div className={styles.cardBody}>
+                                <div className={styles.cardValueWrapper}>
+                                    <span className={styles.cardValue}>0.1</span>
+                                    <div className={styles.cardUnitWrapper}>
+                                        <span className={styles.cardUnit}>mm</span>
+                                        <span className={styles.cardSubUnit}>PRECISION</span>
+                                    </div>
+                                </div>
+                                <p className={styles.cardDesc}>
+                                    Preciznost u svakom rezu. Naš fokus je na najsitnijim
+                                    detaljima koji odvajaju dobre od najboljih majstora.
+                                </p>
+                            </div>
+                            <div className={styles.cardGraphic}></div>
+                        </div>
+
+                        <div className={`${styles.glossyCard} ${styles.cardBotRight}`}>
+                            <div className={styles.cardHeader}>
+                                <div className={styles.cardDot}></div>
+                                <h3 className={styles.cardTitle}>FOKUS NA PRAKSU</h3>
+                            </div>
+                            <div className={styles.cardBody}>
+                                <div className={styles.cardValueWrapper}>
+                                    <span className={styles.cardValue}>100</span>
+                                    <div className={styles.cardUnitWrapper}>
+                                        <span className={styles.cardUnit}>%</span>
+                                        <span className={styles.cardSubUnit}>PRAKTIČAN RAD</span>
+                                    </div>
+                                </div>
+                                <p className={styles.cardDesc}>
+                                    Zaboravi na suvu teoriju. Učiš direktno kroz rad na modelima
+                                    uz posvećeno mentorstvo od prvog do poslednjeg poteza.
+                                </p>
+                            </div>
+                            <div className={styles.cardGraphic}></div>
+                        </div>
+                    </div>
+
+                    <div className={styles.overlayEnd}>
+                        <div className={styles.heroTextContainerCentered}>
+                            <div className={styles.topLabelWrapper}>
+                                <span className={styles.topLabel}>TVOJA KARIJERA</span>
+                            </div>
+                            <h1 className={`${styles.titleLayer1} ${styles.titleEnd1}`}>
+                                PODIGNI SVOJ
+                            </h1>
+                            <h1 className={`${styles.titleLayer2} ${styles.titleEnd2}`}>
+                                STANDARD.
+                            </h1>
+
+                            <div className={styles.ctaWrapper}>
+                                <button className={styles.ctaButton} onClick={() => navigate('/paket')}>
+                                    PRIDRUŽI SE
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-
-        </section>
+        </>
     );
 };
 

@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { RiInstagramLine, RiYoutubeLine, RiArrowUpLine, RiMailLine } from 'react-icons/ri';
+import { FiInstagram, FiYoutube, FiArrowUp, FiMail } from 'react-icons/fi';
 import styles from './Footer.module.css';
+import deliyaLogo from '../images/deliyalogos/White_AC.png';
 
 const Footer = () => {
 
@@ -15,45 +16,40 @@ const Footer = () => {
 
     return (
         <footer className={styles.footer}>
-            {/* Laser linija na vrhu */}
-            <div className={styles.topLine}></div>
-            <div className={styles.topGlow}></div>
-
-            <div className="container">
+            <div className={styles.container}>
                 <div className={styles.footerContent}>
 
-                    {/* 1. Brend Kolona */}
+                    {/* 1. Brand Column */}
                     <div className={styles.brandColumn}>
-                        <h3 className={styles.logoText}>MOTION AKADEMIJA<span className={styles.dot}>.</span></h3>
+                        <img src={deliyaLogo} alt="Deliya Barber Academy" className={styles.footerLogo} />
                         <p className={styles.tagline}>
-                            Tvoja prečica do profesionalne karijere video editora.
-                            Bez lutanja, direktno do rezultata.
+                            Ekskluzivna edukacija za moderne frizere. Savladaj tehniku, unapredi poslovanje i izgradi premium brend.
                         </p>
                         <div className={styles.contactItem}>
-                            <RiMailLine />
-                            <span>motionfilip@gmail.com</span>
+                            <FiMail />
+                            <a href="mailto:info@akademija.com" className={styles.contactLink}>info@akademija.com</a>
                         </div>
                     </div>
 
-                    {/* 2. Linkovi Kolona */}
+                    {/* 2. Links Column */}
                     <div className={styles.linksColumn}>
                         <h4>PRAVILA</h4>
                         <div className={styles.linksList}>
-                            <a href="/tos" className={styles.link}>Uslovi Korišćenja</a>
-                            <a href="/privacy-policy" className={styles.link}>Politika Privatnosti</a>
-                            <a href="/refund-policy" className={styles.link}>Politika Povraćaja Novca</a>
+                            <a href="/" className={styles.link}>Uslovi Korišćenja</a>
+                            <a href="/" className={styles.link}>Politika Privatnosti</a>
+                            <a href="/" className={styles.link}>Politika Povraćaja Novca</a>
                         </div>
                     </div>
 
-                    {/* 3. Socials Kolona */}
+                    {/* 3. Socials Column */}
                     <div className={styles.socialColumn}>
                         <h4>PRATI NAS</h4>
                         <div className={styles.socialGrid}>
-                            <a href="https://www.instagram.com/filip.motion" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className={styles.socialIcon}>
-                                <RiInstagramLine />
+                            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className={styles.socialIcon}>
+                                <FiInstagram />
                             </a>
-                            <a href="https://youtube.com/@filipmotion?si=LJx1cRMc10qlkxkq" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className={styles.socialIcon}>
-                                <RiYoutubeLine />
+                            <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className={styles.socialIcon}>
+                                <FiYoutube />
                             </a>
                         </div>
                     </div>
@@ -62,12 +58,16 @@ const Footer = () => {
                 {/* Footer Bottom */}
                 <div className={styles.footerBottom}>
                     <p className={styles.copyright}>
-                        © {new Date().getFullYear()} Motion Akademija
+                        © {new Date().getFullYear()} Barber Akademija. Sva prava zadržana.
                     </p>
-
-                    <button onClick={scrollToTop} className={styles.backToTop} aria-label="Back to top">
-                        <RiArrowUpLine />
-                    </button>
+                    <div className={styles.bottomRight}>
+                        <p className={styles.devCredit}>
+                            Dizajn i razvoj: <a href="https://zecevicdev.com" target="_blank" rel="noopener noreferrer" className={styles.devLink}>zecevicdev.com</a>
+                        </p>
+                        <button onClick={scrollToTop} className={styles.backToTop} aria-label="Back to top">
+                            <FiArrowUp />
+                        </button>
+                    </div>
                 </div>
             </div>
         </footer>

@@ -1,0 +1,331 @@
+/* Paket.module.css */
+.section {
+    width: 100%;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 120px 0;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    padding: 0 40px;
+    margin-bottom: 20px;
+}
+
+.headerTitle {
+    font-family: 'Space Mono', 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #666666;
+    margin: 0;
+}
+
+.rows {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-top: 1px solid #333333;
+}
+
+/* Red */
+.row {
+    display: grid;
+    grid-template-columns: 3fr 3fr 4fr 2fr;
+    align-items: center;
+    padding: 50px 40px;
+    border-bottom: 1px solid #333333;
+    transition: background-color 0.4s ease, border-color 0.4s ease;
+    cursor: none;
+    /* Hide default cursor to show custom one */
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.row:hover {
+    background-color: #0A0A0A;
+    /* Ekstremno tamna hladna siva */
+    border-bottom-color: #ffffff;
+    /* Zasvetli u čisto belu na dnu reda */
+}
+
+/* Kolona 1 */
+.col1 {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tier {
+    font-family: 'Space Mono', 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: #666666;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.tierRecommended {
+    color: #0047AB;
+    /* The Anchor - Kraljevsko plava boja */
+    font-weight: 700;
+}
+
+.name {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0;
+    line-height: 1;
+    color: #ffffff;
+}
+
+/* Kolona 2 */
+.col2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: #aaaaaa;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+/* Kolona 3 */
+.col3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    color: #cccccc;
+    letter-spacing: 0.05em;
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+/* Kolona 4 */
+.col4 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.priceWrapper {
+    display: flex;
+    align-items: flex-start;
+    color: #ffffff;
+}
+
+.currency {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-top: 10px;
+    margin-right: 6px;
+}
+
+.price {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 5.5rem;
+    font-weight: 500;
+    line-height: 0.85;
+}
+
+.action {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    font-family: 'Space Mono', 'Courier New', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    color: #ffffff;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.row:hover .action {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+.row:hover .arrow {
+    transform: translateX(5px) translateY(-5px);
+}
+
+/* Custom Cursor */
+.customCursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 120px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.customCursor.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.cursorText {
+    color: #000000;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+/* The Stack - Mobile Responsiveness */
+@media (max-width: 1200px) {
+    .row {
+        grid-template-columns: 2.5fr 2fr 3.5fr 2fr;
+    }
+}
+
+@media (max-width: 1024px) {
+    .row {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        padding: 50px 40px;
+    }
+
+    .col3 {
+        grid-column: 1 / -1;
+    }
+
+    .col4 {
+        grid-column: 1 / -1;
+        align-items: flex-start;
+    }
+
+    .action {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .section {
+        padding: 80px 0;
+    }
+
+    .header {
+        margin-bottom: 20px;
+        padding: 0 40px;
+    }
+
+    .rows {
+        border-top: none;
+    }
+
+    /* Kinetički The Stack na telefonu */
+    .row {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 60px 40px;
+        /* Minimum 40px unutrašnjeg paddinga za blok */
+        gap: 24px;
+        border-top: none;
+        border-bottom: 1px solid #333333;
+        cursor: auto;
+        /* Default kursor na telefonu */
+    }
+
+    .col1 {
+        width: 100%;
+        order: 1;
+        gap: 16px;
+    }
+
+    .tier {
+        letter-spacing: 0.2em;
+    }
+
+    .name {
+        font-size: 2.5rem;
+    }
+
+    .col2 {
+        width: 100%;
+        order: 2;
+        font-size: 0.8rem;
+        letter-spacing: 0.15em;
+        color: #888888;
+    }
+
+    .col3 {
+        width: 100%;
+        order: 3;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #e0e0e0;
+    }
+
+    .col4 {
+        width: 100%;
+        order: 4;
+        align-items: flex-end;
+        /* Cena ide na dno gigantska, poravno udesno */
+        margin-top: 10px;
+    }
+
+    .price {
+        font-size: 4.5rem;
+    }
+
+    .action {
+        opacity: 1;
+        transform: translateY(0);
+        margin-top: 15px;
+    }
+
+    .customCursor {
+        display: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .row {
+        padding: 50px 30px;
+    }
+
+    .header {
+        padding: 0 30px;
+    }
+
+    .name {
+        font-size: 2rem;
+    }
+
+    .price {
+        font-size: 3.8rem;
+    }
+}

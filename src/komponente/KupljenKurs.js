@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../login/api";
 import { useAuth } from "../login/auth";
 import "./KupljenKurs.css";
-import reactkurs from '../images/reactkurs.png';
+import reactkurs from '../images/csskurs.png';
 import keyikonica from '../icons/key.png';
 import moneybag from '../icons/money-bag.png';
 import wave from '../icons/wave-sound.png';

@@ -1,74 +1,146 @@
-/* FAQ.module.css */
+/* FAQ.module.css - ULTRA PREMIUM EDITORIAL LAYOUT */
 
 .section {
-    padding: 1rem 0;
-    /* NEMA BACKGROUND BOJE/SLIKE - Ostavljamo prozirno */
-    background: transparent;
+    position: relative;
+    width: 100%;
+    /* Lepa, elegantna toplo-bela boja */
+    background: #faf8f5;
+    color: rgba(17, 17, 17, 0.87);
+    padding: 8rem 0 10rem 0;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+}
+
+.globalNoise {
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    z-index: 1;
+}
+
+
+
+.container {
+    position: relative;
+    max-width: 1000px;
+    /* Narrower for elegant text reading */
+    margin: 0 auto;
+    padding: 0 2rem;
+    z-index: 2;
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto 6rem auto;
+}
+
+.badgeWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
-.header {
+.starIcon {
+    color: #3a7fd5;
+    font-size: 0.7rem;
+    opacity: 0.8;
+}
+
+.luxuryTag {
+    display: inline-block;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 8px;
+    color: #3a7fd5;
+    border: 1px solid rgba(20, 94, 173, 0.3);
+    padding: 10px 24px;
+    border-radius: 100px;
+    backdrop-filter: blur(8px);
+    background: rgba(20, 94, 173, 0.05);
+    text-transform: uppercase;
+}
+
+.mainHeading {
+    font-family: 'Bebas Neue Pro Bold', sans-serif;
+    font-size: clamp(5rem, 16vw, 14rem);
+    font-weight: 500;
+    line-height: 1.02;
+    color: rgba(17, 17, 17, 0.87);
+    letter-spacing: 0em;
+    text-transform: uppercase;
+    margin: 0;
+    text-align: left;
+}
+
+.titleAccent {
+    display: block;
+    font-weight: 500;
+    color: #1c68c2;
+    background: none;
+    font-style: italic;
+    margin-left: 4vw;
+    text-shadow: 0 0 15px rgba(28, 104, 194, 0.6), 0 0 30px rgba(28, 104, 194, 0.4), 0 0 50px rgba(28, 104, 194, 0.2);
+}
+
+
+
+.subtitle {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.88rem;
+    color: rgba(17, 17, 17, 0.65);
+    letter-spacing: 0.05em;
+    max-width: 560px;
+    line-height: 2;
+    font-weight: 400;
+    align-self: center;
     text-align: center;
-    margin-bottom: 4rem;
+    margin: 2rem auto 0 auto;
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid rgba(20, 94, 173, 0.15);
+    padding-top: 2rem;
 }
 
-/* Naslovi se nasleđuju iz globalnih stilova, ali ih ovde preciziramo */
-.header h2 {
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    font-weight: 900;
-    color: white;
-    margin-bottom: 1rem;
-    letter-spacing: -1px;
+.subtitle em {
+    font-style: italic;
+    color: #145ead;
+    font-weight: 500;
 }
 
-.header p {
-    color: #888;
-    font-size: 1.1rem;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.iconWrapper {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    margin-bottom: 1.5rem;
-    font-size: 1.8rem;
-    color: var(--narandzasta);
-    box-shadow: 0 0 20px rgba(255, 69, 0, 0.2);
-}
-
-/* --- FAQ LIST --- */
+/* =========================================
+   FAQ LIST & ITEMS
+   ========================================= */
 
 .faqList {
-    max-width: 800px;
-    margin: 0 auto 4rem auto;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    margin-bottom: 5rem;
 }
 
 .faqItem {
-    position: relative;
-    /* Glass efekat */
-    background: rgba(20, 20, 20, 0.6);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: all 0.3s ease;
+    background: transparent;
+    border-bottom: 1px solid rgba(20, 94, 173, 0.3);
+    transition: all 0.4s ease;
 }
 
 .faqItem.active {
-    background: rgba(30, 30, 30, 0.8);
-    border-color: rgba(255, 69, 0, 0.5);
-    /* Narandzasti border kad je otvoren */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-bottom-color: rgba(20, 94, 173, 1);
 }
 
 .questionButton {
@@ -76,99 +148,309 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem 2rem;
+    padding: 2rem 0;
     background: transparent;
     border: none;
     cursor: pointer;
-    color: white;
     text-align: left;
+    color: rgba(17, 17, 17, 0.87);
 }
 
 .questionContent {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
 .indexNumber {
-    font-family: 'Orbitron', monospace;
-    /* Tech font za broj */
-    color: var(--narandzasta);
-    opacity: 0.7;
-    font-size: 0.9rem;
-    font-weight: 700;
+    font-family: 'Bebas Neue Pro Bold', sans-serif;
+    font-weight: 300;
+    font-size: 1.2rem;
+    color: #3a7fd5;
+    min-width: 30px;
 }
 
 .questionText {
-    font-size: 1.1rem;
-    font-weight: 600;
-    line-height: 1.4;
+    font-family: 'Bebas Neue Pro Bold', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.5px;
+    transition: color 0.3s ease;
 }
 
-/* Ikonica (+ / -) */
+.questionButton:hover .questionText {
+    color: #3a7fd5;
+}
+
 .iconContainer {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    color: #a0a0a0;
+    color: #1a1a1a;
     font-size: 1.2rem;
-    transition: all 0.3s;
-    flex-shrink: 0;
-    /* Da se ne spljosti na mobilnom */
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    background: rgba(20, 94, 173, 0.05);
 }
 
 .faqItem.active .iconContainer {
-    background: var(--narandzasta);
-    color: white;
+    background: #3a7fd5;
+    color: #fff;
     transform: rotate(180deg);
 }
 
-/* --- ANSWER ANIMATION --- */
+/* =========================================
+   ANSWER ANIMATION
+   ========================================= */
 
 .answerWrapper {
     overflow: hidden;
 }
 
 .answerContent {
-    padding: 0 2rem 2rem 4rem;
-    /* Uvuceno da prati tekst pitanja */
-    color: #b0b0b0;
-    line-height: 1.7;
-    font-size: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    margin-top: -0.5rem;
-    /* Malo podignemo border */
-    padding-top: 1.5rem;
+    padding: 2.5rem 3rem;
+    margin: 1rem 0 2.5rem 4rem;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 0.5px solid rgba(20, 94, 173, 0.5);
+    border-radius: 8px;
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.03),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Dekorativni marker u uglu */
-.cornerMarker {
+.answerContent::before {
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 0%;
-    background: var(--narandzasta);
-    transition: height 0.3s ease;
+    inset: 0;
+    opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    border-radius: inherit;
+    mix-blend-mode: multiply;
 }
 
-.faqItem.active .cornerMarker {
-    height: 100%;
+.answerContent:hover {
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.05),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
 }
+
+.answerDivider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 120px;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+}
+
+.answerDividerLine {
+    height: 1px;
+    background: #3a7fd5;
+    flex: 1;
+}
+
+.answerContent p {
+    color: rgba(17, 17, 17, 0.6);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    font-weight: 400;
+    /* Podebljano zbog smanjene prozirnosti */
+    max-width: 650px;
+    margin: 0;
+}
+
+/* =========================================
+   CTA BUTTON
+   ========================================= */
 
 .ctaWrapper {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 6rem;
 }
 
-/* --- RESPONSIVE --- */
+.ctaButton {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.6rem 0.6rem 0.6rem 2.5rem;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.ctaText {
+    font-family: 'Bebas Neue Pro Bold', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.ctaIconCircle {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #3a7fd5;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: transform 0.4s ease;
+}
+
+.ctaButton:hover {
+    background: #1a1a1a;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(20, 94, 173, 0.3);
+    transform: translateY(-3px);
+}
+
+.ctaButton:hover .ctaIconCircle {
+    transform: scale(1.05) translateX(2px);
+}
+
+/* =========================================
+   PAYMENT LOGOS
+   ========================================= */
+
+.paymentWrapper {
+    margin-top: 2rem;
+    padding: 3rem;
+    background: rgba(20, 94, 173, 0.03);
+    border: 1px solid rgba(20, 94, 173, 0.1);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+.logosContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6rem;
+    width: 100%;
+}
+
+.logosGroup {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.logoImg {
+    height: 35px;
+    object-fit: contain;
+    filter: grayscale(100%) opacity(0.5);
+    transition: all 0.4s ease;
+}
+
+.logoImg:hover {
+    filter: grayscale(0%) opacity(1);
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 1024px) {
+    .logosContainer {
+        gap: 4rem;
+    }
+
+    .mainHeading {
+        font-size: clamp(4.5rem, 14vw, 8rem);
+    }
+}
 
 @media (max-width: 768px) {
-    .questionButton {
-        padding: 1.2rem;
+    .section {
+        padding: 6rem 0 8rem 0;
+    }
+
+    .header {
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .mainHeading {
+        font-size: clamp(3.5rem, 16vw, 8rem);
+        letter-spacing: 0em;
+        text-align: center;
+        line-height: 1.05;
+    }
+
+    .titleAccent {
+        margin-left: 0;
+    }
+
+    .subtitle {
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+    }
+
+    .questionContent {
+        gap: 1.5rem;
+    }
+
+    .questionText {
+        font-size: 1.2rem;
+    }
+
+    .answerContent {
+        padding: 2rem;
+        margin: 1rem 0 2rem 3rem;
+    }
+
+    .ctaButton {
+        padding: 0.5rem 0.5rem 0.5rem 2rem;
+    }
+
+    .ctaIconCircle {
+        width: 40px;
+        height: 40px;
+    }
+
+    .paymentWrapper {
+        padding: 2rem 1rem;
+    }
+
+    .logosContainer {
+        gap: 2.5rem;
+        flex-direction: column;
+    }
+
+    .logosGroup {
+        gap: 1.5rem;
+    }
+
+    .logoImg {
+        height: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mainHeading {
+        font-size: clamp(3rem, 18vw, 5.5rem);
     }
 
     .questionContent {
@@ -176,73 +458,22 @@
     }
 
     .indexNumber {
-        display: none;
-        /* Sakrij broj na malom ekranu za vise mesta */
+        font-size: 1rem;
+        min-width: 25px;
     }
 
     .questionText {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
     .answerContent {
-        padding: 0 1.2rem 1.5rem 1.2rem;
-        /* Smanjen padding na mobilnom */
-    }
-}
-
-/* Logos Section - Global styles for shared markup */
-:global(.paket-logos-wrapper) {
-    margin-top: 5rem;
-    padding: 2.5rem;
-    background: white;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-:global(.paket-logos-container) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8rem;
-    /* Large gap representing separation between verification and payment methods */
-    width: 100%;
-    max-width: 1000px;
-}
-
-:global(.logos-group) {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-:global(.logo-img) {
-    height: 45px;
-    object-fit: contain;
-    transition: transform 0.3s ease;
-}
-
-:global(.logo-img:hover) {
-    transform: scale(1.05);
-}
-
-/* Mobile responsive for logos */
-@media (max-width: 900px) {
-    :global(.paket-logos-container) {
-        gap: 3rem;
-        flex-direction: column;
-    }
-
-    :global(.paket-logos-wrapper) {
-        margin-top: 3rem;
         padding: 1.5rem;
+        margin: 1rem 0 2rem 0;
     }
+}
 
-    :global(.logo-img) {
-        height: 35px;
+@media (max-width: 400px) {
+    .mainHeading {
+        font-size: clamp(2.5rem, 18vw, 4.5rem);
     }
 }

@@ -1,107 +1,122 @@
+'use client';
+
 import React, { useContext, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../login/auth'; // Putanja do auth.js
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../login/auth';
 import './Navbar.css';
 import { ThemeContext } from '../komponente/ThemeContext';
-import motionlogo from '../images/motionacademylogo.png';
+import deliyaLogo from '../images/deliyalogos/White_AC.png';
+import { FiUser, FiBarChart2, FiMenu, FiX } from 'react-icons/fi';
 
 const Navbar = () => {
-    // --- 1. KORAK: Dohvatamo 'user' i 'loading' stanje ---
-    const { user, loading } = useAuth(); 
-    const { isDarkTheme, toggleTheme } = useContext(ThemeContext);
+    const { user, loading } = useAuth();
+    const { isDarkTheme } = useContext(ThemeContext);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [cartItems, setCartItems] = useState([]);
+    const [scrolled, setScrolled] = useState(false);
+    const location = useLocation();
 
     useEffect(() => {
-        const updateCartItems = () => {
-            const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-            setCartItems(storedCart);
-        };
-
-        updateCartItems();
-        window.addEventListener('storage', updateCartItems);
-        window.addEventListener('cart-updated', updateCartItems);
-
-        return () => {
-            window.removeEventListener('storage', updateCartItems);
-            window.removeEventListener('cart-updated', updateCartItems);
-        };
+        const handleScroll = () => setScrolled(window.scrollY > 60);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const handleMenuToggle = () => {
-        setIsMenuOpen(!isMenuOpen);
-    };
-
-    const cartItemCount = cartItems.length;
-
-    const closeMobileMenu = () => {
+    // Close on route change
+    useEffect(() => {
         setIsMenuOpen(false);
-    };
+    }, [location]);
 
-    // --- 2. KORAK: Uslov za prikazivanje navbara ---
-    // Ako se sesija još uvek proverava (loading === true) ili ako korisnik nije ulogovan (user === null),
-    // komponenta ne vraća ništa (vraća null).
-    if (loading || !user) {
-        return null;
-    }
+    // Lock body scroll when mobile menu is open
+    useEffect(() => {
+        document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
+    }, [isMenuOpen]);
 
-    // Ako provera prođe (korisnik je ulogovan), prikazuje se ostatak komponente.
+    const closeMobileMenu = () => setIsMenuOpen(false);
+
     return (
-        <nav className={`navbar ${isDarkTheme ? 'dark' : ''}`}>
+        <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${isMenuOpen ? 'menu-open' : ''}`}>
             <div className="navbar-container">
-                <div className="navbar-left">
-                    <Link to="/" className="navbar-logo">
-                        <img src={motionlogo} alt='logo' className='logo' />
+
+                {/* LEFT — Logo */}
+                <div className="navbar-brand">
+                    <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
+                        <img src={deliyaLogo} alt="Deliya Barber Academy" className="logo-img" />
                     </Link>
                 </div>
 
-                <div className="navbar-right">
-                    <ul className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
-                        <li className="navbar-item">
-                            <Link to="/" className="navbar-link" onClick={closeMobileMenu}>POČETNA</Link>
-                        </li>
-                        {/* <li className="navbar-item">
-                            <Link to="/kurs/1" className="navbar-link" onClick={closeMobileMenu}>LEKCIJE</Link>
-                        </li> */}
-                        
-                        {/* Sada više ne moramo da proveravamo da li korisnik postoji ovde, 
-                          jer se cela komponenta neće prikazati ako nije ulogovan.
-                          Ali radi sigurnosti, ostavićemo kod kakav jeste.
-                        */}
-                        {user && (
-                            <>
-                                <li className="navbar-item">
-                                    <Link to="/kupljenkurs" className="navbar-link" onClick={closeMobileMenu}>LEKCIJE</Link>
-                                </li>
-                                {/* <li className="navbar-item">
-                                    <Link to="/korpa" className="navbar-link cart-icon" onClick={closeMobileMenu}>
-                                        <i className="ri-shopping-cart-2-line"></i>
-                                        {cartItemCount > 0 && (
-                                            <span className="cart-badge">{cartItemCount}</span>
-                                        )}
-                                    </Link>
-                                </li> */}
-                                <li className="navbar-item">
-                                    <Link to="/profil" className="navbar-link acc-icon" onClick={closeMobileMenu}>
-                                        <i className="ri-account-circle-line"></i>
-                                    </Link>
-                                </li>
+                {/* CENTER — Nav links */}
+                <ul className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
+                    <li className="navbar-item">
+                        <Link to="/" className="navbar-link" onClick={closeMobileMenu}>Početna</Link>
+                    </li>
+                    <li className="navbar-item">
+                        <a href="/" className="navbar-link" onClick={closeMobileMenu}>Edukacija</a>
+                    </li>
 
-                                {(user.uloga === 'admin' || user.uloga === 'instruktor') && (
-                                    <li className="navbar-item">
-                                        <Link to="/instruktor" className="navbar-link chart" onClick={closeMobileMenu}>
-                                            <i className="ri-line-chart-line"></i>
-                                        </Link>
-                                    </li>
-                                )}
-                            </>
-                        )}
-                    </ul>
+                    {!loading && user && (
+                        <>
+                            <li className="navbar-item">
+                                <Link to="/" className="navbar-link" onClick={closeMobileMenu}>Lekcije</Link>
+                            </li>
+                            <li className="navbar-item">
+                                <Link to="/" className="navbar-link icon-link" onClick={closeMobileMenu}>
+                                    <FiUser />
+                                    <span className="icon-text">Profil</span>
+                                </Link>
+                            </li>
+                            {(user.uloga === 'admin' || user.uloga === 'instruktor') && (
+                                <li className="navbar-item">
+                                    <Link to="/" className="navbar-link icon-link" onClick={closeMobileMenu}>
+                                        <FiBarChart2 />
+                                        <span className="icon-text">Dashboard</span>
+                                    </Link>
+                                </li>
+                            )}
+                        </>
+                    )}
+
+                    {/* Mobile-only: Prijava link inside overlay */}
+                    {!loading && !user && (
+                        <li className="navbar-item mobile-only">
+                            <Link to="/login" className="navbar-link" onClick={closeMobileMenu}>Prijava</Link>
+                        </li>
+                    )}
+
+                    {/* Mobile-only: CTA Upis button inside overlay */}
+                    {!loading && !user && (
+                        <li className="navbar-item mobile-only">
+                            <div className="mobile-cta-wrapper">
+                                <Link to="/" className="mobile-cta-btn" onClick={closeMobileMenu}>
+                                    Upis na Akademiju
+                                </Link>
+                            </div>
+                        </li>
+                    )}
+                </ul>
+
+                {/* RIGHT — CTA + Hamburger */}
+                <div className="navbar-actions">
+                    {!loading && !user && (
+                        <>
+                            <Link to="/" className="navbar-link login-link" onClick={closeMobileMenu}>
+                                Prijava
+                            </Link>
+                            <Link to="/paket" className="navbar-cta-btn" onClick={closeMobileMenu}>
+                                Upis na Akademiju
+                            </Link>
+                        </>
+                    )}
+
+                    <button
+                        className={`navbar-hamburger ${isMenuOpen ? 'open' : ''}`}
+                        onClick={() => setIsMenuOpen(prev => !prev)}
+                        aria-label="Toggle menu"
+                    >
+                        {isMenuOpen ? <FiX /> : <FiMenu />}
+                    </button>
                 </div>
 
-                <button className="navbar-hamburger" onClick={handleMenuToggle}>
-                    <i className="ri-menu-line"></i>
-                </button>
             </div>
         </nav>
     );

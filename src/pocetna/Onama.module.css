@@ -1,0 +1,358 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+/* Kontejner */
+.scrollContainer {
+  background-color: #FFFFFF;
+  color: #111827;
+  font-family: 'Montserrat', sans-serif;
+  width: 100%;
+  position: relative;
+  height: 400vh;
+}
+
+.stickyWrapper {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+  .stickyWrapper {
+    flex-direction: row;
+  }
+}
+
+/* Watermark */
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  font-family: 'Clash Display', sans-serif;
+  font-size: 28vw;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.03);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  letter-spacing: -0.05em;
+}
+
+/* Leva Strana sa Progress Linijom */
+.leftColumn {
+  width: 100%;
+  padding: 3rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+  height: auto;
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .leftColumn {
+    width: 45%;
+    height: 100%;
+    padding-left: 8vw;
+    padding-right: 4vw;
+  }
+}
+
+/* Timeline Progres Linija */
+.progressBar {
+  position: absolute;
+  left: 4vw;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 300px;
+  background-color: rgba(0, 0, 0, 0.1);
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .progressBar {
+    display: block;
+  }
+}
+
+.progressFill {
+  width: 100%;
+  background-color: #0047AB;
+  height: 0%;
+}
+
+.stickyHeader {
+  display: flex;
+  flex-direction: column;
+}
+
+.heroBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  color: #4B5563;
+}
+
+/* Vogue Editorial linija umesto kvadratica */
+.editorialLine {
+  display: inline-block;
+  width: 40px;
+  height: 2px;
+  background-color: #111827;
+}
+
+/* Vizija Massive Title - Bez naglašenog kvadrata, striktno slovo i tačka */
+.stickyTitle {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(4rem, 8vw, 7.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  line-height: 0.9;
+  color: #111827;
+  margin: 0;
+  margin-bottom: 4rem;
+}
+
+/* Premium Solid Button */
+.ctaButton {
+  padding: 1.5rem 4rem;
+  background-color: #0047AB;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  width: fit-content;
+  border-radius: 0;
+  /* Oštre ivice svuda */
+}
+
+.ctaButton:hover {
+  background-color: #111827;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Desna Strana */
+.rightColumn {
+  width: 100%;
+  flex: 1;
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .rightColumn {
+    width: 55%;
+    height: 100%;
+  }
+}
+
+.overlayBlocksContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.overlayBlock {
+  position: absolute;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+@media (min-width: 1024px) {
+  .overlayBlock {
+    padding: 0 4vw;
+    height: 100vh;
+  }
+}
+
+/* ==== BLOK 1: Dominantna Slika ==== */
+.cleanImageWrapper {
+  width: 100%;
+  height: 50vh;
+  overflow: hidden;
+  position: relative;
+  border-radius: 0;
+  /* Bez zaokruženih ivica */
+  box-shadow: 15px 15px 0px rgba(0, 0, 0, 0.05);
+  /* Suptilna, oštra "magazine" senka */
+}
+
+@media (min-width: 1024px) {
+  .cleanImageWrapper {
+    height: 70vh;
+  }
+}
+
+.editorialImage {
+  width: 100%;
+  height: 120%;
+  object-fit: cover;
+  position: absolute;
+  top: -10%;
+  left: 0;
+  filter: grayscale(100%) contrast(140%) brightness(0.9);
+  /* Oštar i jak crno-beli GQ tretman */
+}
+
+
+/* ==== BLOK 2: Tekst o Akademiji ==== */
+.blockText {
+  justify-content: center;
+}
+
+.sectionTitle {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(3rem, 4.5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #111827;
+  margin: 0;
+  margin-bottom: 2.5rem;
+}
+
+.textStack {
+  display: flex;
+  flex-direction: column;
+  max-width: 90%;
+}
+
+.bodyTextPremium {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1rem, 1.2vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.7;
+  /* PRODISAO - Veliki prored */
+  color: #333333;
+  /* Tamno sivo umesto royal plave */
+  margin: 0;
+  margin-bottom: 2rem;
+  /* Veliki razmak izmedju paragrafa za lakse citanje */
+}
+
+/* Brutalno cist focus - samo crni bold za naglasavanje arhitekture recenice */
+.bodyTextPremium strong {
+  font-weight: 600;
+  color: #111827;
+}
+
+
+/* ==== BLOK 3: Premium Statistika (Brojke) ==== */
+.blockStats {
+  justify-content: center;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.statItem {
+  background-color: #FFFFFF;
+  padding: 1.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.statItem:hover {
+  background-color: #F9FAFB;
+}
+
+@media (min-width: 640px) {
+  .statItem {
+    padding: 2.5rem 1.5rem;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1024px) {
+  .statItem {
+    padding: 4rem 2.5rem;
+  }
+}
+
+.statNumberWrapper {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .statNumberWrapper {
+    justify-content: flex-start;
+  }
+}
+
+.statNumber {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 5.5rem);
+  font-weight: 700;
+  color: #111827;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.statPlus {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1rem, 4vw, 2.5rem);
+  color: #0047AB;
+  font-weight: 600;
+  margin-left: 4px;
+  line-height: 1;
+}
+
+.statLabel {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.7rem, 2.5vw, 0.95rem);
+  font-weight: 600;
+  color: #4B5563;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (min-width: 640px) {
+  .statLabel {
+    font-size: 0.95rem;
+    letter-spacing: 0.15em;
+  }
+}

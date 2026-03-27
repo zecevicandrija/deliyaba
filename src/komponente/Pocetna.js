@@ -6,14 +6,17 @@ import rezultat2 from '../images/rezultati23.png'
 import rezultat3 from '../images/rezultat32.png'
 import rezultat4 from '../images/rezultati4.png'
 import { useInView } from 'react-intersection-observer';
+import ONama from '../pocetna/ONama';
+import Program from '../pocetna/Program';
+
+import Rezultati from '../pocetna/Rezultati';
+import Proces from '../pocetna/Proces';
+import CTA from '../pocetna/CTA';
 
 // IMPORTUJEMO NOVU KOMPONENTU
 import Hero from '../pocetna/Hero';
 import Features from '../pocetna/Features';
-import Testimonijal from '../pocetna/Testimonijal';
-import Results from '../pocetna/Results';
 import FAQ from '../pocetna/FAQ';
-import Footer from '../pocetna/Footer';
 import Motion from '../pocetna/Motion';
 
 const ChevronIcon = ({ isOpen }) => <i className={`ri-arrow-down-s-line accordion-chevron ${isOpen ? 'open' : ''}`}></i>;
@@ -39,12 +42,21 @@ const Pocetna = () => {
             <main className="pocetna-page">
                 {/* 3. OBMOTAVAMO SVAKU SEKCIJU */}
 
-                {/* HERO JE SADA POSEBNA KOMPONENTA */}
-                <AnimateOnScroll>
-                    <Hero navigate={navigate} />
-                </AnimateOnScroll>
+                {/* HERO — NEMA AnimateOnScroll jer transform ubija sticky! */}
+                <Hero navigate={navigate} />
 
-                <AnimateOnScroll>
+                <ONama navigate={navigate} />
+
+                <Rezultati navigate={navigate} />
+
+                {/* REZULTATI - Sadrze sopstvene scroll pins i triggere, pa nema wrapper */}
+                <Program navigate={navigate} />
+
+                <Proces navigate={navigate} />
+
+                <CTA navigate={navigate} />
+
+                {/* <AnimateOnScroll>
                     <Motion navigate={navigate} />
                 </AnimateOnScroll>
 
@@ -53,18 +65,9 @@ const Pocetna = () => {
                 </AnimateOnScroll>
 
                 <AnimateOnScroll>
-                    <Testimonijal />
-                </AnimateOnScroll>
-
-                <AnimateOnScroll>
-                    <Results navigate={navigate} />
-                </AnimateOnScroll>
-
-                <AnimateOnScroll>
                     <FAQ navigate={navigate} />
-                </AnimateOnScroll>
+                </AnimateOnScroll> */}
             </main>
-            <Footer />
         </div>
     );
 };

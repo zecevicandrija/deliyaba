@@ -1,6 +1,6 @@
 {
-  "short_name": "Motion Akademija",
-  "name": "Motion Akademija Video Edit",
+  "short_name": "Deliya Edukacija",
+  "name": "Deliya - Premium Frizerska Edukacija",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,13 +8,13 @@
       "type": "image/x-icon"
     },
     {
-      "src": "motionakademijalogo.jpg",
-      "type": "image/jpeg",
+      "src": "Background_White_AC.png",
+      "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "motionakademijalogo.jpg",
-      "type": "image/jpeg",
+      "src": "Background_White_AC.png",
+      "type": "image/png",
       "sizes": "512x512"
     }
   ],

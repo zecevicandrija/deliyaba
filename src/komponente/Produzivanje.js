@@ -8,7 +8,6 @@ import "./Produzivanje.css";
 
 import banner from '../images/motionakademijabanner.jpg';
 import animatedbanner from '../images/0731banrer.gif';
-import Footer from '../pocetna/Footer.js';
 
 // Logotipi
 import visaSecure from '../images/logotipi/visa-secure_blu_72dpi.jpg';
@@ -377,7 +376,6 @@ const Produzivanje = () => {
 
                 </div>
             </section>
-            <Footer />
         </>
     );
 };

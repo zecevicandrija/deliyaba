@@ -28,30 +28,14 @@ html {
 body {
   position: relative; /* Neophodno za z-index pseudo-elementa */
   background-color: transparent; /* Telo mora biti providno! */
-  font-family: "Josefin Sans", sans-serif;
+  font-family: 'Outfit', sans-serif;
   color: var(--text-color);
 }
 
 /* Kreiramo pseudo-element koji će služiti kao fiksirana pozadina.
   Ovo je najstabilniji način koji radi na SVIM pretraživačima.
 */
-body::before {
-  content: '';
-  position: fixed;   /* Fiksiran u odnosu na ekran */
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;       /* Postavlja ga IZA svog ostalog sadržaja */
-
-  /* Sve stilove za pozadinu prebacujemo ovde */
-  /* background-image: url('../src/images/pozadina3.png'); */
-  background-image: url('../src/images/filippozadina.jpg');
-
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
+/* Uklonjena pozadina sa slikom */
 
 #root, .App {
   /* Osiguravamo da su i glavni kontejneri providni */

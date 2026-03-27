@@ -2,103 +2,151 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { RiMovie2Line, RiFolderZipLine, RiCommunityLine, RiAwardLine, RiArrowRightLine } from 'react-icons/ri';
+import { FiArrowRight } from 'react-icons/fi';
 import styles from './Features.module.css';
 
 const Features = ({ navigate }) => {
     const features = [
-        { 
-            icon: <RiMovie2Line />, 
-            title: '20+ Sati Materijala', 
-            text: 'Detaljne video lekcije koje pokrivaju sve aspekte montaže, od osnova do naprednih VFX tehnika.' 
+        {
+            id: "01",
+            tag: "EDUKACIJA",
+            title: '20+ Sati Materijala',
+            text: 'Detaljne video lekcije u visokoj rezoluciji koje usmeravaju tvoju tehniku, od osnova fading-a do naprednih stilova.'
         },
-        { 
-            icon: <RiFolderZipLine />, 
-            title: 'Svi Materijali', 
-            text: 'Dobijaš pristup sirovim snimcima, presetima i projektnim fajlovima za vežbu.' 
+        {
+            id: "02",
+            tag: "BIZNIS",
+            title: 'Svi Resursi',
+            text: 'Pristup ekskluzivnim poslovnim strukturama, cenovnicima i šablonima za rad sa premium klijentima.'
         },
-        { 
-            icon: <RiCommunityLine />, 
-            title: 'Pro Community', 
-            text: 'Ulaz u privatnu Discord grupu gde analiziramo radove i delimo poslove.' 
+        {
+            id: "03",
+            tag: "MREŽA",
+            title: 'Pro Community',
+            text: 'Zatvoreni krug motivisanih pojedinaca gde analiziramo radove, rešavamo probleme i rastemo zajedno.'
         },
-        { 
-            icon: <RiAwardLine />, 
-            title: 'Sertifikat', 
-            text: 'Zvaničan dokaz o završenoj obuci koji možeš dodati u svoj CV ili LinkedIn.' 
+        {
+            id: "04",
+            tag: "PRESTIŽ",
+            title: 'Sertifikat',
+            text: 'Zvaničan dokaz o uspešno završenoj Akademiji, prestižan znak koji podiže tvoj autoritet u industriji.'
         },
     ];
 
-    // Varijante za animaciju
+    const elegantEase = [0.16, 1, 0.3, 1];
+
     const container = {
         hidden: { opacity: 0 },
         show: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.2
+                staggerChildren: 0.15
             }
         }
     };
 
     const item = {
-        hidden: { opacity: 0, y: 50 },
-        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 50 } }
+        hidden: { opacity: 0, y: 30 },
+        show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: elegantEase } }
+    };
+
+    const headerVariants = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.1
+            }
+        }
+    };
+
+    const headerItem = {
+        hidden: { opacity: 0, y: 50, filter: 'blur(12px)' },
+        show: { 
+            opacity: 1, 
+            y: 0, 
+            filter: 'blur(0px)',
+            transition: { duration: 1.4, ease: elegantEase } 
+        }
     };
 
     return (
         <section className={styles.section}>
-            {/* Pozadinski grid za ovu sekciju (suptilniji) */}
-            <div className={styles.bgGrid}></div>
+            {/* Tangible Depth via Global Noise */}
+            <div className={styles.globalNoise} />
 
-            <div className="container" style={{position: 'relative', zIndex: 2}}>
-                
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
+            {/* Central Radial Glow for Depth */}
+            <div className={styles.centralGlow} />
+
+            <div className={styles.container}>
+
+                <motion.div
                     className={styles.headerWrapper}
+                    variants={headerVariants}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, margin: "-50px" }}
                 >
-                    <h2 className="section-title">ŠTA SVE DOBIJAŠ?</h2>
-                    <p className="section-subtitle">Ovo nije samo kurs. Ovo je kompletan alat za tvoju karijeru.</p>
+                    <motion.div variants={headerItem} className={styles.badgeWrapper}>
+                        <span className={styles.starIcon}>✦</span>
+                        <span className={styles.luxuryTag}>PREMIUM PAKET</span>
+                        <span className={styles.starIcon}>✦</span>
+                    </motion.div>
+                    <motion.h2 variants={headerItem} className={styles.mainHeading}>
+                        ŠTA SVE <br />
+                        <span className={styles.titleAccent}>DOBIJAŠ?</span>
+                    </motion.h2>
+
+                    <motion.p variants={headerItem} className={styles.subtitle}>
+                        Svaki element pažljivo osmišljen da te izgradi od nule do profesionalca.
+                        Ne kupuješ lekcije — ulagaš u sistem koji radi <em>umesto tebe</em>,
+                        dok ti gradiš karijeru koja traje.
+                    </motion.p>
                 </motion.div>
-                
-                <motion.div 
+
+                <motion.div
                     className={styles.featuresGrid}
                     variants={container}
                     initial="hidden"
                     whileInView="show"
-                    viewport={{ once: true, margin: "-100px" }}
+                    viewport={{ once: true, margin: "-50px" }}
                 >
                     {features.map((feature, index) => (
-                        <motion.div variants={item} className={styles.featureCard} key={index}>
-                            {/* Dekorativni broj u pozadini (01, 02...) */}
-                            <div className={styles.bgNumber}>0{index + 1}</div>
-                            
-                            {/* Tech Borders (Uglovi) */}
-                            <div className={styles.cornerTopLeft}></div>
-                            <div className={styles.cornerBottomRight}></div>
+                        <motion.div variants={item} className={styles.cardWrapper} key={index}>
+                            <div className={styles.featureCard}>
+                                <div className={styles.cardNoise}></div>
+                                <div className={styles.cardHeader}>
+                                    <span className={styles.cardNumber}>{feature.id}</span>
+                                    <div className={styles.tagLineWrapper}>
+                                        <div className={styles.tagLine}></div>
+                                        <span className={styles.tag}>{feature.tag}</span>
+                                    </div>
+                                </div>
 
-                            <div className={styles.iconWrapper}>
-                                {feature.icon}
-                                <div className={styles.iconGlow}></div>
+                                <div className={styles.cardContent}>
+                                    <h3 className={styles.title}>{feature.title}</h3>
+                                    <p className={styles.text}>{feature.text}</p>
+                                </div>
+                                {/* Abstract Geometric Decor */}
+                                <div className={styles.decorCircle}></div>
                             </div>
-                            
-                            <h3 className={styles.title}>{feature.title}</h3>
-                            <p className={styles.text}>{feature.text}</p>
                         </motion.div>
                     ))}
                 </motion.div>
-                
-                <motion.div 
+
+                <motion.div
                     className={styles.ctaWrapper}
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 0.8 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4, duration: 1, ease: elegantEase }}
                 >
-                    <button className={styles.ctaButton} onClick={() => navigate('/paket')}>
-                        <span>PRIDRUŽI SE AKADEMIJI</span>
-                        <RiArrowRightLine />
+                    <button className={styles.ctaButton} onClick={() => navigate && navigate('/')}>
+                        <span className={styles.ctaText}>PRIDRUŽI SE AKADEMIJI</span>
+                        <div className={styles.ctaIconCircle}>
+                            <FiArrowRight />
+                        </div>
                     </button>
                 </motion.div>
             </div>
