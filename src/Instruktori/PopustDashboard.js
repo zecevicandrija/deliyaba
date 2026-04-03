@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../login/api';
-import './PopustDashboard.css';
+import styles from './PopustDashboard.module.css';
 
 const PopustDashboard = () => {
     const navigate = useNavigate();
@@ -136,41 +136,44 @@ const PopustDashboard = () => {
     const filteredPopusti = popusti.filter(p => p.kod.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return (
-        <div className="pd-page">
-            <div className="pd-container">
-                <button className="pd-back-btn" onClick={() => navigate('/instruktor')}>
-                    <i className="ri-arrow-left-line"></i> Nazad
+        <div className={styles.page}>
+            <div className={styles.watermark}>Deliya</div>
+
+            <div className={styles.container}>
+                <button className={styles.backBtn} onClick={() => navigate('/instruktor')}>
+                    <i className="ri-arrow-left-line"></i> Nazad na Tablu
                 </button>
 
-                <div className="pd-header">
-                    <div className="pd-header-icon">
-                        <i className="ri-percent-line"></i>
+                <header className={styles.header}>
+                    <div className={styles.badge}>
+                        <span className={styles.editorialLine}></span>
+                        <span>Promotivni Sistem</span>
                     </div>
-                    <h1>Upravljanje Popustima</h1>
-                    <p>Kreirajte, menjajte i brišite kodove za popust.</p>
-                </div>
+                    <h1 className={styles.title}>Upravljaj Popustima</h1>
+                    <p className={styles.subtitle}>Konfiguracija promotivnih kodova, procentualnih umanjenja i rokova važenja.</p>
+                </header>
 
                 {feedback.message && (
-                    <div className={`pd-feedback ${feedback.type}`}>
-                        {feedback.type === 'error' ? <i className="ri-error-warning-line"></i> : <i className="ri-check-line"></i>}
+                    <div className={`${styles.feedback} ${styles[feedback.type]}`}>
+                        <i className={feedback.type === 'error' ? 'ri-error-warning-line' : 'ri-check-line'}></i>
                         {feedback.message}
                     </div>
                 )}
 
-                <div className="pd-create-section">
-                    <h3>Kreiraj Novi Popust</h3>
-                    <form className="pd-create-form" onSubmit={handleCreateDiscount}>
-                        <div className="pd-input-group">
+                <div className={styles.createSection}>
+                    <h3 className={styles.sectionTitle}>Kreiraj Novi Popust</h3>
+                    <form className={styles.createForm} onSubmit={handleCreateDiscount}>
+                        <div className={styles.field}>
                             <label>Kod Popusta</label>
                             <input
                                 type="text"
-                                placeholder="Npr. KOD20"
+                                placeholder="Npr. MASTER10"
                                 value={newDiscountCode}
                                 onChange={e => setNewDiscountCode(e.target.value)}
                                 required
                             />
                         </div>
-                        <div className="pd-input-group">
+                        <div className={styles.field}>
                             <label>Procenat (%)</label>
                             <input
                                 type="number"
@@ -181,7 +184,7 @@ const PopustDashboard = () => {
                                 required
                             />
                         </div>
-                        <div className="pd-input-group">
+                        <div className={styles.field}>
                             <label>Datum Isteka</label>
                             <input
                                 type="date"
@@ -189,44 +192,44 @@ const PopustDashboard = () => {
                                 onChange={e => setNewDiscountExpires(e.target.value)}
                             />
                         </div>
-                        <div className="pd-input-group">
+                        <div className={styles.field}>
                             <label>Status</label>
                             <select 
                                 value={newDiscountStatus}
                                 onChange={e => setNewDiscountStatus(e.target.value)}
-                                className="pd-select"
+                                className={styles.select}
                             >
                                 <option value="aktivan">Aktivan</option>
                                 <option value="neaktivan">Neaktivan</option>
                             </select>
                         </div>
-                        <button type="submit" className="pd-create-btn">
-                            Kreiraj <i className="ri-add-line"></i>
+                        <button type="submit" className={styles.createBtn}>
+                            Dodaj Kod <i className="ri-add-line"></i>
                         </button>
                     </form>
                 </div>
 
-                <div className="pd-search-container">
-                    <div className="pd-search-box">
-                        <i className="ri-search-line pd-search-icon"></i>
+                <div className={styles.searchContainer}>
+                    <div className={styles.searchBox}>
+                        <i className={`ri-search-line ${styles.searchIcon}`}></i>
                         <input
                             type="text"
-                            placeholder="Pretraži kodove..."
+                            placeholder="Pretraži aktivne kodove..."
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
-                            className="pd-search-input"
+                            className={styles.searchInput}
                         />
                     </div>
                 </div>
 
-                <div className="pd-table-responsive">
-                    <table className="pd-table">
+                <div className={styles.tableResponsive}>
+                    <table className={styles.table}>
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Kod Popusta</th>
-                                <th>Procenat</th>
-                                <th>Ističe</th>
+                                <th>Umanjenje</th>
+                                <th>Validnost</th>
                                 <th>Status</th>
                                 <th style={{ textAlign: 'center' }}>Akcije</th>
                             </tr>
@@ -237,24 +240,24 @@ const PopustDashboard = () => {
                                     <td>{p.id}</td>
                                     <td><strong>{p.kod}</strong></td>
                                     <td>{p.procenat}%</td>
-                                    <td>{p.datum_isteka ? new Date(p.datum_isteka).toLocaleDateString('sr-RS') : 'Zauvek'}</td>
+                                    <td>{p.datum_isteka ? new Date(p.datum_isteka).toLocaleDateString('sr-RS') : 'Trajno'}</td>
                                     <td>
-                                        <span className={`pd-status-badge ${p.status === 'aktivan' ? 'aktivan' : 'neaktivan'}`}>
+                                        <span className={`${styles.statusBadge} ${p.status === 'aktivan' ? styles.statusActive : styles.statusInactive}`}>
                                             {p.status}
                                         </span>
                                     </td>
-                                    <td className="pd-actions">
-                                        <button className="pd-action-btn pd-edit-btn" onClick={() => openEditModal(p)} title="Izmeni popust">
+                                    <td className={styles.actions}>
+                                        <button className={`${styles.actionBtn} ${styles.editBtn}`} onClick={() => openEditModal(p)} title="Izmeni popust">
                                             <i className="ri-edit-line"></i>
                                         </button>
-                                        <button className="pd-action-btn pd-delete-btn" onClick={() => openDeleteModal(p)} title="Obriši popust">
+                                        <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => openDeleteModal(p)} title="Obriši popust">
                                             <i className="ri-delete-bin-line"></i>
                                         </button>
                                     </td>
                                 </tr>
                             )) : (
                                 <tr>
-                                    <td colSpan="6" className="pd-no-results">Nema pronađenih popusta.</td>
+                                    <td colSpan="6" className={styles.noResults}>Nema pronađenih popusta u sistemu.</td>
                                 </tr>
                             )}
                         </tbody>
@@ -264,33 +267,33 @@ const PopustDashboard = () => {
 
             {/* Edit Modal */}
             {isEditModalOpen && discountToEdit && (
-                <div className="pd-modal-overlay">
-                    <div className="pd-modal-content">
-                        <button className="pd-close-btn" onClick={() => setIsEditModalOpen(false)}>&times;</button>
-                        <h2>Izmeni Popust</h2>
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <button className={styles.closeBtn} onClick={() => setIsEditModalOpen(false)}>&times;</button>
+                        <h2 className={styles.modalTitle}>Izmeni Popust</h2>
 
-                        <form onSubmit={handleEditSubmit} className="pd-form">
-                            <div className="pd-field">
+                        <form onSubmit={handleEditSubmit} className={styles.modalForm}>
+                            <div className={styles.modalField}>
                                 <label><i className="ri-percent-line"></i> Kod Popusta</label>
                                 <input type="text" name="code" value={editForm.code} onChange={handleEditChange} required />
                             </div>
-                            <div className="pd-field">
+                            <div className={styles.modalField}>
                                 <label><i className="ri-price-tag-3-line"></i> Procenat (%)</label>
                                 <input type="number" name="discountPercent" value={editForm.discountPercent} onChange={handleEditChange} required min="1" max="100" />
                             </div>
-                            <div className="pd-field">
+                            <div className={styles.modalField}>
                                 <label><i className="ri-calendar-event-line"></i> Datum Isteka</label>
                                 <input type="date" name="datum_isteka" value={editForm.datum_isteka} onChange={handleEditChange} />
                             </div>
-                            <div className="pd-field">
+                            <div className={styles.modalField}>
                                 <label><i className="ri-toggle-line"></i> Status</label>
-                                <select name="status" value={editForm.status} onChange={handleEditChange} className="pd-select">
+                                <select name="status" value={editForm.status} onChange={handleEditChange}>
                                     <option value="aktivan">Aktivan</option>
                                     <option value="neaktivan">Neaktivan</option>
                                 </select>
                             </div>
-                            <button type="submit" className="pd-submit-btn">
-                                <i className="ri-save-line"></i> Sačuvaj Izmene
+                            <button type="submit" className={styles.submitBtn}>
+                                <i className="ri-save-line"></i> Autorizuj Izmene
                             </button>
                         </form>
                     </div>
@@ -299,23 +302,26 @@ const PopustDashboard = () => {
 
             {/* Delete Modal */}
             {isDeleteModalOpen && discountToDelete && (
-                <div className="pd-modal-overlay">
-                    <div className="pd-modal-content pd-delete-modal">
-                        <div className="pd-warning-icon">
-                            <i className="ri-alert-line"></i>
-                        </div>
-                        <h2>Potvrda Brisanja</h2>
-                        <h3 className="pd-delete-name">{discountToDelete.kod} ({discountToDelete.procenat}%)</h3>
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <button className={styles.closeBtn} onClick={() => setIsDeleteModalOpen(false)}>&times;</button>
+                        <div className={styles.deleteModal}>
+                            <div className={styles.warningIcon}>
+                                <i className="ri-alert-line"></i>
+                            </div>
+                            <h2 className={styles.modalTitle}>Potvrda Brisanja</h2>
+                            <h3 style={{ textTransform: 'uppercase', color: '#111827', margin: '1rem 0' }}>{discountToDelete.kod} ({discountToDelete.procenat}%)</h3>
 
-                        <div className="pd-warning-box">
-                            <strong>Upozorenje:</strong> Brisanje popusta može biti onemogućeno ukoliko je ovaj kod već korišćen u starim transakcijama.
-                        </div>
+                            <div className={styles.warningBox}>
+                                <strong>Upozorenje:</strong> Brisanje popusta može biti onemogućeno ukoliko je ovaj kod sistemski povezan sa transakcijama.
+                            </div>
 
-                        <div className="pd-modal-actions">
-                            <button onClick={() => setIsDeleteModalOpen(false)} className="pd-cancel-btn">Odustani</button>
-                            <button onClick={confirmDelete} className="pd-confirm-delete-btn">
-                                <i className="ri-delete-bin-line"></i> Obriši
-                            </button>
+                            <div className={styles.modalActions}>
+                                <button onClick={() => setIsDeleteModalOpen(false)} className={styles.cancelBtn}>Prekini</button>
+                                <button onClick={confirmDelete} className={styles.confirmDeleteBtn}>
+                                    <i className="ri-delete-bin-line"></i> Obriši Kod
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

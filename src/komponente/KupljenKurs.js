@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import api from "../login/api";
 import { useAuth } from "../login/auth";
 import "./KupljenKurs.css";
-import reactkurs from '../images/csskurs.png';
 import keyikonica from '../icons/key.png';
 import moneybag from '../icons/money-bag.png';
 import wave from '../icons/wave-sound.png';
@@ -132,7 +131,7 @@ const KupljenKurs = () => {
                                 <div className="timeline-content kurs-card1">
 
                                     <img
-                                        src={sekcija.thumbnail || reactkurs}
+                                        src={sekcija.thumbnail}
                                         alt={`Sekcija ${sekcija.naziv_sekcije}`}
                                         className="card-image"
                                     />

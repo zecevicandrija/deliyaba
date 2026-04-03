@@ -1,0 +1,491 @@
+/* PopustDashboard.module.css */
+
+.page {
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  color: #111827;
+  font-family: 'Montserrat', sans-serif;
+  padding: 6rem 1.5rem 4rem 1.5rem;
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .page {
+    padding: 8rem 8vw 6rem 8vw;
+  }
+}
+
+.watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Clash Display', sans-serif;
+  font-size: 20vw;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.02);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  letter-spacing: -0.05em;
+}
+
+.container {
+  max-width: 1200px;
+  position: relative;
+  z-index: 10;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid #111827;
+  color: #111827;
+  padding: 0.8rem 1.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 3rem;
+  width: fit-content;
+}
+
+.backBtn:hover {
+  background-color: #111827;
+  color: #FFFFFF;
+}
+
+.header {
+  margin-bottom: 4rem;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  color: #4B5563;
+}
+
+.editorialLine {
+  display: inline-block;
+  width: 40px;
+  height: 2px;
+  background-color: #111827;
+}
+
+.title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1rem, 1.2vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: #333333;
+  max-width: 600px;
+}
+
+.feedback {
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  border-left: 4px solid transparent;
+}
+
+.success {
+  background-color: #ECFDF5;
+  color: #065F46;
+  border-left-color: #10B981;
+}
+
+.error {
+  background-color: #FEF2F2;
+  color: #991B1B;
+  border-left-color: #EF4444;
+}
+
+.createSection {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+  margin-bottom: 4rem;
+  box-shadow: 15px 15px 0px rgba(0, 0, 0, 0.02);
+}
+
+.sectionTitle {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.createForm {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: flex-end;
+}
+
+@media (min-width: 768px) {
+  .createForm {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .createForm {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #111827;
+}
+
+.field input, .field select {
+  padding: 1rem;
+  border: 1px solid #E5E7EB;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  border-radius: 0;
+  background-color: #F9FAFB;
+}
+
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: #0047AB;
+  background-color: #FFFFFF;
+}
+
+.createBtn {
+  padding: 1rem;
+  background-color: #0047AB;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 52px;
+}
+
+.createBtn:hover {
+  background-color: #111827;
+  transform: translateY(-2px);
+}
+
+.searchContainer {
+  margin-bottom: 2.5rem;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  padding: 1rem 1.5rem;
+  max-width: 400px;
+  transition: all 0.3s ease;
+}
+
+.searchBox:focus-within {
+  border-color: #0047AB;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.searchIcon {
+  color: #9CA3AF;
+  margin-right: 1rem;
+}
+
+.searchInput {
+  border: none;
+  background: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.tableResponsive {
+  width: 100%;
+  overflow-x: auto;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Montserrat', sans-serif;
+  text-align: left;
+}
+
+.table th {
+  padding: 1.5rem;
+  background-color: #F9FAFB;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: #111827;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.table td {
+  padding: 1.5rem;
+  border-bottom: 1px solid #F3F4F6;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.table tr:hover {
+  background-color: #F9FAFB;
+}
+
+.statusBadge {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block;
+}
+
+.statusActive {
+  background-color: #ECFDF5;
+  color: #065F46;
+}
+
+.statusInactive {
+  background-color: #FEF2F2;
+  color: #991B1B;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.actionBtn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #E5E7EB;
+  background: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+}
+
+.editBtn:hover {
+  background-color: #0047AB;
+  color: #FFFFFF;
+  border-color: #0047AB;
+}
+
+.deleteBtn:hover {
+  background-color: #EF4444;
+  color: #FFFFFF;
+  border-color: #EF4444;
+}
+
+/* Modal styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modalContent {
+  background-color: #FFFFFF;
+  width: 90%;
+  max-width: 500px;
+  padding: 3.5rem;
+  position: relative;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  cursor: pointer;
+  color: #111827;
+  line-height: 1;
+}
+
+.modalTitle {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modalField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.modalField label {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modalField input, .modalField select {
+  padding: 1.1rem;
+  border: 1px solid #E5E7EB;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  border-radius: 0;
+}
+
+.submitBtn {
+  margin-top: 1rem;
+  padding: 1.2rem;
+  background-color: #0047AB;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.submitBtn:hover {
+  background-color: #111827;
+}
+
+.warningIcon {
+  color: #EF4444;
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.warningBox {
+  background-color: #FEF2F2;
+  border: 1px solid #FEE2E2;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  font-size: 0.9rem;
+  color: #991B1B;
+}
+
+.modalActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.cancelBtn {
+  flex: 1;
+  padding: 1.2rem;
+  background: none;
+  border: 1px solid #111827;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.confirmDeleteBtn {
+  flex: 1;
+  padding: 1.2rem;
+  background-color: #EF4444;
+  color: #FFFFFF;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.noResults {
+  text-align: center;
+  padding: 4rem;
+  color: #6B7280;
+  font-style: italic;
+}

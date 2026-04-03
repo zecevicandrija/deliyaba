@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../login/api';
-import './Editkorisnika.css';
+import styles from './Editkorisnika.module.css';
 
 const Editkorisnika = () => {
     const navigate = useNavigate();
@@ -73,7 +73,6 @@ const Editkorisnika = () => {
             if (editUserForm.pretplata !== currentPt) {
                 body.subscription_expires_at = editUserForm.pretplata ? `${editUserForm.pretplata} 23:59:59` : null;
                 // Ako pretplata ističe stavimo status na expired, ako se stavi nova, na active (opciono)
-                // Ako se stavlja NULL onda se verovatno otkazuje
                 if (editUserForm.pretplata) body.subscription_status = 'active';
             }
 
@@ -112,44 +111,47 @@ const Editkorisnika = () => {
     };
 
     return (
-        <div className="ek-page">
-            <div className="ek-container">
-                <button className="ek-back-btn" onClick={() => navigate('/instruktor')}>
-                    <i className="ri-arrow-left-line"></i> Nazad
+        <div className={styles.page}>
+            <div className={styles.watermark}>Deliya</div>
+
+            <div className={styles.container}>
+                <button className={styles.backBtn} onClick={() => navigate('/instruktor')}>
+                    <i className="ri-arrow-left-line"></i> Nazad na Tablu
                 </button>
 
-                <div className="ek-header">
-                    <div className="ek-header-icon">
-                        <i className="ri-group-line"></i>
+                <header className={styles.header}>
+                    <div className={styles.badge}>
+                        <span className={styles.editorialLine}></span>
+                        <span>Administrativni Kontroler</span>
                     </div>
-                    <h1>Upravljaj Korisnicima</h1>
-                    <p>Pregledajte sve korisnike, menjajte njihove podatke i brišite naloge.</p>
-                </div>
+                    <h1 className={styles.title}>Upravljaj Korisnicima</h1>
+                    <p className={styles.subtitle}>Sistemski pregled baze podataka polaznika, statusa pretplata i pristupnih nivoa.</p>
+                </header>
 
                 {/* Search Bar */}
-                <div className="ek-search-container">
-                    <div className="ek-search-box">
-                        <i className="ri-search-line ek-search-icon"></i>
+                <div className={styles.searchContainer}>
+                    <div className={styles.searchBox}>
+                        <i className={`ri-search-line ${styles.searchIcon}`}></i>
                         <input
                             type="text"
-                            placeholder="Pretraži po email adresi..."
+                            placeholder="Pretraži protokol po email adresi..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="ek-search-input"
+                            className={styles.searchInput}
                         />
                     </div>
                 </div>
 
                 {/* Users Table */}
-                <div className="ek-table-responsive">
-                    <table className="ek-table">
+                <div className={styles.tableResponsive}>
+                    <table className={styles.table}>
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Ime i Prezime</th>
-                                <th>Email</th>
-                                <th>Uloga</th>
-                                <th>Pretplata Do</th>
+                                <th>Polaznik</th>
+                                <th>Email Adresa</th>
+                                <th>Nivo</th>
+                                <th>Pretplata</th>
                                 <th>Status</th>
                                 <th style={{ textAlign: 'center' }}>Akcije</th>
                             </tr>
@@ -163,22 +165,22 @@ const Editkorisnika = () => {
                                     <td style={{ textTransform: 'capitalize' }}>{k.uloga}</td>
                                     <td>{k.subscription_expires_at ? new Date(k.subscription_expires_at.replace(' ', 'T')).toLocaleDateString() : 'N/A'}</td>
                                     <td>
-                                        <span className={`ek-status-badge ${k.subscription_status === 'active' ? 'active' : 'inactive'}`}>
+                                        <span className={`${styles.statusBadge} ${k.subscription_status === 'active' ? styles.statusActive : styles.statusInactive}`}>
                                             {k.subscription_status || 'N/A'}
                                         </span>
                                     </td>
-                                    <td className="ek-actions">
-                                        <button className="ek-action-btn ek-edit-btn" onClick={() => openEditUserModal(k)} title="Izmeni mejl/šifru">
+                                    <td className={styles.actions}>
+                                        <button className={`${styles.actionBtn} ${styles.editBtn}`} onClick={() => openEditUserModal(k)} title="Izmeni mejl/šifru">
                                             <i className="ri-edit-line"></i>
                                         </button>
-                                        <button className="ek-action-btn ek-delete-btn" onClick={() => openDeleteUserModal(k)} title="Obriši korisnika">
+                                        <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => openDeleteUserModal(k)} title="Obriši korisnika">
                                             <i className="ri-delete-bin-line"></i>
                                         </button>
                                     </td>
                                 </tr>
                             )) : (
                                 <tr>
-                                    <td colSpan="7" className="ek-no-results">Nema pronađenih korisnika.</td>
+                                    <td colSpan="7" className={styles.noResults}>Nema pronađenih korisnika u bazi.</td>
                                 </tr>
                             )}
                         </tbody>
@@ -188,39 +190,40 @@ const Editkorisnika = () => {
 
             {/* Edit User Modal */}
             {isEditUserModalOpen && userToEdit && (
-                <div className="ek-modal-overlay">
-                    <div className="ek-modal-content">
-                        <button className="ek-close-btn" onClick={() => setIsEditUserModalOpen(false)}>&times;</button>
-                        <h2>Izmeni Korisnika</h2>
-                        <div className="ek-modal-header-info">
-                            <div className="ek-avatar"><i className="ri-user-smile-line"></i></div>
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <button className={styles.closeBtn} onClick={() => setIsEditUserModalOpen(false)}>&times;</button>
+                        <h2 className={styles.modalTitle}>Izmeni Korisnika</h2>
+                        
+                        <div className={styles.modalHeaderInfo}>
+                            <div className={styles.avatar}><i className="ri-user-smile-line"></i></div>
                             <div>
                                 <h3>{userToEdit.ime} {userToEdit.prezime}</h3>
-                                <span>{userToEdit.email}</span>
+                                <span>Primarni: {userToEdit.email}</span>
                             </div>
                         </div>
 
                         {editFeedback.message && (
-                            <div className={`ek-feedback ${editFeedback.type}`}>
+                            <div className={`${styles.feedback} ${styles.error}`}>
                                 <i className="ri-error-warning-line"></i> {editFeedback.message}
                             </div>
                         )}
 
-                        <form onSubmit={handleEditUserSubmit} className="ek-form">
-                            <div className="ek-field">
-                                <label htmlFor="email"><i className="ri-mail-line"></i> Email</label>
+                        <form onSubmit={handleEditUserSubmit} className={styles.form}>
+                            <div className={styles.field}>
+                                <label htmlFor="email"><i className="ri-mail-line"></i> Protokol Email</label>
                                 <input type="email" name="email" id="email" value={editUserForm.email} onChange={handleEditUserChange} required />
                             </div>
-                            <div className="ek-field">
-                                <label htmlFor="sifra"><i className="ri-lock-password-line"></i> Nova Šifra (opciono)</label>
-                                <input type="password" name="sifra" id="sifra" value={editUserForm.sifra} onChange={handleEditUserChange} placeholder="Unesite novu šifru" />
+                            <div className={styles.field}>
+                                <label htmlFor="sifra"><i className="ri-lock-password-line"></i> Nova Pristupna Šifra</label>
+                                <input type="password" name="sifra" id="sifra" value={editUserForm.sifra} onChange={handleEditUserChange} placeholder="Unesite novu lozinku (opcionalno)" />
                             </div>
-                            <div className="ek-field">
-                                <label htmlFor="pretplata"><i className="ri-calendar-line"></i> Pretplata Do</label>
+                            <div className={styles.field}>
+                                <label htmlFor="pretplata"><i className="ri-calendar-line"></i> Validnost Pretplate</label>
                                 <input type="date" name="pretplata" id="pretplata" value={editUserForm.pretplata} onChange={handleEditUserChange} />
                             </div>
-                            <button type="submit" className="ek-submit-btn">
-                                <i className="ri-save-line"></i> Sačuvaj Izmene
+                            <button type="submit" className={styles.submitBtn}>
+                                <i className="ri-save-line"></i> Autorizuj Izmene
                             </button>
                         </form>
                     </div>
@@ -229,30 +232,33 @@ const Editkorisnika = () => {
 
             {/* Delete User Confirm Modal */}
             {isDeleteUserModalOpen && userToDelete && (
-                <div className="ek-modal-overlay">
-                    <div className="ek-modal-content ek-delete-modal">
-                        <div className="ek-warning-icon">
-                            <i className="ri-alert-line"></i>
-                        </div>
-                        <h2>Potvrda Brisanja</h2>
-                        <p>Da li ste sigurni da želite trajno da obrišete korisnika:</p>
-                        <h3 className="ek-delete-name">{userToDelete.ime} {userToDelete.prezime}</h3>
-
-                        <div className="ek-warning-box">
-                            <strong>Upozorenje:</strong> Brisanjem korisnika nepovratno gubite i sve njegove podatke o transakcijama, pretplatama i kupovinama!
-                        </div>
-
-                        {deleteFeedback.message && (
-                            <div className={`ek-feedback ${deleteFeedback.type}`}>
-                                <i className="ri-error-warning-line"></i> {deleteFeedback.message}
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <button className={styles.closeBtn} onClick={() => setIsDeleteUserModalOpen(false)}>&times;</button>
+                        <div className={styles.deleteModal}>
+                            <div className={styles.warningIcon}>
+                                <i className="ri-alert-line"></i>
                             </div>
-                        )}
+                            <h2 className={styles.modalTitle}>Potvrda Brisanja</h2>
+                            <p>Da li ste sigurni da želite trajno da uklonite polaznika:</p>
+                            <h3 style={{ textTransform: 'uppercase', color: '#111827', margin: '1rem 0' }}>{userToDelete.ime} {userToDelete.prezime}</h3>
 
-                        <div className="ek-modal-actions">
-                            <button onClick={() => setIsDeleteUserModalOpen(false)} className="ek-cancel-btn">Odustani</button>
-                            <button onClick={confirmDeleteUser} className="ek-confirm-delete-btn">
-                                <i className="ri-delete-bin-line"></i> Obriši Korisnika
-                            </button>
+                            <div className={styles.warningBox}>
+                                <strong>Upozorenje:</strong> Brisanje korisnika nepovratno gubite sve transakcije, kupovine i evidenciju napretka u sistemu.
+                            </div>
+
+                            {deleteFeedback.message && (
+                                <div className={`${styles.feedback} ${styles.error}`}>
+                                    <i className="ri-error-warning-line"></i> {deleteFeedback.message}
+                                </div>
+                            )}
+
+                            <div className={styles.modalActions}>
+                                <button onClick={() => setIsDeleteUserModalOpen(false)} className={styles.cancelBtn}>Prekini</button>
+                                <button onClick={confirmDeleteUser} className={styles.confirmDeleteBtn}>
+                                    <i className="ri-delete-bin-line"></i> Finalizuj Brisanje
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

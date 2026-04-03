@@ -41,7 +41,7 @@ const Navbar = () => {
                 {/* LEFT — Logo */}
                 <div className="navbar-brand">
                     <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
-                        <img src={deliyaLogo} alt="Deliya Barber Academy" className="logo-img" />
+                        <img src={deliyaLogo} alt="Deliya Barber Academy" className="logo-img" width="169" height="70" />
                     </Link>
                 </div>
 
@@ -51,7 +51,7 @@ const Navbar = () => {
                         <Link to="/" className="navbar-link" onClick={closeMobileMenu}>Početna</Link>
                     </li>
                     <li className="navbar-item">
-                        <a href="/" className="navbar-link" onClick={closeMobileMenu}>Edukacija</a>
+                        <a href="https://onelink.to/delija-the-barbe" target="_blank" rel="noopener noreferrer" className="navbar-link" onClick={closeMobileMenu}>Zakaži Termin</a>
                     </li>
 
                     {!loading && user && (
@@ -60,14 +60,14 @@ const Navbar = () => {
                                 <Link to="/" className="navbar-link" onClick={closeMobileMenu}>Lekcije</Link>
                             </li>
                             <li className="navbar-item">
-                                <Link to="/" className="navbar-link icon-link" onClick={closeMobileMenu}>
+                                <Link to="/profil" className="navbar-link icon-link" onClick={closeMobileMenu}>
                                     <FiUser />
                                     <span className="icon-text">Profil</span>
                                 </Link>
                             </li>
                             {(user.uloga === 'admin' || user.uloga === 'instruktor') && (
                                 <li className="navbar-item">
-                                    <Link to="/" className="navbar-link icon-link" onClick={closeMobileMenu}>
+                                    <Link to="/instruktor" className="navbar-link icon-link" onClick={closeMobileMenu}>
                                         <FiBarChart2 />
                                         <span className="icon-text">Dashboard</span>
                                     </Link>

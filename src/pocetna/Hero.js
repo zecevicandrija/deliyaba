@@ -1,330 +1,309 @@
 'use client';
 
-import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Hero.module.css';
 
-gsap.registerPlugin(ScrollTrigger);
-
-const FRAME_COUNT = 81;
-
-function getFramePath(index) {
-    const num = String(index).padStart(3, '0');
-    return require(`../images/deliyaframes2/ezgif-frame-${num}.jpg`);
-}
-
-function lerp(start, end, factor) {
-    return start + (end - start) * factor;
-}
-
 const Hero = ({ navigate }) => {
-    const canvasRef = useRef(null);
     const containerRef = useRef(null);
-    const imagesRef = useRef([]);
-    const targetFrameRef = useRef(0);
-    const currentFrameRef = useRef(0);
-    const rafIdRef = useRef(null);
+    const mirzaRef = useRef(null);
+    const titleSolidRef = useRef(null);
+    const titleOutlineRef = useRef(null);
+    const cardLeftRef = useRef(null);
+    const cardRightRef = useRef(null);
+    const mobileCardsTrackRef = useRef(null);
+    const mobileGlowRef = useRef(null);
+    const mobileBgGlowRef = useRef(null);
+    const ctaBlockRef = useRef(null);
+    const mobileStickyCtaRef = useRef(null);
 
-    const [loadProgress, setLoadProgress] = useState(0);
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    // Preload all frames
-    useEffect(() => {
-        let loaded = 0;
-        const images = [];
-        for (let i = 1; i <= FRAME_COUNT; i++) {
-            const img = new Image();
-            img.src = getFramePath(i);
-            img.onload = () => {
-                loaded++;
-                setLoadProgress(Math.round((loaded / FRAME_COUNT) * 100));
-                if (loaded === FRAME_COUNT) setIsLoaded(true);
-            };
-            img.onerror = () => {
-                loaded++;
-                setLoadProgress(Math.round((loaded / FRAME_COUNT) * 100));
-                if (loaded === FRAME_COUNT) setIsLoaded(true);
-            };
-            images.push(img);
-        }
-        imagesRef.current = images;
-    }, []);
-
-    // Canvas render — DPR + object-fit COVER
-    const renderFrame = useCallback((index) => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const img = imagesRef.current[Math.round(Math.min(Math.max(index, 0), FRAME_COUNT - 1))];
-        if (!img || !img.complete || !img.naturalWidth) return;
-
-        const dpr = Math.min(window.devicePixelRatio || 1, 3);
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
-        ctx.scale(dpr, dpr);
-        ctx.clearRect(0, 0, w, h);
-
-        // Cover algorithm
-        const imgRatio = img.naturalWidth / img.naturalHeight;
-        const canvasRatio = w / h;
-        let dw, dh, dx, dy;
-        if (canvasRatio > imgRatio) {
-            dw = w; dh = w / imgRatio;
-            dx = 0; dy = (h - dh) / 2;
-        } else {
-            dh = h; dw = h * imgRatio;
-            dx = (w - dw) / 2; dy = 0;
-        }
-        ctx.drawImage(img, dx, dy, dw, dh);
-    }, []);
+    // Ref za čuvanje matchMedia instance
+    const mmRef = useRef(null);
 
     useEffect(() => {
-        if (isLoaded) {
-            // Animacija ulaska teksta odozdo sa Clip Path-om
-            gsap.fromTo([`.${styles.titleLayer1}`, `.${styles.titleLayer2}`, `.${styles.topLabel}`, `.${styles.canvasSubtitle}`],
-                { y: 100, opacity: 0, clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)' },
-                {
-                    y: 0,
-                    opacity: 1,
-                    clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-                    duration: 1.2,
-                    ease: 'expo.out',
-                    delay: 0.2 
-                }
-            );
-        }
-    }, [isLoaded]);
+        let isMounted = true;
 
-    // LERP loop
-    useEffect(() => {
-        if (!isLoaded) return;
+        const loadGSAP = async () => {
+            try {
+                const gsapModule = await import('gsap');
+                const scrollTriggerModule = await import('gsap/ScrollTrigger');
 
-        const isMobile = window.innerWidth <= 1024;
-        const lerpFactor = isMobile ? 0.02 : 0.01;
+                const gsap = gsapModule.default || gsapModule;
+                const ScrollTrigger = scrollTriggerModule.ScrollTrigger || scrollTriggerModule.default;
 
-        const tick = () => {
-            const diff = Math.abs(currentFrameRef.current - targetFrameRef.current);
-            if (diff > 0.01) {
-                currentFrameRef.current = lerp(currentFrameRef.current, targetFrameRef.current, lerpFactor);
-                renderFrame(currentFrameRef.current);
-            }
-            rafIdRef.current = requestAnimationFrame(tick);
-        };
+                if (!isMounted) return;
+                gsap.registerPlugin(ScrollTrigger);
 
-        rafIdRef.current = requestAnimationFrame(tick);
+                // 1. ULAZNA ANIMACIJA
+                const entranceTl = gsap.timeline({ delay: 0.1 });
+                entranceTl
+                    .fromTo(titleSolidRef.current,
+                        { y: 80, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 1.1, ease: 'expo.out' }
+                    )
+                    .fromTo(titleOutlineRef.current,
+                        { y: 80, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 1.1, ease: 'expo.out' },
+                        '-=0.9'
+                    )
+                    .fromTo(mirzaRef.current,
+                        { y: 60, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 1.2, ease: 'expo.out' },
+                        '-=0.8'
+                    );
 
-        return () => {
-            if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-        };
-    }, [isLoaded, renderFrame]);
+                // 2. GSAP MATCH MEDIA 
+                mmRef.current = gsap.matchMedia();
 
-    // GSAP ScrollTrigger
-    useEffect(() => {
-        if (!isLoaded) return;
-        renderFrame(0);
+                mmRef.current.add("(min-width: 769px)", () => {
+                    // DESKTOP SCROLLYTELLING
+                    const tl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: containerRef.current,
+                            start: 'top top',
+                            end: 'bottom bottom',
+                            scrub: 1.2,
+                        }
+                    });
 
-        const ctx = gsap.context(() => {
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: 'top top',
-                    end: 'bottom bottom',
-                    scrub: 1.5,
-                    onUpdate: (self) => {
-                        targetFrameRef.current = self.progress * (FRAME_COUNT - 1);
-                    },
-                }
-            });
+                    tl.fromTo(mirzaRef.current,
+                        { scale: 1, y: 0 },
+                        { scale: 1.15, y: '4%', duration: 0.30, ease: 'none' }, 0
+                    )
+                        .fromTo(titleSolidRef.current,
+                            { y: 0, opacity: 1 },
+                            { y: '-35%', opacity: 0, duration: 0.30, ease: 'power2.in' }, 0
+                        )
+                        .fromTo(titleOutlineRef.current,
+                            { y: 0, opacity: 1 },
+                            { y: '35%', opacity: 0, duration: 0.30, ease: 'power2.in' }, 0
+                        )
+                        .fromTo(cardLeftRef.current,
+                            { opacity: 0, x: -80, rotateY: -25 },
+                            { opacity: 1, x: 0, rotateY: 0, duration: 0.25, ease: 'power2.out' }, 0.30
+                        )
+                        .fromTo(cardRightRef.current,
+                            { opacity: 0, x: 80, rotateY: 25 },
+                            { opacity: 1, x: 0, rotateY: 0, duration: 0.25, ease: 'power2.out' }, 0.35
+                        )
+                        .to(cardLeftRef.current,
+                            { rotateY: 8, rotateX: -3, duration: 0.20, ease: 'sine.inOut' }, 0.50
+                        )
+                        .to(cardRightRef.current,
+                            { rotateY: -8, rotateX: 3, duration: 0.20, ease: 'sine.inOut' }, 0.50
+                        )
+                        .to([cardLeftRef.current, cardRightRef.current],
+                            { opacity: 0, duration: 0.12, ease: 'power1.in' }, 0.68
+                        )
+                        .to(mirzaRef.current,
+                            { y: '-12%', opacity: 0, scale: 1.0, duration: 0.30, ease: 'power2.in' }, 0.70
+                        )
+                        .fromTo(ctaBlockRef.current,
+                            { opacity: 0, y: 60 },
+                            { opacity: 1, y: 0, duration: 0.25, ease: 'expo.out' }, 0.80
+                        );
+                });
 
-            // Title fades out from 0% to 15% progress
-            tl.fromTo(`.${styles.overlayTitle}`,
-                { opacity: 1, scale: 1, filter: 'blur(0px)' },
-                {
-                    opacity: 0,
-                    scale: 1.3,
-                    filter: 'blur(12px)',
-                    duration: 0.15,
-                    ease: 'power2.in'
-                },
-                0
-            );
+                mmRef.current.add("(max-width: 768px)", () => {
+                    // MOBILE SCROLLYTELLING
+                    const tl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: containerRef.current,
+                            start: 'top top',
+                            end: 'bottom bottom',
+                            scrub: 1.0,
+                        }
+                    });
 
-            // Mid fades in from 25% to 40%
-            tl.fromTo(`.${styles.overlayMid}`,
-                { opacity: 0, y: 60 },
-                { opacity: 1, y: 0, duration: 0.15, ease: 'power1.out' },
-                0.25
-            );
+                    tl.to([titleSolidRef.current, titleOutlineRef.current],
+                        { y: '-30%', opacity: 0, duration: 0.28, ease: 'power2.in' }, 0
+                    )
+                        .to(mirzaRef.current,
+                            { scale: 0.72, y: '6%', opacity: 0.35, duration: 0.22, ease: 'power2.inOut' }, 0.25
+                        )
+                        .fromTo(mobileCardsTrackRef.current,
+                            { opacity: 0, y: 30, yPercent: -50 },
+                            { opacity: 1, y: 0, yPercent: -50, duration: 0.22, ease: 'power2.out' }, 0.45
+                        )
+                        .fromTo(mobileGlowRef.current,
+                            { opacity: 0, scale: 0.7 },
+                            { opacity: 1, scale: 1, duration: 0.22, ease: 'power2.out' }, 0.45
+                        )
+                        .to(mobileCardsTrackRef.current,
+                            { opacity: 0, y: -30, yPercent: -50, duration: 0.18, ease: 'power2.in' }, 0.65
+                        )
+                        .to(mobileGlowRef.current,
+                            { opacity: 0, duration: 0.15 }, 0.65
+                        )
+                        .to(mirzaRef.current,
+                            { scale: 1.0, y: '0%', opacity: 1, duration: 0.28, ease: 'power2.out' }, 0.70
+                        )
+                        .fromTo(ctaBlockRef.current,
+                            { opacity: 0, y: -40 },
+                            { opacity: 1, y: 0, duration: 0.25, ease: 'expo.out' }, 0.76
+                        )
+                        .fromTo(mobileStickyCtaRef.current,
+                            { opacity: 0, y: 30 },
+                            { opacity: 1, y: 0, duration: 0.22, ease: 'expo.out' }, 0.82
+                        );
+                });
 
-            // Mid fades out from 45% to 55%
-            tl.to(`.${styles.overlayMid}`,
-                { opacity: 0, y: -60, duration: 0.10, ease: 'power1.in' },
-                0.45
-            );
-
-            // End fades in from 60% to 75%
-            tl.fromTo(`.${styles.overlayEnd}`,
-                { opacity: 0, y: 60 },
-                { opacity: 1, y: 0, duration: 0.15, ease: 'power1.out' },
-                0.60
-            );
-        }, containerRef);
-
-        let lastWidth = window.innerWidth;
-        const handleResize = () => {
-            renderFrame(currentFrameRef.current);
-            if (window.innerWidth !== lastWidth) {
-                lastWidth = window.innerWidth;
-                ScrollTrigger.refresh();
+            } catch (error) {
+                console.error("GSAP load error:", error);
             }
         };
-        window.addEventListener('resize', handleResize);
+
+        loadGSAP();
 
         return () => {
-            ctx.revert();
-            window.removeEventListener('resize', handleResize);
+            isMounted = false;
+            if (mmRef.current) {
+                mmRef.current.revert();
+            }
         };
-    }, [isLoaded, renderFrame]);
+    }, []);
 
     return (
-        <>
-            {/* LOADING SCREEN */}
-            {!isLoaded && (
-                <div className={styles.loadingScreen}>
-                    <div className={styles.loaderContent}>
-                        <div className={styles.loaderLogo}>DELIYA</div>
-                        <div className={styles.progressBar}>
-                            <div
-                                className={styles.progressFill}
-                                style={{ width: `${loadProgress}%` }}
-                            />
-                        </div>
-                        <span className={styles.progressText}>{loadProgress}%</span>
-                    </div>
-                </div>
-            )}
+        <div className={styles.scrollContainer} ref={containerRef}>
+            <div className={styles.canvasWrapper}>
 
-            {/* SCROLLYTELLING — tall container, sticky canvas */}
-            <div className={styles.scrollContainer} ref={containerRef}>
-                <div className={styles.canvasWrapper}>
-
-                    <canvas ref={canvasRef} className={styles.stickyCanvas} />
-
-                    {/* PREMIJUM OVERLAY ZA BOLJU ČITLJIVOST TEKSTA */}
-                    <div className={styles.canvasOverlay} />
-                    {/* FILM GRAIN - DODATNA TEKSTURA */}
+                {/* ── LAYER 1: DEEP BACKGROUND (Slika uklonjena, ostaju efekti) ── */}
+                <div className={styles.deepBg}>
+                    <div className={styles.bgDimmer} />
                     <div className={styles.noiseOverlay} />
+                    <div className={styles.mobileBgGlow} ref={mobileBgGlowRef} />
+                </div>
 
-                    {/* DEKORATIVNI EKRANSKI OKVIR */}
-                    <div className={styles.frameDecoration}>
-                        <div className={`${styles.frameCorner} ${styles.topLeft}`} />
-                        <div className={`${styles.frameCorner} ${styles.topRight}`} />
-                        <div className={`${styles.frameCorner} ${styles.bottomLeft}`} />
-                        <div className={`${styles.frameCorner} ${styles.bottomRight}`} />
-                        <div className={styles.frameBorderLeft} />
-                        <div className={styles.frameBorderRight} />
+                {/* ── LAYER 2: SOLID TITLE "OVLADAJ" ── */}
+                <div className={styles.titleSolidWrapper} ref={titleSolidRef}>
+                    <span className={styles.titleSolid}>OVLADAJ</span>
+                </div>
+
+                {/* ── LAYER 3: MIRZA PNG CUTOUT ── */}
+                <div className={styles.mirzaCenterAnchor}>
+                    <div className={styles.mirzaWrapper} ref={mirzaRef}>
+                        <img
+                            src="/delijaa.webp"
+                            srcSet="/delijaa.webp 1200w"
+                            sizes="(max-width: 768px) 100vw, 864px"
+                            alt="Mirza Deliya"
+                            className={styles.mirzaImg}
+                            fetchPriority="high"
+                            loading="eager"
+                            width="864"
+                            height="1296"
+                        />
                     </div>
+                </div>
 
-                    {/* TEXT STACK: ISPRED MAŠINICE (Z-Index 10) */}
-                    <div className={styles.overlayTitle}>
-                        <div className={styles.heroTextContainer}>
-                            <div className={styles.topLabelWrapper}>
-                                <span className={styles.topLabel}>DELIYA MASTERCLASS</span>
-                            </div>
-                            <h1 className={styles.titleLayer1}>
-                                OVLADAJ
-                            </h1>
-                            <h1 className={styles.titleLayer2}>
-                                ZANATOM.
-                            </h1>
-                            <p className={styles.canvasSubtitle}>
-                                Od početnika do sigurnog barbera kroz jasan sistem rada i praksu.
+                {/* ── LAYER 4: OUTLINE TITLE "ZANATOM" ── */}
+                <div className={styles.titleOutlineWrapper} ref={titleOutlineRef}>
+                    <span className={styles.titleOutline}>ZANATOM</span>
+                </div>
+
+                {/* ── LAYER 5: GLOSSY CARDS ── */}
+                <div
+                    className={`${styles.glossyCard} ${styles.cardLeft} ${styles.desktopOnly}`}
+                    ref={cardLeftRef}
+                >
+                    <div className={styles.cardInner}>
+                        <div className={styles.cardGlossSheen} />
+                        <div className={styles.cardDot} />
+                        <h3 className={styles.cardTitle}>REZULTATI<br />KOJI SE VIDE</h3>
+                        <p className={styles.cardDesc}>
+                            Svaki rez je merljiv. Napredak je vidljiv od prvog dana — kroz tehniku, preciznost i samopouzdanje koje rasteš svaki čas.
+                        </p>
+                        <div className={styles.cardAccent} />
+                    </div>
+                </div>
+
+                <div
+                    className={`${styles.glossyCard} ${styles.cardRight} ${styles.desktopOnly}`}
+                    ref={cardRightRef}
+                >
+                    <div className={styles.cardInner}>
+                        <div className={styles.cardGlossSheen} />
+                        <div className={styles.cardDot} />
+                        <h3 className={styles.cardTitle}>DOKAZAN<br />SISTEM</h3>
+                        <p className={styles.cardDesc}>
+                            Nije improvizacija. Deliya metoda je strukturisana, testirana i dovela stotine učenika do prvog profesionalnog šišanja.
+                        </p>
+                        <div className={styles.cardAccent} />
+                    </div>
+                </div>
+
+                {/* Mobile: horizontal snap carousel track */}
+                <div
+                    className={styles.mobileCardsTrack}
+                    ref={mobileCardsTrackRef}
+                >
+                    <div className={styles.mobileGlow} ref={mobileGlowRef} />
+                    <div className={`${styles.glossyCard} ${styles.mobileCard}`}>
+                        <div className={styles.cardInner}>
+                            <div className={styles.cardGlossSheen} />
+                            <div className={styles.cardDot} />
+                            <h3 className={styles.cardTitle}>REZULTATI<br />KOJI SE VIDE</h3>
+                            <p className={styles.cardDesc}>
+                                Svaki rez je merljiv. Napredak je vidljiv od prvog dana — kroz tehniku, preciznost i samopouzdanje koje rasteš svaki čas.
                             </p>
-                        </div>
-                        <div className={styles.scrollArrowWrapper}>
-                            <motion.div
-                                animate={{ y: [0, 15, 0] }}
-                                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                            >
-                                <FiChevronDown />
-                            </motion.div>
+                            <div className={styles.cardAccent} />
                         </div>
                     </div>
-
-                    <div className={styles.overlayMid}>
-                        <div className={`${styles.glossyCard} ${styles.cardTopLeft}`}>
-                            <div className={styles.cardHeader}>
-                                <div className={styles.cardDot}></div>
-                                <h3 className={styles.cardTitle}>BEZ KOMPROMISA</h3>
-                            </div>
-                            <div className={styles.cardBody}>
-                                <div className={styles.cardValueWrapper}>
-                                    <span className={styles.cardValue}>0.1</span>
-                                    <div className={styles.cardUnitWrapper}>
-                                        <span className={styles.cardUnit}>mm</span>
-                                        <span className={styles.cardSubUnit}>PRECISION</span>
-                                    </div>
-                                </div>
-                                <p className={styles.cardDesc}>
-                                    Preciznost u svakom rezu. Naš fokus je na najsitnijim
-                                    detaljima koji odvajaju dobre od najboljih majstora.
-                                </p>
-                            </div>
-                            <div className={styles.cardGraphic}></div>
-                        </div>
-
-                        <div className={`${styles.glossyCard} ${styles.cardBotRight}`}>
-                            <div className={styles.cardHeader}>
-                                <div className={styles.cardDot}></div>
-                                <h3 className={styles.cardTitle}>FOKUS NA PRAKSU</h3>
-                            </div>
-                            <div className={styles.cardBody}>
-                                <div className={styles.cardValueWrapper}>
-                                    <span className={styles.cardValue}>100</span>
-                                    <div className={styles.cardUnitWrapper}>
-                                        <span className={styles.cardUnit}>%</span>
-                                        <span className={styles.cardSubUnit}>PRAKTIČAN RAD</span>
-                                    </div>
-                                </div>
-                                <p className={styles.cardDesc}>
-                                    Zaboravi na suvu teoriju. Učiš direktno kroz rad na modelima
-                                    uz posvećeno mentorstvo od prvog do poslednjeg poteza.
-                                </p>
-                            </div>
-                            <div className={styles.cardGraphic}></div>
-                        </div>
-                    </div>
-
-                    <div className={styles.overlayEnd}>
-                        <div className={styles.heroTextContainerCentered}>
-                            <div className={styles.topLabelWrapper}>
-                                <span className={styles.topLabel}>TVOJA KARIJERA</span>
-                            </div>
-                            <h1 className={`${styles.titleLayer1} ${styles.titleEnd1}`}>
-                                PODIGNI SVOJ
-                            </h1>
-                            <h1 className={`${styles.titleLayer2} ${styles.titleEnd2}`}>
-                                STANDARD.
-                            </h1>
-
-                            <div className={styles.ctaWrapper}>
-                                <button className={styles.ctaButton} onClick={() => navigate('/paket')}>
-                                    PRIDRUŽI SE
-                                </button>
-                            </div>
+                    <div className={`${styles.glossyCard} ${styles.mobileCard}`}>
+                        <div className={styles.cardInner}>
+                            <div className={styles.cardGlossSheen} />
+                            <div className={styles.cardDot} />
+                            <h3 className={styles.cardTitle}>DOKAZAN<br />SISTEM</h3>
+                            <p className={styles.cardDesc}>
+                                Nije improvizacija. Deliya metoda je strukturisana, testirana i dovela stotine učenika do prvog profesionalnog šišanja.
+                            </p>
+                            <div className={styles.cardAccent} />
                         </div>
                     </div>
                 </div>
+
+                {/* ── LAYER 6: CTA BLOCK ── */}
+                <div className={styles.ctaBlock} ref={ctaBlockRef}>
+                    <span className={styles.ctaLabel}>[ TVOJA KARIJERA POKREĆE SE OVDE ]</span>
+                    <h2 className={styles.ctaHeading}>PODIGNI SVOJ<br />STANDARD.</h2>
+                    <p className={styles.ctaSubtitle}>
+                        Od početnika do sigurnog barbera — kroz jasan sistem rada i posvećenu praksu.
+                    </p>
+                    <button
+                        className={`${styles.ctaButton} ${styles.desktopOnly}`}
+                        onClick={() => navigate('/paket')}
+                    >
+                        POČNI DANAS
+                    </button>
+                </div>
+
+                {/* ── MOBILE STICKY CTA BUTTON ── */}
+                <div className={styles.mobileStickyCtaBar} ref={mobileStickyCtaRef}>
+                    <button
+                        className={styles.mobileStickyBtn}
+                        onClick={() => navigate('/paket')}
+                    >
+                        POČNI DANAS
+                    </button>
+                </div>
+
+                {/* ── SCROLL ARROW ── */}
+                <div className={styles.scrollArrowWrapper}>
+                    <div className={styles.bouncingArrow}>
+                        <FiChevronDown />
+                    </div>
+                </div>
+
+                {/* Decorative frame corners */}
+                <div className={styles.frameDecoration}>
+                    <div className={`${styles.frameCorner} ${styles.topLeft}`} />
+                    <div className={`${styles.frameCorner} ${styles.topRight}`} />
+                    <div className={`${styles.frameCorner} ${styles.bottomLeft}`} />
+                    <div className={`${styles.frameCorner} ${styles.bottomRight}`} />
+                </div>
+
             </div>
-        </>
+        </div>
     );
 };
 

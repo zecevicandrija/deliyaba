@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../login/api';
-import './DodajKorisnika.css';
+import styles from './DodajKorisnika.module.css';
 
 const DodajKorisnika = () => {
     const navigate = useNavigate();
@@ -103,24 +103,27 @@ const DodajKorisnika = () => {
     };
 
     return (
-        <div className="dk-page">
-            <div className="dk-container">
-                <button className="dk-back-btn" onClick={() => navigate('/instruktor')}>
-                    <i className="ri-arrow-left-line"></i> Nazad
+        <div className={styles.page}>
+            <div className={styles.watermark}>Deliya</div>
+            
+            <div className={styles.container}>
+                <button className={styles.backBtn} onClick={() => navigate('/instruktor')}>
+                    <i className="ri-arrow-left-line"></i> Nazad na Tablu
                 </button>
 
-                <div className="dk-header">
-                    <div className="dk-header-icon">
-                        <i className="ri-user-add-line"></i>
+                <header className={styles.header}>
+                    <div className={styles.badge}>
+                        <span className={styles.editorialLine}></span>
+                        <span>Administracija Korisnika</span>
                     </div>
-                    <h1>Dodaj Korisnika</h1>
-                    <p>Ručno dodajte novog korisnika i dodelite mu pristup kursu.</p>
-                </div>
+                    <h1 className={styles.title}>Dodaj Korisnika</h1>
+                    <p className={styles.subtitle}>Ručno kreiranje novih profila i dodeljivanje pristupa edukativnim materijalima.</p>
+                </header>
 
-                <form className="dk-form" onSubmit={handleSubmit}>
-                    <div className="dk-form-grid">
+                <form className={styles.form} onSubmit={handleSubmit}>
+                    <div className={styles.formGrid}>
                         {/* Ime */}
-                        <div className="dk-field">
+                        <div className={styles.field}>
                             <label htmlFor="ime">
                                 <i className="ri-user-line"></i> Ime *
                             </label>
@@ -128,7 +131,7 @@ const DodajKorisnika = () => {
                                 id="ime"
                                 name="ime"
                                 type="text"
-                                placeholder="Unesite ime"
+                                placeholder="Unesite ime polaznika"
                                 value={form.ime}
                                 onChange={handleChange}
                                 required
@@ -136,7 +139,7 @@ const DodajKorisnika = () => {
                         </div>
 
                         {/* Prezime */}
-                        <div className="dk-field">
+                        <div className={styles.field}>
                             <label htmlFor="prezime">
                                 <i className="ri-user-line"></i> Prezime *
                             </label>
@@ -144,7 +147,7 @@ const DodajKorisnika = () => {
                                 id="prezime"
                                 name="prezime"
                                 type="text"
-                                placeholder="Unesite prezime"
+                                placeholder="Unesite prezime polaznika"
                                 value={form.prezime}
                                 onChange={handleChange}
                                 required
@@ -152,15 +155,15 @@ const DodajKorisnika = () => {
                         </div>
 
                         {/* Email */}
-                        <div className="dk-field dk-full-width">
+                        <div className={`${styles.field} ${styles.fullWidth}`}>
                             <label htmlFor="email">
-                                <i className="ri-mail-line"></i> Email *
+                                <i className="ri-mail-line"></i> Protokol Email *
                             </label>
                             <input
                                 id="email"
                                 name="email"
                                 type="email"
-                                placeholder="korisnik@email.com"
+                                placeholder="korisnik@domain.com"
                                 value={form.email}
                                 onChange={handleChange}
                                 required
@@ -168,15 +171,15 @@ const DodajKorisnika = () => {
                         </div>
 
                         {/* Šifra */}
-                        <div className="dk-field">
+                        <div className={styles.field}>
                             <label htmlFor="sifra">
-                                <i className="ri-lock-line"></i> Šifra *
+                                <i className="ri-lock-line"></i> Pristupna Šifra *
                             </label>
                             <input
                                 id="sifra"
                                 name="sifra"
                                 type="password"
-                                placeholder="Unesite šifru"
+                                placeholder="Izaberite sigurnu lozinku"
                                 value={form.sifra}
                                 onChange={handleChange}
                                 required
@@ -184,21 +187,21 @@ const DodajKorisnika = () => {
                         </div>
 
                         {/* Uloga */}
-                        <div className="dk-field">
+                        <div className={styles.field}>
                             <label htmlFor="uloga">
-                                <i className="ri-shield-user-line"></i> Uloga
+                                <i className="ri-shield-user-line"></i> Nivo Pristupa
                             </label>
                             <select id="uloga" name="uloga" value={form.uloga} onChange={handleChange}>
-                                <option value="korisnik">Korisnik</option>
+                                <option value="korisnik">Korisnik (Student)</option>
                                 <option value="instruktor">Instruktor</option>
-                                <option value="admin">Admin</option>
+                                <option value="admin">Sistemski Admin</option>
                             </select>
                         </div>
 
                         {/* Datum isteka pretplate */}
-                        <div className="dk-field">
+                        <div className={styles.field}>
                             <label htmlFor="subscription_expires_at">
-                                <i className="ri-calendar-line"></i> Pretplata ističe *
+                                <i className="ri-calendar-line"></i> Expiration Date *
                             </label>
                             <input
                                 id="subscription_expires_at"
@@ -211,35 +214,35 @@ const DodajKorisnika = () => {
                         </div>
 
                         {/* Kurs */}
-                        <div className="dk-field">
+                        <div className={styles.field}>
                             <label htmlFor="kurs_id">
-                                <i className="ri-book-open-line"></i> Kurs
+                                <i className="ri-book-open-line"></i> Dodeljeni Kurs
                             </label>
                             <select id="kurs_id" name="kurs_id" value={form.kurs_id} onChange={handleChange}>
                                 {kursevi.map(k => (
                                     <option key={k.id} value={k.id}>{k.naziv}</option>
                                 ))}
-                                {kursevi.length === 0 && <option value="1">Motion Akademija (ID: 1)</option>}
+                                {kursevi.length === 0 && <option value="1">Akademija (ID: 1)</option>}
                             </select>
                         </div>
                     </div>
 
                     {/* Feedback */}
                     {feedback.message && (
-                        <div className={`dk-feedback ${feedback.type}`}>
+                        <div className={`${styles.feedback} ${styles[feedback.type]}`}>
                             <i className={feedback.type === 'success' ? 'ri-check-line' : 'ri-error-warning-line'}></i>
                             {feedback.message}
                         </div>
                     )}
 
-                    <button type="submit" className="dk-submit-btn" disabled={isSubmitting}>
+                    <button type="submit" className={styles.submitBtn} disabled={isSubmitting}>
                         {isSubmitting ? (
                             <>
-                                <i className="ri-loader-4-line dk-spin"></i> Dodavanje...
+                                <i className={`ri-loader-4-line ${styles.spin}`}></i> Autorizacija...
                             </>
                         ) : (
                             <>
-                                <i className="ri-user-add-line"></i> Dodaj Korisnika
+                                <i className="ri-user-add-line"></i> Finalizuj Dodavanje
                             </>
                         )}
                     </button>

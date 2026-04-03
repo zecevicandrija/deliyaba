@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './auth';
 import api from './api';
-import './MojProfil.css';
+import styles from './MojProfil.module.css';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMail, FiKey, FiArrowRight, FiCheck, FiMessageCircle, FiX } from 'react-icons/fi';
@@ -18,19 +18,12 @@ const MojProfil = () => {
         newPassword: ''
     });
 
-    // NOVI STATE: Čuvamo listu svih kupljenih kurseva
     const [kupljeniKursevi, setKupljeniKursevi] = useState([]);
-
-    // NOVO: State za recurring subscription detalje
     const [subscriptionDetails, setSubscriptionDetails] = useState(null);
-
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [cancelLoading, setCancelLoading] = useState(false);
 
-    // Provera da li korisnik ima pristup pretplati
-    // Pristup ima ako: datum nije istekao I status NIJE 'expired' ili 'payment_failed'
-    // Status 'cancelled' ili 'active' dozvoljavaju pristup do datuma isteka
     const imaAktivnuPretplatu = user &&
         user.subscription_expires_at &&
         new Date(user.subscription_expires_at) > new Date() &&
@@ -39,7 +32,6 @@ const MojProfil = () => {
 
     const fetchData = useCallback(async () => {
         if (user) {
-            // Osvježi user podatke sa servera da imaAktivnuPretplatu bude tačan
             try {
                 const meResponse = await api.get('/api/auth/me');
                 setAuthUser(meResponse.data);
@@ -56,31 +48,23 @@ const MojProfil = () => {
                 newPassword: ''
             });
 
-            // OPTIMIZOVANO: Oba poziva idu PARALELNO umesto sekvencijalno
             const [kupovinaResult, subResult] = await Promise.allSettled([
                 api.get(`/api/kupovina/user/${user.id}`),
                 api.get(`/api/subscription/details/${user.id}`)
             ]);
 
-            // Obradi kupljene kurseve
             if (kupovinaResult.status === 'fulfilled') {
                 setKupljeniKursevi(kupovinaResult.value.data);
             } else {
-                const error = kupovinaResult.reason;
-                if (error?.response?.status === 403) {
-                    console.log('Subscription expired - showing courses with expired status');
-                }
                 setKupljeniKursevi([]);
             }
 
-            // Obradi subscription details
             if (subResult.status === 'fulfilled' && subResult.value.data.hasRecurring) {
                 setSubscriptionDetails(subResult.value.data.subscription);
             } else {
                 setSubscriptionDetails(null);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.id, setAuthUser]);
 
     useEffect(() => {
@@ -132,24 +116,19 @@ const MojProfil = () => {
         setCancelLoading(true);
         try {
             await api.post('/api/subscription/cancel');
-
-            // Refresh subscription details
             const subResponse = await api.get(`/api/subscription/details/${user.id}`);
             if (subResponse.data.hasRecurring) {
                 setSubscriptionDetails(subResponse.data.subscription);
             } else {
                 setSubscriptionDetails(null);
             }
-
-            // Refresh user data
             const response = await api.get('/api/auth/me');
             setAuthUser(response.data);
             localStorage.setItem('user', JSON.stringify(response.data));
-
-            alert('Automatsko produžavanje je uspešno otkazano. Zadržaćete pristup do isteka trenutne pretplate.');
+            alert('Automatsko produžavanje je uspešno otkazano.');
         } catch (error) {
             console.error('Greška pri otkazivanju pretplate:', error);
-            alert('Greška pri otkazivanju pretplate. Molimo pokušajte ponovo.');
+            alert('Greška pri otkazivanju pretplate.');
         } finally {
             setCancelLoading(false);
         }
@@ -159,24 +138,19 @@ const MojProfil = () => {
         setCancelLoading(true);
         try {
             await api.post('/api/subscription/reactivate');
-
-            // Refresh subscription details
             const subResponse = await api.get(`/api/subscription/details/${user.id}`);
             if (subResponse.data.hasRecurring) {
                 setSubscriptionDetails(subResponse.data.subscription);
             } else {
                 setSubscriptionDetails(null);
             }
-
-            // Refresh user data
             const response = await api.get('/api/auth/me');
             setAuthUser(response.data);
             localStorage.setItem('user', JSON.stringify(response.data));
-
             alert('Automatsko produžavanje je ponovo aktivirano!');
         } catch (error) {
             console.error('Greška pri reaktivaciji pretplate:', error);
-            alert('Greška pri reaktivaciji pretplate. Molimo pokušajte ponovo.');
+            alert('Greška pri reaktivaciji pretplate.');
         } finally {
             setCancelLoading(false);
         }
@@ -185,111 +159,99 @@ const MojProfil = () => {
 
     if (!user) {
         return (
-            <div className="profil-container">
+            <div className={styles.page}>
+                <div className={styles.watermark}>Deliya</div>
                 <motion.div
-                    className="welcome-container"
+                    className={styles.welcomeContainer}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8 }}
                 >
-                    {/* Main Welcome Card */}
                     <motion.div
-                        className="welcome-hero-card"
-                        initial={{ scale: 0.9, opacity: 0 }}
+                        className={styles.welcomeHeroCard}
+                        initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
                     >
-                        <div className="welcome-glow" />
-
+                        <div className={styles.welcomeGlow} />
                         <motion.div
-                            className="welcome-icon-box"
+                            className={styles.welcomeIconBox}
                             initial={{ y: -20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.4, duration: 0.6 }}
                         >
-                            <FiCheck className="welcome-check-icon" />
+                            <FiCheck style={{ color: '#fff' }} />
                         </motion.div>
 
                         <motion.h1
-                            className="welcome-title"
+                            className={styles.welcomeTitle}
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.5, duration: 0.6 }}
                         >
-                            Dobrodošli u <span className="gradient-text">Motion Akademiju</span>!
+                            Dobrodošli u <span className={styles.gradientText}>Motion Akademiju</span>
                         </motion.h1>
 
                         <motion.p
-                            className="welcome-subtitle"
+                            className={styles.welcomeSubtitle}
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.6, duration: 0.6 }}
                         >
-                            Uspešno ste se pridružili zajednici kreativaca
+                            Vaša autorizacija je uspešno potvrđena. Dobrodošli u elitnu zajednicu video stvaralaca.
                         </motion.p>
                     </motion.div>
 
-                    {/* Information Cards */}
-                    <div className="welcome-info-grid">
+                    <div className={styles.welcomeInfoGrid}>
                         <motion.div
-                            className="welcome-info-card"
-                            initial={{ x: -30, opacity: 0 }}
+                            className={styles.welcomeInfoCard}
+                            initial={{ x: -20, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             transition={{ delay: 0.7, duration: 0.5 }}
                         >
-                            <div className="info-card-icon-wrapper">
-                                <FiMail className="info-card-icon" />
-                            </div>
-                            <div className="info-card-content">
-                                <h3>Proverite Vaš Email</h3>
-                                <p>Poslali smo vam podatke za login na vašu email adresu</p>
+                            <div className={styles.iconWrapper}><FiMail /></div>
+                            <div>
+                                <h3>Protokol Email</h3>
+                                <p>Proverite vašu pristiglu poštu za login podatke i instrukcije.</p>
                             </div>
                         </motion.div>
 
                         <motion.div
-                            className="welcome-info-card"
-                            initial={{ x: -30, opacity: 0 }}
+                            className={styles.welcomeInfoCard}
+                            initial={{ x: -20, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             transition={{ delay: 0.8, duration: 0.5 }}
                         >
-                            <div className="info-card-icon-wrapper">
-                                <FiKey className="info-card-icon" />
-                            </div>
-                            <div className="info-card-content">
-                                <h3>Pristupite Platformi</h3>
-                                <p>Koristite email i šifru koju smo vam prosledili za login</p>
+                            <div className={styles.iconWrapper}><FiKey /></div>
+                            <div>
+                                <h3>Pristupni Kodovi</h3>
+                                <p>Koristite generisanu lozinku za prvi pristup platformi.</p>
                             </div>
                         </motion.div>
 
                         <motion.div
-                            className="welcome-info-card"
-                            initial={{ x: -30, opacity: 0 }}
+                            className={styles.welcomeInfoCard}
+                            initial={{ x: -20, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             transition={{ delay: 0.9, duration: 0.5 }}
                         >
-                            <div className="info-card-icon-wrapper">
-                                <FiMessageCircle className="info-card-icon" />
-                            </div>
-                            <div className="info-card-content">
-                                <h3>Discord Zajednica</h3>
-                                <p>Ne zaboravite da se pridružite našoj Discord zajednici!</p>
+                            <div className={styles.iconWrapper}><FiMessageCircle /></div>
+                            <div>
+                                <h3>Discord Hub</h3>
+                                <p>Ekskluzivni kanali su sada otvoreni za vašu saradnju.</p>
                             </div>
                         </motion.div>
                     </div>
 
-                    {/* CTA Button */}
                     <motion.button
-                        className="welcome-cta-btn"
+                        className={styles.welcomeCtaBtn}
                         onClick={() => navigate('/login')}
-                        initial={{ y: 30, opacity: 0 }}
+                        initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 1, duration: 0.6 }}
-                        whileHover={{ scale: 1.05, boxShadow: '0 20px 60px rgba(255, 165, 0, 0.4)' }}
-                        whileTap={{ scale: 0.95 }}
                     >
-                        <span>Uđite na Platformu</span>
-                        <FiArrowRight className="cta-icon" />
-                        <div className="cta-shine" />
+                        <span>Uđi na Platformu</span>
+                        <FiArrowRight />
                     </motion.button>
                 </motion.div>
             </div>
@@ -297,144 +259,137 @@ const MojProfil = () => {
     }
 
     return (
-        <div className="profil-container">
-            <div className="profil-content-wrapper">
+        <div className={styles.page}>
+            <div className={styles.watermark}>Deliya</div>
+
+            <div className={styles.contentWrapper}>
                 {/* --- Leva Kartica - Profil --- */}
-                <div className="profil-card">
-                    <h2 className="profil-header">Moj Profil</h2>
-                    <form onSubmit={handleSubmit} className="profil-form">
-                        {/* ... input polja ostaju ista ... */}
-                        <div className="profil-form-group">
+                <div className={styles.card}>
+                    <h2 className={styles.header}>Identitet</h2>
+                    <form onSubmit={handleSubmit} className={styles.form}>
+                        <div className={styles.formGroup}>
                             <label htmlFor="ime">Ime</label>
                             <input id="ime" name="ime" type="text" value={formData.ime} onChange={handleInputChange} required />
                         </div>
-                        <div className="profil-form-group">
+                        <div className={styles.formGroup}>
                             <label htmlFor="prezime">Prezime</label>
                             <input id="prezime" name="prezime" type="text" value={formData.prezime} onChange={handleInputChange} required />
                         </div>
-                        <div className="profil-form-group">
-                            <label htmlFor="email">Email <span style={{fontSize: '0.8em', color: '#888'}}>(Ne može se menjati)</span></label>
-                            <input id="email" name="email" type="email" value={formData.email} disabled className="disabled-input" />
+                        <div className={styles.formGroup}>
+                            <label htmlFor="email">Email Adresa</label>
+                            <input id="email" name="email" type="email" value={formData.email} disabled className={styles.disabledInput} />
                         </div>
-                        <hr className="profil-divider" />
-                        <h3 className="profil-subheader">Promena Lozinke</h3>
-                        <div className="profil-form-group">
-                            <label htmlFor="currentPassword">Trenutna Lozinka</label>
-                            <input id="currentPassword" name="currentPassword" type="password" value={formData.currentPassword} onChange={handleInputChange} placeholder="Unesite za promenu lozinke" />
+                        <hr className={styles.divider} />
+                        <h3 className={styles.subheader}>Sigurnost</h3>
+                        <div className={styles.formGroup}>
+                            <label htmlFor="currentPassword">Stara Šifra</label>
+                            <input id="currentPassword" name="currentPassword" type="password" value={formData.currentPassword} onChange={handleInputChange} placeholder="Unesite staru šifru" />
                         </div>
-                        <div className="profil-form-group">
-                            <label htmlFor="newPassword">Nova Lozinka</label>
-                            <input id="newPassword" name="newPassword" type="password" value={formData.newPassword} onChange={handleInputChange} placeholder="Ostavite prazno ako ne menjate" />
+                        <div className={styles.formGroup}>
+                            <label htmlFor="newPassword">Nova Šifra</label>
+                            <input id="newPassword" name="newPassword" type="password" value={formData.newPassword} onChange={handleInputChange} placeholder="Unesite novu šifru" />
                         </div>
-                        {message && <p className="profil-message">{message}</p>}
-                        <button type="submit" className="profil-submit-btn" disabled={isLoading}>
-                            {isLoading ? 'Ažuriranje...' : 'Sačuvaj Promene'}
+                        {message && <p className={styles.message}>{message}</p>}
+                        <button type="submit" className={styles.submitBtn} disabled={isLoading}>
+                            {isLoading ? 'Autorizacija...' : 'Ažuriraj Podatke'}
                         </button>
                     </form>
                 </div>
 
                 {/* --- Desna Kartica - Pretplate --- */}
-                <div className="pretplata-card">
-                    <h2 className="profil-header">Moje Pretplate</h2>
+                <div className={styles.card}>
+                    <h2 className={styles.header}>Aktivni Programi</h2>
                     {kupljeniKursevi.length > 0 ? (
-                        <ul className="pretplata-list">
+                        <ul className={styles.pretplataList}>
                             {kupljeniKursevi.map(kurs => (
-                                <li key={kurs.id} className="pretplata-item">
-                                    <div className="pretplata-info">
-                                        <span className="pretplata-item-name">{kurs.naziv}</span>
-                                        <span className="pretplata-item-date">
-                                            Kupljeno: {new Date(kurs.datum_kupovine).toLocaleDateString()}
+                                <li key={kurs.id} className={styles.pretplataItem}>
+                                    <div className={styles.pretplataInfo}>
+                                        <span className={styles.pretplataName}>{kurs.naziv}</span>
+                                        <span className={styles.pretplataDate}>
+                                            Upisano: {new Date(kurs.datum_kupovine).toLocaleDateString()}
                                         </span>
                                     </div>
-                                    <div className="pretplata-status">
+                                    <div className={styles.pretplataStatus}>
                                         {kurs.is_subscription ? (
                                             imaAktivnuPretplatu ? (
-                                                <span className="status-active">
+                                                <span className={styles.statusActive}>
                                                     Aktivna do: {new Date(user.subscription_expires_at).toLocaleDateString()}
                                                 </span>
                                             ) : (
-                                                <div className="status-expired">
+                                                <div className={styles.statusExpired}>
                                                     <span>Istekla: {new Date(user.subscription_expires_at).toLocaleDateString()}</span>
-                                                    <button onClick={() => navigate('/produzivanje')} className="produzi-pretplatu-btn">
+                                                    <button onClick={() => navigate('/produzivanje')} className={styles.produziBtn}>
                                                         Produži
                                                     </button>
                                                 </div>
                                             )
                                         ) : (
-                                            <span className="status-permanent">Trajni pristup</span>
+                                            <span className={styles.statusPermanent}>Trajni pristup</span>
                                         )}
                                     </div>
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <div className="pretplata-empty">
+                        <div className={styles.noResults}>
                             {user.subscription_expires_at ? (
                                 new Date(user.subscription_expires_at) < new Date() ? (
                                     <>
-                                        <p style={{ marginBottom: '10px' }}>Vaša pretplata je istekla {new Date(user.subscription_expires_at).toLocaleDateString()}.</p>
-                                        <button onClick={() => navigate('/produzivanje')} className="produzi-pretplatu-btn">
-                                            Obnovi pristup
+                                        <p style={{ marginBottom: '10px' }}>Pristup programima je istekao.</p>
+                                        <button onClick={() => navigate('/produzivanje')} className={styles.produziBtn}>
+                                            Obnovi članstvo
                                         </button>
                                     </>
                                 ) : (
-                                    <p>Greška pri učitavanju podataka o pretplati.</p>
+                                    <p>Sistemski podaci se ažuriraju...</p>
                                 )
                             ) : (
-                                <p>Nemate aktivnih kupovina ili pretplata.</p>
+                                <p>Nemate aktivnih upisa na kurs.</p>
                             )}
                         </div>
                     )}
 
-                    {/* NOVO: Auto-Renewal Section */}
+                    {/* Auto-Renewal Section */}
                     {subscriptionDetails && (
-                        <div className="auto-renewal-section">
-                            <hr className="profil-divider" />
-                            <h3 className="profil-subheader">Automatsko Produžavanje</h3>
+                        <div className={styles.renewalSection}>
+                            <hr className={styles.divider} />
+                            <h3 className={styles.subheader}>Auto-Obnova</h3>
 
                             {subscriptionDetails.isActive ? (
-                                <div className="renewal-active-info">
-                                    <div className="renewal-info-row">
-                                        <span className="renewal-label">Sledeće Naplaćivanje:</span>
-                                        <span className="renewal-value">
-                                            {new Date(subscriptionDetails.nextBillingDate).toLocaleDateString('en-GB', {
-                                                year: 'numeric',
-                                                month: '2-digit',
-                                                day: '2-digit'
-                                            })}
+                                <div>
+                                    <div className={styles.renewalInfoRow}>
+                                        <span className={styles.renewalLabel}>Naredni Protokol:</span>
+                                        <span className={styles.renewalValue}>
+                                            {new Date(subscriptionDetails.nextBillingDate).toLocaleDateString('sr-RS')}
                                         </span>
                                     </div>
-                                    <div className="renewal-info-row">
-                                        <span className="renewal-label">Iznos:</span>
-                                        <span className="renewal-value-amount">{subscriptionDetails.amount} RSD</span>
+                                    <div className={styles.renewalInfoRow}>
+                                        <span className={styles.renewalLabel}>Iznos:</span>
+                                        <span className={styles.renewalAmount}>{subscriptionDetails.amount} RSD</span>
                                     </div>
                                     <button
                                         onClick={handleCancelSubscription}
-                                        className="cancel-renewal-btn"
+                                        className={styles.cancelRenewalBtn}
                                         disabled={cancelLoading}
                                     >
-                                        <FiX className="cancel-icon" />
-                                        {cancelLoading ? 'Otkazivanje...' : 'Otkaži Automatsko Produžavanje'}
+                                        <FiX />
+                                        {cancelLoading ? 'Otkazivanje...' : 'Otkaži Auto-Obnovu'}
                                     </button>
-                                    <p className="renewal-note">
-                                        💡 Možete otkazati u bilo kom trenutku. Zadržaćete pristup do {new Date(user.subscription_expires_at).toLocaleDateString('en-GB')}.
-                                    </p>
                                 </div>
                             ) : imaAktivnuPretplatu ? (
-                                // Prikaži opciju za reaktivaciju samo ako korisnik još uvek ima pristup
-                                <div className="renewal-cancelled-info">
-                                    <p className="cancelled-message">
-                                        ⚠️ Automatsko produžavanje je otkazano.
+                                <div className={styles.renewalCancelledInfo}>
+                                    <p className={styles.cancelledMessage}>
+                                        Auto-obnova je deaktivirana.
                                     </p>
-                                    <p className="access-until">
-                                        Vaš pristup ističe: <strong>{new Date(user.subscription_expires_at).toLocaleDateString('en-GB')}</strong>
+                                    <p style={{ fontSize: '0.8rem' }}>
+                                        Pristup prestaje: <strong>{new Date(user.subscription_expires_at).toLocaleDateString('sr-RS')}</strong>
                                     </p>
                                     <button
                                         onClick={handleReactivateSubscription}
-                                        className="reactivate-renewal-btn"
+                                        className={styles.reactivateBtn}
                                         disabled={cancelLoading}
                                     >
-                                        {cancelLoading ? 'Aktivacija...' : 'Ponovo Aktiviraj Automatsko Produžavanje'}
+                                        {cancelLoading ? 'Aktivacija...' : 'Ponovo Aktiviraj'}
                                     </button>
                                 </div>
                             ) : null}
@@ -442,7 +397,7 @@ const MojProfil = () => {
                     )}
                 </div>
             </div>
-            <button onClick={logout} className="profil-logout-btn">Odjavi se</button>
+            <button onClick={logout} className={styles.logoutBtn}>Odjavi se</button>
         </div>
     );
 };

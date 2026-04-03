@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { FiMail, FiLock, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
 import './LoginPage.css'
 
-import animatedbanner from '../images/0731banrer.gif';
+import animatedbanner from '../images/deliyaslike/deliya2.webp';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');

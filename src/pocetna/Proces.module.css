@@ -1,11 +1,8 @@
-@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-
 .scrollContainer {
     height: 100vh;
     /* Pinned komponenta traje kolko i ekran */
     width: 100%;
-    background-color: #050505;
+    background-color: #0a0a0a;
     position: relative;
     overflow: hidden;
     font-family: 'Montserrat', sans-serif;
@@ -25,6 +22,7 @@
     display: flex;
     position: relative;
     z-index: 10;
+    /* Mora biti iznad bgContainer-a */
 }
 
 /* ============================
@@ -70,6 +68,8 @@
     width: 100%;
     height: 100%;
     z-index: 0;
+    /* Smeštamo ga na dno ispod stickyWrapper-a */
+    overflow: hidden;
     pointer-events: none;
 }
 
@@ -80,12 +80,18 @@
     width: 80vw;
     height: 100vh;
     object-fit: cover;
+
+    /* GSAP sada animira samo opacity, ali moramo forsirati vidljivost */
     opacity: 0;
-    visibility: hidden;
+    visibility: visible !important;
+
     filter: grayscale(100%) contrast(1.2) brightness(0.7);
-    /* Ispravi warning: OBAVEZNO ovim redom (prefix pa obicni) */
     -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 1) 40%);
     mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 1) 40%);
+
+    pointer-events: none;
+    will-change: opacity;
+    /* Prebacuje render slike na GPU */
 }
 
 /* ============================
@@ -103,9 +109,7 @@
 .spineTrack {
     position: relative;
     height: 60vh;
-    /* Da popuni solidan prostor po y osi */
     width: 2px;
-    /* Podebljana linija zbog boje */
     background-color: #222222;
 }
 
@@ -114,11 +118,14 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 0%;
-    /* Animira od 0 do 100% preko timeline-a */
     background-color: #145ead;
-    /* UVEDENA PLAVA BOJA */
     box-shadow: 0 0 15px rgba(20, 94, 173, 0.6);
+
+    /* OBAVEZNA OPTIMIZACIJA: GPU transformacija umesto menjanja height-a */
+    height: 100%;
+    transform-origin: top;
+    transform: scaleY(0);
+    will-change: transform;
 }
 
 .spineNodes {
@@ -136,14 +143,21 @@
 
 .node {
     font-family: 'Clash Display', sans-serif;
-    font-size: 3.5rem;
+    font-size: 2.8rem;
     font-weight: 700;
-    color: #333333;
-    /* Default tamno sivo ugaseno */
-    background-color: #050505;
-    padding: 1rem 0;
-    line-height: 0.8;
-    transition: color 0.5s ease;
+    background-color: #0a0a0a;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    line-height: 1;
+
+    /* Početni izgled brojeva - GSAP samo dodaje scale i opacity */
+    color: #145ead;
+    text-shadow: 0 0 10px rgba(20, 94, 173, 0.4);
+    will-change: transform, opacity;
 }
 
 /* ============================
@@ -163,14 +177,16 @@
     display: grid;
     align-items: center;
     min-height: 400px;
-    /* Osigurava da svi blokovi imaju dovoljno mesta i budu na istom centru */
 }
 
-/* Svi koraci sede na apsolutno istoj poziciji, samo se animiraju */
 .overlayBlock {
     grid-area: 1 / 1;
     width: 100%;
     padding-right: 15vw;
+
+    pointer-events: none;
+    /* Ne dozvoljava telefonu da detektuje dodir preko celog bloka */
+    will-change: transform, opacity;
 }
 
 .stepNumMobile {
@@ -219,7 +235,8 @@
         width: 100vw;
         -webkit-mask-image: none;
         mask-image: none;
-        opacity: 0.5;
+        /* Osiguravamo da override radi i na tabletu/mobilnom */
+        visibility: visible !important;
     }
 }
 
@@ -244,8 +261,9 @@
     }
 
     .node {
-        font-size: 2rem;
-        padding: 0.5rem 0;
+        font-size: 1.6rem;
+        width: 50px;
+        height: 50px;
     }
 
     .rightColumn {
@@ -263,14 +281,14 @@
         width: 100%;
         padding-right: 5vw;
         position: relative;
-        /* Skloni absolute */
         top: auto;
         transform: none;
+        pointer-events: none;
+        will-change: transform, opacity;
     }
 
     .stepNumMobile {
         display: block;
-        /* Na mobilnom prikazujemo broj i iznad testa da bi bilo jasno */
     }
 
     .stepTitle {

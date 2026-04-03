@@ -1,117 +1,131 @@
 'use client';
 import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Proces.module.css';
-import barber12 from '../images/barber12.jpg';
 
-gsap.registerPlugin(ScrollTrigger);
+// 1. UKLANJAMO statičke importe za GSAP na vrhu fajla!
+// import gsap from 'gsap';
+// import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+import img1 from '../images/deliyaslike/deliya11.webp';
+import img2 from '../images/deliyaslike/deliya5.webp';
+import img3 from '../images/deliyaslike/deliya32.webp';
+import img4 from '../images/deliyaslike/deliya33.webp';
 
 const procesData = [
-    {
-        num: '01',
-        title: 'OSNOVE I DISCIPLINA',
-        desc: 'Razvijaš profesionalne navike od prvog dana — pravilno držanje alata, čistoća radnog prostora i odnos prema klijentu. Ovde gradiš temelj koji razlikuje amatera od ozbiljnog frizera.',
-        bg: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2670&auto=format&fit=crop'
-    },
-    {
-        num: '02',
-        title: 'TEHNIKA',
-        desc: 'Savladavaš precizne tehnike šišanja — fade prelaze, rad sa mašinicom i makazama, kao i kontrolu svake linije. Fokus je na čistom, konzistentnom rezultatu bez grešaka.',
-        bg: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2670&auto=format&fit=crop'
-    },
-    {
-        num: '03',
-        title: 'RAD SA KLIJENTIMA',
-        desc: 'Učiš kako da vodiš razgovor, razumeš zahteve klijenta i daješ profesionalne preporuke. Cilj je da izgradiš poverenje i pretvoriš svakog klijenta u stalnog.',
-        bg: barber12
-    },
-    {
-        num: '04',
-        title: 'SAMOSTALNI RAD',
-        desc: 'Primena znanja u realnim situacijama — organizacija rada, brzina, kvalitet i naplata usluge. Priprema za izlazak na tržište i izgradnju sopstvenog, profitabilnog posla.',
-        bg: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=2670&auto=format&fit=crop'
-    }
+    { num: '01', title: 'OSNOVE I DISCIPLINA', desc: 'Razvijaš profesionalne navike od prvog dana — pravilno držanje alata, čistoća radnog prostora i odnos prema klijentu. Ovde gradiš temelj koji razlikuje amatera od ozbiljnog frizera.', bg: img1 },
+    { num: '02', title: 'TEHNIKA', desc: 'Savladavaš precizne tehnike šišanja — fade prelaze, rad sa mašinicom i makazama, kao i kontrolu svake linije. Fokus je na čistom, konzistentnom rezultatu bez grešaka.', bg: img2 },
+    { num: '03', title: 'RAD SA KLIJENTIMA', desc: 'Učiš kako da vodiš razgovor, razumeš zahteve klijenta i daješ profesionalne preporuke. Cilj je da izgradiš poverenje i pretvoriš svakog klijenta u stalnog.', bg: img3 },
+    { num: '04', title: 'SAMOSTALNI RAD', desc: 'Primena znanja u realnim situacijama — organizacija rada, brzina, kvalitet i naplata usluge. Priprema za izlazak na tržište i izgradnju sopstvenog, profitabilnog posla.', bg: img4 }
 ];
 
-
 const Proces = () => {
-    const triggerRef = useRef(null); // NOVO: Omotač koji služi kao okidač
-    const containerRef = useRef(null); // Ovo se pinuje
+    const triggerRef = useRef(null);
+    const containerRef = useRef(null);
     const progressBarRef = useRef(null);
 
     const nodeRefs = useRef([]);
     const stepRefs = useRef([]);
     const bgRefs = useRef([]);
 
+    // 2. Dodajemo ref koji će čuvati naš GSAP kontekst za potrebe čišćenja
+    const ctxRef = useRef(null);
+
     useEffect(() => {
-        let ctx = gsap.context(() => {
+        let isMounted = true; // Zastavica da proverimo da li je komponenta i dalje na ekranu
 
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: triggerRef.current, // Okidač je sada spoljni div
-                    pin: containerRef.current,   // Pinujemo unutrašnji div
-                    start: 'top top',
-                    end: '+=400%',
-                    scrub: 1,                    // Malo veći scrub za glatkoću (opciono, može i 0.8)
-                    pinSpacing: true,            // GSAP dodaje prostor za skrol
-                    // UKLONJENO: anticipatePin, fastScrollEnd, preventOverlaps (oni su često krivci za trzanje)
-                }
-            });
+        const loadGSAP = async () => {
+            try {
+                // 3. Dinamički importujemo GSAP i ScrollTrigger tek kada se komponenta montira
+                const gsapModule = await import('gsap');
+                const scrollTriggerModule = await import('gsap/ScrollTrigger');
 
-            // Set Initial States
-            gsap.set(stepRefs.current, { autoAlpha: 0, y: 100 });
-            gsap.set(stepRefs.current[0], { autoAlpha: 1, y: 0 });
+                // Podrška za različite module bundler-e (izvlačimo default export)
+                const gsap = gsapModule.default || gsapModule;
+                const ScrollTrigger = scrollTriggerModule.ScrollTrigger || scrollTriggerModule.default;
 
-            gsap.set(bgRefs.current, { autoAlpha: 0 });
-            gsap.set(bgRefs.current[0], { autoAlpha: 0.15 });
+                // Ako je korisnik u međuvremenu napustio stranicu (pre nego što se GSAP učitao), prekidamo
+                if (!isMounted) return;
 
-            gsap.set(nodeRefs.current, { color: '#333', scale: 1 });
-            gsap.set(nodeRefs.current[0], { color: '#145ead', scale: 1.3, textShadow: '0 0 15px rgba(20,94,173,0.5)' });
+                gsap.registerPlugin(ScrollTrigger);
 
-            // Progress Bar
-            tl.to(progressBarRef.current, { height: '100%', ease: 'none', duration: 4.5 }, 0);
+                // Kreiramo kontekst i čuvamo ga u ref-u
+                ctxRef.current = gsap.context(() => {
+                    const tl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: triggerRef.current,
+                            pin: containerRef.current,
+                            start: 'top top',
+                            end: '+=400%',
+                            scrub: 1.2,
+                            pinSpacing: true,
+                            anticipatePin: 1
+                        }
+                    });
 
-            // ... OSTATAK TVOJE TIMELINE ANIMACIJE OSTAJE POTPUNO ISTI ...
-            // 0 -> 1
-            tl.to(stepRefs.current[0], { autoAlpha: 0, y: -150, duration: 0.5, ease: 'power2.in' }, 0.5);
-            tl.to(bgRefs.current[0], { autoAlpha: 0, duration: 0.5 }, 0.5);
-            tl.to(nodeRefs.current[0], { color: '#333', scale: 1, textShadow: 'none', duration: 0.5 }, 0.5);
+                    // Zadržane su sve prethodne optimizacije (samo opacity, bez maski)
+                    gsap.set(stepRefs.current, { opacity: 0, y: 50 });
+                    gsap.set(stepRefs.current[0], { opacity: 1, y: 0 });
 
-            tl.to(stepRefs.current[1], { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.9);
-            tl.to(bgRefs.current[1], { autoAlpha: 0.15, duration: 0.5 }, 0.9);
-            tl.to(nodeRefs.current[1], { color: '#145ead', scale: 1.3, textShadow: '0 0 15px rgba(20,94,173,0.5)', duration: 0.5 }, 0.9);
+                    gsap.set(bgRefs.current, { opacity: 0 });
+                    gsap.set(bgRefs.current[0], { opacity: 0.15 });
 
-            // 1 -> 2
-            tl.to(stepRefs.current[1], { autoAlpha: 0, y: -150, duration: 0.5, ease: 'power2.in' }, 1.8);
-            tl.to(bgRefs.current[1], { autoAlpha: 0, duration: 0.5 }, 1.8);
-            tl.to(nodeRefs.current[1], { color: '#333', scale: 1, textShadow: 'none', duration: 0.5 }, 1.8);
+                    gsap.set(nodeRefs.current, { scale: 1, opacity: 0.4 });
+                    gsap.set(nodeRefs.current[0], { scale: 1.3, opacity: 1 });
 
-            tl.to(stepRefs.current[2], { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 2.2);
-            tl.to(bgRefs.current[2], { autoAlpha: 0.15, duration: 0.5 }, 2.2);
-            tl.to(nodeRefs.current[2], { color: '#145ead', scale: 1.3, textShadow: '0 0 15px rgba(20,94,173,0.5)', duration: 0.5 }, 2.2);
+                    tl.to(progressBarRef.current, { scaleY: 1, ease: 'none', duration: 4.5 }, 0);
 
-            // 2 -> 3
-            tl.to(stepRefs.current[2], { autoAlpha: 0, y: -150, duration: 0.5, ease: 'power2.in' }, 3.1);
-            tl.to(bgRefs.current[2], { autoAlpha: 0, duration: 0.5 }, 3.1);
-            tl.to(nodeRefs.current[2], { color: '#333', scale: 1, textShadow: 'none', duration: 0.5 }, 3.1);
+                    // TRANZICIJA 0 -> 1
+                    tl.to(stepRefs.current[0], { opacity: 0, y: -50, duration: 0.5, ease: 'power1.inOut' }, 0.5);
+                    tl.to(bgRefs.current[0], { opacity: 0, duration: 0.5, ease: 'power1.inOut' }, 0.5);
+                    tl.to(nodeRefs.current[0], { scale: 1, opacity: 0.4, duration: 0.5 }, 0.5);
 
-            tl.to(stepRefs.current[3], { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 3.5);
-            tl.to(bgRefs.current[3], { autoAlpha: 0.15, duration: 0.5 }, 3.5);
-            tl.to(nodeRefs.current[3], { color: '#145ead', scale: 1.3, textShadow: '0 0 15px rgba(20,94,173,0.5)', duration: 0.5 }, 3.5);
+                    tl.to(stepRefs.current[1], { opacity: 1, y: 0, duration: 0.5, ease: 'power1.out' }, 0.9);
+                    tl.to(bgRefs.current[1], { opacity: 0.15, duration: 0.5, ease: 'power1.inOut' }, 0.9);
+                    tl.to(nodeRefs.current[1], { scale: 1.3, opacity: 1, duration: 0.5 }, 0.9);
 
-            // Konačni izlaz
-            tl.to(stepRefs.current[3], { autoAlpha: 0, y: -150, duration: 0.5, ease: 'power2.in' }, 4.3);
+                    // TRANZICIJA 1 -> 2
+                    tl.to(stepRefs.current[1], { opacity: 0, y: -50, duration: 0.5, ease: 'power1.inOut' }, 1.8);
+                    tl.to(bgRefs.current[1], { opacity: 0, duration: 0.5, ease: 'power1.inOut' }, 1.8);
+                    tl.to(nodeRefs.current[1], { scale: 1, opacity: 0.4, duration: 0.5 }, 1.8);
 
-        }, triggerRef); // Kontekst sada posmatra triggerRef
+                    tl.to(stepRefs.current[2], { opacity: 1, y: 0, duration: 0.5, ease: 'power1.out' }, 2.2);
+                    tl.to(bgRefs.current[2], { opacity: 0.15, duration: 0.5, ease: 'power1.inOut' }, 2.2);
+                    tl.to(nodeRefs.current[2], { scale: 1.3, opacity: 1, duration: 0.5 }, 2.2);
 
-        return () => ctx.revert();
+                    // TRANZICIJA 2 -> 3
+                    tl.to(stepRefs.current[2], { opacity: 0, y: -50, duration: 0.5, ease: 'power1.inOut' }, 3.1);
+                    tl.to(bgRefs.current[2], { opacity: 0, duration: 0.5, ease: 'power1.inOut' }, 3.1);
+                    tl.to(nodeRefs.current[2], { scale: 1, opacity: 0.4, duration: 0.5 }, 3.1);
+
+                    tl.to(stepRefs.current[3], { opacity: 1, y: 0, duration: 0.5, ease: 'power1.out' }, 3.5);
+                    tl.to(bgRefs.current[3], { opacity: 0.15, duration: 0.5, ease: 'power1.inOut' }, 3.5);
+                    tl.to(nodeRefs.current[3], { scale: 1.3, opacity: 1, duration: 0.5 }, 3.5);
+
+                    // KONAČNI IZLAZ
+                    tl.to(stepRefs.current[3], { opacity: 0, y: -50, duration: 0.5, ease: 'power1.inOut' }, 4.3);
+
+                }, triggerRef);
+
+            } catch (error) {
+                console.error("Greška pri učitavanju GSAP-a:", error);
+            }
+        };
+
+        // Pozivamo asinhronu funkciju
+        loadGSAP();
+
+        // 4. Cleanup funkcija sada čisti preko sačuvanog ref-a
+        return () => {
+            isMounted = false;
+            if (ctxRef.current) {
+                ctxRef.current.revert();
+            }
+        };
     }, []);
 
     return (
         <div ref={triggerRef} className={styles.triggerWrapper}>
             <section className={styles.scrollContainer} ref={containerRef}>
-
                 <div className={styles.sectionHeader}>
                     <span className={styles.sectionLabel}>SISTEM RADA</span>
                     <h2 className={styles.mainTitle}>PROCES UČENJA.</h2>
@@ -127,6 +141,7 @@ const Proces = () => {
                             className={styles.bgImage}
                         />
                     ))}
+                    <div className={styles.bgOverlayMask}></div>
                 </div>
 
                 <div className={styles.stickyWrapper}>
@@ -162,7 +177,6 @@ const Proces = () => {
                         </div>
                     </div>
                 </div>
-
             </section>
         </div>
     );

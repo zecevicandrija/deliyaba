@@ -1,0 +1,386 @@
+/* Container padding i tamna pozadina */
+.sectionContainer {
+    width: 100%;
+    background-color: #050505; /* Duboka tama bez kompromisa */
+    position: relative;
+    overflow: hidden;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    border-top: 1px solid rgba(255, 255, 255, 0.03); /* Suptilni separator od prethodne sekcije */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Premium subtilni overlay preliv */
+.premiumOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 100% 0%, rgba(20, 20, 20, 1) 0%, transparent 40%),
+                      radial-gradient(circle at 0% 100%, rgba(10, 10, 10, 1) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Edge-to-edge layout umesto kartice */
+.splitLayout {
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Slika gore, tekst dole */
+    position: relative;
+    z-index: 2;
+}
+
+@media (min-width: 1024px) {
+    .splitLayout {
+        flex-direction: row; /* Na desktopu ostaje slika levo, tekst desno */
+    }
+}
+
+/* Leva strana 45% na desktopu, 100% na mobilnom */
+.leftColumn {
+    width: 100%;
+    position: relative;
+    z-index: 1; /* Slika ispod teksta ukoliko se preklapaju */
+}
+
+@media (min-width: 1024px) {
+    .leftColumn {
+        width: 45%;
+        /* Slika uvek ispunjava datu visinu */
+        display: flex;
+        align-items: stretch;
+    }
+}
+
+.imageWrapper {
+    width: 100%;
+    position: relative;
+    height: 60vh; /* Mobilna proporcija */
+    overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+    .imageWrapper {
+        height: 100%; 
+        min-height: 800px;
+    }
+}
+
+/* Slika - veoma ostra, sa dugotrajnim zum prelazom na hover */
+.moodyImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    filter: grayscale(100%) contrast(125%) brightness(0.65);
+    transition: transform 12s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.leftColumn:hover .moodyImage {
+    transform: scale(1.04);
+}
+
+/* Gradient preko slike da se suptilno stopi sa pozadinom */
+.imageOverlay {
+    position: absolute;
+    inset: 0;
+    /* Na mobilnom dno slike bledi ka tekstu ispod (prelaz od dole) */
+    background: linear-gradient(to top, #050505 5%, rgba(5, 5, 5, 0.4) 20%, transparent 45%);
+}
+
+@media (min-width: 1024px) {
+    .imageOverlay {
+        background: linear-gradient(to right, transparent 0%, #050505 100%);
+    }
+}
+
+/* Estetski stakleni blok obelezivac na slici */
+.imageCornerBox {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 2.5rem;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(16px);
+    background: rgba(0, 0, 0, 0.4);
+    display: inline-block;
+}
+
+.cornerText {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 5px;
+    color: #FFFFFF;
+}
+
+@media (max-width: 1023px) {
+    .imageCornerBox {
+        left: 1.5rem;
+        top: 1.5rem;
+        bottom: unset;
+    }
+}
+
+/* Desna strana 55% na desktopu, 100% na mobilnom */
+.rightColumn {
+    width: 100%;
+    padding: 4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 10;
+}
+
+@media (min-width: 1024px) {
+    .rightColumn {
+        width: 55%;
+        padding: 5rem 7vw 5rem 5vw; /* Ogroman, luksuzan prorez */
+    }
+}
+
+.contentWrapper {
+    max-width: 650px;
+}
+
+@media (max-width: 1023px) {
+    .contentWrapper {
+        margin: 0 auto;
+    }
+}
+
+/* 1. Tehnicka Labela sa Arhitektonskom Linijom */
+.badgeWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.aestheticLine {
+    width: 40px;
+    height: 1px;
+    background-color: #6B7280;
+}
+
+.techLabel {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: #9CA3AF;
+    text-transform: uppercase;
+}
+
+/* 2. Glavni naslov */
+.mainTitle {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(3.2rem, 7vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: #FFFFFF;
+    margin: 0 0 2.5rem 0;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+}
+
+.titleAccent {
+    font-weight: 700;
+    color: #FFFFFF;
+    display: inline-block;
+}
+
+/* 3. Opis programa */
+.hookDescription {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1rem, 1.2vw, 1.15rem);
+    line-height: 1.8;
+    color: #A1A1AA;
+    margin: 0 0 4rem 0;
+    letter-spacing: 0.01em;
+}
+
+/* 4. ZA KOGA JE OVAJ FORMAT */
+.targetAudience {
+    margin-bottom: 4rem;
+}
+
+.targetTitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: #6B7280;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+}
+
+.targetTitle::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.05); /* Skupo i diskretno */
+    margin-left: 1.5rem;
+}
+
+.targetList {
+    display: flex;
+    flex-direction: column;
+}
+
+.targetItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.targetItem:first-child {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.itemNumber {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #6B7280;
+    margin-top: 0.15rem;
+}
+
+.targetItem p {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #D1D5DB;
+    font-weight: 300;
+}
+
+/* WHATSAPP DUGME - Masivno i Arhitektonsko */
+.ctaButton {
+    display: flex;
+    align-items: stretch;
+    background-color: transparent;
+    color: #FFFFFF;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    border-radius: 50px; /* Dodat border radius */
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.buttonText {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 1rem 1.5rem 3rem; /* Više prostora levo zbog luka */
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    z-index: 2;
+    position: relative;
+    transition: color 0.4s ease;
+}
+
+.buttonIconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3rem 0 2rem; /* Više prostora desno zbog luka */
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.02);
+    z-index: 2;
+    position: relative;
+    transition: all 0.4s ease;
+}
+
+.waIcon {
+    font-size: 1.5rem;
+    color: #FFFFFF;
+    transition: transform 0.4s ease, color 0.4s ease;
+}
+
+/* Premium Hover - Fill from Left */
+.ctaButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1;
+}
+
+.ctaButton:hover {
+    border-color: #FFFFFF;
+}
+
+.ctaButton:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.ctaButton:hover .buttonText {
+    color: #000000;
+}
+
+.ctaButton:hover .buttonIconWrapper {
+    border-left-color: rgba(0, 0, 0, 0.1);
+    background-color: transparent;
+}
+
+.ctaButton:hover .waIcon {
+    color: #000000;
+    transform: scale(1.1);
+}
+
+/* Mobilna Optimizacija */
+@media (max-width: 1023px) {
+    .rightColumn {
+        padding-top: 4rem;
+        margin-top: -12vh; /* Tekst se penje preko slike iznad */
+    }
+
+    .badgeWrapper {
+        justify-content: center;
+    }
+    
+    .techLabel {
+        text-align: center;
+    }
+    
+    .mainTitle {
+        text-align: center;
+    }
+
+    .hookDescription {
+        text-align: center;
+    }
+
+    .targetTitle {
+        justify-content: center;
+    }
+
+    .targetTitle::after {
+        display: none;
+    }
+
+    /* Uklonjen sticky efekat na mobilnom, dugme je centrirano sa lepim razmakom */
+    .ctaButton {
+        margin-top: 1rem;
+    }
+}

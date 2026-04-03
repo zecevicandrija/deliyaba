@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Onama.module.css';
+import slika from '../images/deliyaslike/deliya23.webp'
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -134,10 +135,13 @@ const ONama = () => {
             <div className={`${styles.overlayBlock} ${styles.blockImage}`} ref={block1Ref}>
               <div className={styles.cleanImageWrapper}>
                 <img
-                  src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a"
+                  src={slika}
                   alt="Barber edukacija"
                   className={styles.editorialImage}
                   ref={imageParallaxRef}
+                  loading="lazy"
+                  width="1294"
+                  height="864"
                 />
               </div>
             </div>

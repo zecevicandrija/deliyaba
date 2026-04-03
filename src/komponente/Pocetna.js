@@ -1,25 +1,18 @@
-import React, { useState } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Pocetna.css';
-import rezultat5 from '../images/rezultat31.png';
-import rezultat2 from '../images/rezultati23.png'
-import rezultat3 from '../images/rezultat32.png'
-import rezultat4 from '../images/rezultati4.png'
 import { useInView } from 'react-intersection-observer';
-import ONama from '../pocetna/ONama';
-import Program from '../pocetna/Program';
 
-import Rezultati from '../pocetna/Rezultati';
-import Proces from '../pocetna/Proces';
-import CTA from '../pocetna/CTA';
-
-// IMPORTUJEMO NOVU KOMPONENTU
+// HERO SE UČITAVA ODMAH (EAGER)
 import Hero from '../pocetna/Hero';
-import Features from '../pocetna/Features';
-import FAQ from '../pocetna/FAQ';
-import Motion from '../pocetna/Motion';
 
-const ChevronIcon = ({ isOpen }) => <i className={`ri-arrow-down-s-line accordion-chevron ${isOpen ? 'open' : ''}`}></i>;
+// OSTALE SEKCIJE SE UČITAVAJU NAKNADNO (LAZY)
+const ONama = lazy(() => import('../pocetna/ONama'));
+const Program = lazy(() => import('../pocetna/Program'));
+const Rezultati = lazy(() => import('../pocetna/Rezultati'));
+const Proces = lazy(() => import('../pocetna/Proces'));
+const CTA = lazy(() => import('../pocetna/CTA'));
+const Jedan = lazy(() => import('../pocetna/Jedan'));
 
 const AnimateOnScroll = ({ children }) => {
     const { ref, inView } = useInView({
@@ -34,39 +27,35 @@ const AnimateOnScroll = ({ children }) => {
     );
 };
 
+// Fallback skeleton ili prazan div za glatko iskustvo skrolovanja
+const SectionLoader = () => <div style={{ height: '50vh' }}></div>;
 
 const Pocetna = () => {
     const navigate = useNavigate();
+
     return (
         <div className="pocetna-wrapper">
             <main className="pocetna-page">
-                {/* 3. OBMOTAVAMO SVAKU SEKCIJU */}
-
-                {/* HERO — NEMA AnimateOnScroll jer transform ubija sticky! */}
+                {/* HERO — NEMA AnimateOnScroll niti Suspense, mora biti odmah vidljiv */}
                 <Hero navigate={navigate} />
 
-                <ONama navigate={navigate} />
+                {/* SVE ISPOD HERO BLOKA UHVATIĆE SUSPENSE */}
+                <Suspense fallback={<SectionLoader />}>
+                    <ONama navigate={navigate} />
+                    <Rezultati navigate={navigate} />
+                    {/* REZULTATI - Sadrze sopstvene scroll pins i triggere, pa nema wrapper */}
+                    <Program navigate={navigate} />
+                    <Proces navigate={navigate} />
 
-                <Rezultati navigate={navigate} />
+                    <CTA navigate={navigate} />
+                    <Jedan navigate={navigate} />
 
-                {/* REZULTATI - Sadrze sopstvene scroll pins i triggere, pa nema wrapper */}
-                <Program navigate={navigate} />
-
-                <Proces navigate={navigate} />
-
-                <CTA navigate={navigate} />
-
-                {/* <AnimateOnScroll>
-                    <Motion navigate={navigate} />
-                </AnimateOnScroll>
-
-                <AnimateOnScroll>
-                    <Features navigate={navigate} />
-                </AnimateOnScroll>
-
-                <AnimateOnScroll>
-                    <FAQ navigate={navigate} />
-                </AnimateOnScroll> */}
+                    {/* Ako ih vratiš, koristi ih ovako: */}
+                    {/* <AnimateOnScroll>
+                        <Motion navigate={navigate} />
+                    </AnimateOnScroll>
+                    */}
+                </Suspense>
             </main>
         </div>
     );

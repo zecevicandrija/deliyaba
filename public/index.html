@@ -25,38 +25,57 @@
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
   <title>Deliya Edukacija</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Sacramento&display=swap">
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- Optimization: Performance Pre-connections -->
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Optimization: Early LCP Preload -->
+  <link rel="preload" href="/delijaa.webp" as="image" fetchpriority="high">
+
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700,800&display=swap" rel="stylesheet"
+    media="print" onload="this.media='all'">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" media="print"
+    onload="this.media='all'">
+
+  <!-- Critical CSS Inlining for FCP/LCP -->
   <style>
-    @font-face {
-      font-family: 'Coco Sharp';
-      src: url('%PUBLIC_URL%/fonts/CocoGothicAlternate-Heavy.otf') format('opentype');
-      font-weight: normal;
-      font-style: normal;
+    body {
+      background: #050505;
+      margin: 0;
     }
-    @font-face {
-      font-family: 'Coco Sharp';
-      src: url('%PUBLIC_URL%/fonts/CocoGothicAlternate-Heavy.otf') format('opentype');
-      font-weight: bold;
-      font-style: normal;
+
+    .Hero_scrollContainer__tZ5m- {
+      position: relative;
+      height: 400vh;
+      background: #050505;
     }
-    @font-face {
-      font-family: 'Coco Sharp';
-      src: url('%PUBLIC_URL%/fonts/CocoGothicAlternate-Heavy.otf') format('opentype');
-      font-weight: 100 900;
-      font-style: normal;
+
+    .Hero_canvasWrapper__Djk2_ {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      background: #050505;
     }
-    @font-face {
-      font-family: 'Coco Gothic Alternate';
-      src: url('%PUBLIC_URL%/fonts/CocoGothicAlternate-Light.otf') format('opentype');
-      font-weight: 300;
-      font-style: normal;
+
+    .Hero_bgImage__Q18wm {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
-    @font-face {
-      font-family: 'Coco Gothic Alternate';
-      src: url('%PUBLIC_URL%/fonts/CocoGothicAlternate.otf') format('opentype');
-      font-weight: 400;
-      font-style: normal;
+
+    .Hero_mirzaImg__JOgR2 {
+      width: 100%;
+      height: auto;
+      max-width: 864px;
     }
   </style>
 </head>

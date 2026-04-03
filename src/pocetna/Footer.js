@@ -21,7 +21,7 @@ const Footer = () => {
 
                     {/* 1. Brand Column */}
                     <div className={styles.brandColumn}>
-                        <img src={deliyaLogo} alt="Deliya Barber Academy" className={styles.footerLogo} />
+                        <img src={deliyaLogo} alt="Deliya Barber Academy" className={styles.footerLogo} width="190" height="79" />
                         <p className={styles.tagline}>
                             Ekskluzivna edukacija za moderne frizere. Savladaj tehniku, unapredi poslovanje i izgradi premium brend.
                         </p>

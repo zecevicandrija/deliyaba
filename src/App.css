@@ -2,13 +2,15 @@
   --primary-color: #ff3c00;
   --secondary-color: #ff3c00;
   --accent-color: #ff3c00;
-  --text-color: #f0f0f0; /* Prilagođeno za tamnu pozadinu */
+  --text-color: #f0f0f0;
+  /* Prilagođeno za tamnu pozadinu */
   --card-bg: #ffffff;
   --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   --button-bg: var(--primary-color);
   --button-text: #fff;
   --button-hover: var(--secondary-color);
-  --fallback-bg-color: #1a1a1a; /* Tamna boja ako slika ne uspe da se učita */
+  --fallback-bg-color: #1a1a1a;
+  /* Tamna boja ako slika ne uspe da se učita */
 }
 
 /* Global Reset */
@@ -26,8 +28,10 @@ html {
 }
 
 body {
-  position: relative; /* Neophodno za z-index pseudo-elementa */
-  background-color: transparent; /* Telo mora biti providno! */
+  position: relative;
+  /* Neophodno za z-index pseudo-elementa */
+  background-color: transparent;
+  /* Telo mora biti providno! */
   font-family: 'Outfit', sans-serif;
   color: var(--text-color);
 }
@@ -37,7 +41,8 @@ body {
 */
 /* Uklonjena pozadina sa slikom */
 
-#root, .App {
+#root,
+.App {
   /* Osiguravamo da su i glavni kontejneri providni */
   background-color: transparent;
   min-height: 100vh;

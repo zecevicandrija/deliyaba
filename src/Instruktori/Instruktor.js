@@ -2,8 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../login/auth';
 import { useNavigate } from 'react-router-dom';
 import api from '../login/api';
-import './Instruktor.css';
-import Zarada from './Zarada';
+import styles from './Instruktor.module.css';
 
 const Instruktor = () => {
     const [kursevi, setKursevi] = useState([]);
@@ -105,20 +104,30 @@ const Instruktor = () => {
 
 
     return (
-        <div className="instruktor-dashboard">
-            <header className="dashboard-header">
-                <h1>Instruktorska Tabla</h1>
-                <p>Dobrodošli, {user?.ime}! Upravljajte svojim kursevima i pratite zaradu.</p>
-                <div style={{display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '15px'}}>
-                    <button className="dodaj-korisnika-btn" onClick={() => navigate('/dodajkorisnika')} style={{margin: 0}}>
+        <div className={styles.dashboard}>
+            <div className={styles.watermark}>Deliya</div>
+
+            <header className={styles.header}>
+                <div className={styles.badge}>
+                    <span className={styles.editorialLine}></span>
+                    <span>Instruktorska Tabla</span>
+                </div>
+                <h1 className={styles.title}>Dobrodošli, {user?.ime}!</h1>
+                <p className={styles.subtitle}>Upravljajte svojim kursevima i pratite zaradu kroz centralizovanu administrativnu platformu.</p>
+                
+                <div className={styles.actionButtons}>
+                    <button className={styles.primaryBtn} onClick={() => navigate('/zarada')}>
+                        <i className="ri-bar-chart-line"></i> Statistika
+                    </button>
+                    <button className={styles.primaryBtn} onClick={() => navigate('/dodajkorisnika')}>
                         <i className="ri-user-add-line"></i> Dodaj Korisnika
                     </button>
                     {user?.uloga === 'admin' && (
                         <>
-                            <button className="dodaj-korisnika-btn" onClick={() => navigate('/edit-korisnika')} style={{margin: 0, backgroundColor: '#34495e'}}>
+                            <button className={styles.secondaryBtn} onClick={() => navigate('/edit-korisnika')}>
                                 <i className="ri-group-line"></i> Upravljaj Korisnicima
                             </button>
-                            <button className="dodaj-korisnika-btn" onClick={() => navigate('/popusti')} style={{margin: 0, backgroundColor: '#007BFF'}}>
+                            <button className={styles.secondaryBtn} onClick={() => navigate('/popusti')} style={{ backgroundColor: '#0047AB' }}>
                                 <i className="ri-percent-line"></i> Upravljaj Popustima
                             </button>
                         </>
@@ -126,47 +135,45 @@ const Instruktor = () => {
                 </div>
             </header>
 
-            <div className="dashboard-main-content">
-                <div className="dashboard-kursevi-section">
-                    <h2 className="section-title">Moji Kursevi</h2>
-                    <div className="kurs-lista">
+            <div className={styles.mainContent}>
+                <div className={styles.kurseviSection}>
+                    <h2 className={styles.sectionTitle}>Moji Kursevi</h2>
+                    <div className={styles.kursGrid}>
                         {kursevi.length > 0 ? kursevi.map(kurs => (
-                            <div className="kurs-card-admin" key={kurs.id}>
-                                <img src={kurs.slika} alt={kurs.naziv} className="kurs-slika-admin" />
-                                <div className="kurs-info-admin">
-                                    <h3>{kurs.naziv}</h3>
-                                    <p className="kurs-cena-admin">{kurs.cena} €</p>
+                            <div className={styles.kursCard} key={kurs.id}>
+                                <div className={styles.imageWrapper}>
+                                    <img src={kurs.slika} alt={kurs.naziv} className={styles.kursImage} />
                                 </div>
-                                <div className="kurs-actions-admin">
-                                    <button onClick={() => openEditCourseModal(kurs)} title="Izmeni Kurs"><i className="ri-edit-line"></i></button>
-                                    <button onClick={() => viewLessons(kurs.id)} title="Uredi Lekcije"><i className="ri-list-check"></i></button>
-                                    <button onClick={() => viewStudents(kurs.id)} title="Pregled Studenata"><i className="ri-group-line"></i></button>
-                                    <button onClick={() => viewStatistics(kurs.id)} title="Statistika Kursa"><i className="ri-bar-chart-line"></i></button>
-                                    <button onClick={() => openDeleteModal(kurs)} className="delete-button-admin" title="Obriši Kurs"><i className="ri-delete-bin-line"></i></button>
+                                <div className={styles.kursDetails}>
+                                    <h3>{kurs.naziv}</h3>
+                                    <p className={styles.kursPrice}>{kurs.cena} €</p>
+                                </div>
+                                <div className={styles.kursActions}>
+                                    <button className={styles.actionBtn} onClick={() => openEditCourseModal(kurs)} title="Izmeni Kurs"><i className="ri-edit-line"></i></button>
+                                    <button className={styles.actionBtn} onClick={() => viewLessons(kurs.id)} title="Uredi Lekcije"><i className="ri-list-check"></i></button>
+                                    <button className={styles.actionBtn} onClick={() => viewStudents(kurs.id)} title="Pregled Studenata"><i className="ri-group-line"></i></button>
+                                    <button className={styles.actionBtn} onClick={() => viewStatistics(kurs.id)} title="Statistika Kursa"><i className="ri-bar-chart-line"></i></button>
+                                    <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => openDeleteModal(kurs)} title="Obriši Kurs"><i className="ri-delete-bin-line"></i></button>
                                 </div>
                             </div>
                         )) : <p>Trenutno nemate kreiranih kurseva.</p>}
                     </div>
-                </div>
-
-                <div className="dashboard-side-content">
-                    <div className="dashboard-widget"><Zarada kursevi={kursevi} /></div>
                 </div>
             </div>
 
 
             {/* Edit Course Modal */}
             {isEditCourseModalOpen && editingCourse && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <button className="close-modal-button" onClick={() => setIsEditCourseModalOpen(false)}>&times;</button>
-                        <h2>Izmeni Kurs</h2>
-                        <form onSubmit={handleEditCourseSubmit} className="modal-form">
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <button className={styles.closeBtn} onClick={() => setIsEditCourseModalOpen(false)}>&times;</button>
+                        <h2 className={styles.modalTitle}>Izmeni Kurs</h2>
+                        <form onSubmit={handleEditCourseSubmit} className={styles.modalForm}>
                             <label>Naziv: <input type="text" name="naziv" value={editCourseForm.naziv} onChange={handleEditCourseChange} required /></label>
                             <label>Opis: <textarea name="opis" value={editCourseForm.opis} onChange={handleEditCourseChange} required></textarea></label>
                             <label>Cena: <input type="number" name="cena" value={editCourseForm.cena} onChange={handleEditCourseChange} required /></label>
                             <label>Nova Slika (opciono): <input type="file" accept="image/*" onChange={handleCourseImageChange} /></label>
-                            <button type="submit" className="save-button">Sačuvaj Izmene</button>
+                            <button type="submit" className={styles.saveBtn}>Sačuvaj Izmene</button>
                         </form>
                     </div>
                 </div>
@@ -174,13 +181,13 @@ const Instruktor = () => {
 
             {/* Delete Confirmation Modal */}
             {isDeleteModalOpen && courseToDelete && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h2>Potvrda Brisanja</h2>
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <h2 className={styles.modalTitle}>Potvrda Brisanja</h2>
                         <p>Da li ste sigurni da želite trajno da obrišete kurs: <strong>{courseToDelete.naziv}</strong>?</p>
-                        <div className="modal-actions">
-                            <button onClick={() => setIsDeleteModalOpen(false)} className="cancel-delete-btn">Odustani</button>
-                            <button onClick={confirmDeleteCourse} className="confirm-delete-btn">Obriši</button>
+                        <div className={styles.modalActions}>
+                            <button onClick={() => setIsDeleteModalOpen(false)} className={styles.cancelBtn}>Odustani</button>
+                            <button onClick={confirmDeleteCourse} className={styles.confirmBtn}>Obriši</button>
                         </div>
                     </div>
                 </div>
@@ -189,4 +196,4 @@ const Instruktor = () => {
     );
 };
 
-export default Instruktor;
+export default Instruktor;

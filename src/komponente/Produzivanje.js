@@ -5,9 +5,8 @@ import { useAuth } from '../login/auth';
 import { useNavigate } from 'react-router-dom';
 import api from '../login/api';
 import "./Produzivanje.css";
-
-import banner from '../images/motionakademijabanner.jpg';
-import animatedbanner from '../images/0731banrer.gif';
+import banner from '../images/deliyaslike/deliya1.webp'
+import animatedbanner from '../images/deliyaslike/deliya2.webp'
 
 // Logotipi
 import visaSecure from '../images/logotipi/visa-secure_blu_72dpi.jpg';
