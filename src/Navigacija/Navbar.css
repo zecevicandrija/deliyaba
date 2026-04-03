@@ -237,6 +237,47 @@
     transform: translateY(-2px);
 }
 
+/* ---- LANGUAGE SWITCHER ---- */
+.navbar-lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    position: relative;
+    padding: 2px 0;
+}
+
+.lang-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.lang-btn:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.lang-btn.active {
+    color: #3a7fd5;
+    font-weight: 700;
+    text-shadow: 0 0 12px rgba(58, 127, 213, 0.3);
+}
+
+.lang-divider {
+    width: 1px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    display: block;
+}
+
 /* ---- HAMBURGER ---- */
 .navbar-hamburger {
     display: none;
@@ -282,6 +323,20 @@
         filter: brightness(0.12) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
     }
 
+    /* Lang Switcher should turn dark inside the light mobile overlay */
+    .navbar.menu-open .navbar-lang-switcher .lang-btn {
+        color: rgba(28, 28, 28, 0.4);
+    }
+
+    .navbar.menu-open .navbar-lang-switcher .lang-btn.active {
+        color: #3a7fd5;
+        text-shadow: none;
+    }
+
+    .navbar.menu-open .navbar-lang-switcher .lang-divider {
+        background: rgba(0, 0, 0, 0.1);
+    }
+
     .navbar-actions .login-link,
     .navbar-actions .navbar-cta-btn {
         display: none;
@@ -292,6 +347,10 @@
         align-items: center;
         z-index: 2000;
         position: relative;
+    }
+
+    .navbar-actions {
+        gap: 1.25rem;
     }
 
     /* ---- LUXURY SCI-FI FULL-SCREEN OVERLAY ---- */

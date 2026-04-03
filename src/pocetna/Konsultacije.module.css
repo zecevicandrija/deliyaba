@@ -1,0 +1,329 @@
+.sectionContainer {
+    width: 100%;
+    background-color: #FFFFFF;
+    color: #000000;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 1. Vazduh (Padding) - Reset brain space */
+.spaceReset {
+    height: 15vh;
+}
+
+@media (max-width: 1023px) {
+    .spaceReset {
+        height: 6vh; /* Smanjeno po zahtevu za telefone */
+    }
+}
+
+.mainWrapper {
+    max-width: 1700px; /* Prosireno da ima vise mesta za ogromnu sliku */
+    margin: 0 auto;
+    padding: 0 1.5rem 8rem 1.5rem;
+}
+
+@media (min-width: 1024px) {
+    .mainWrapper {
+        padding: 0 4rem 10rem 4rem;
+    }
+}
+
+.splitLayout {
+    display: flex;
+    flex-direction: column;
+    /* border-top uklonjen zbog mobilnih telefona */
+}
+
+@media (min-width: 1024px) {
+    .splitLayout {
+        flex-direction: row;
+        border-top: none;
+    }
+}
+
+/* =========================================
+   💼 LEVA KOLONA: KONSULTACIJE (Sada sira, npr. 75%)
+   ========================================= */
+.leftSalesColumn {
+    width: 100%;
+    position: relative;
+    padding: 4rem 0;
+}
+
+@media (min-width: 1024px) {
+    .leftSalesColumn {
+        width: 75%;
+        padding: 6rem 6rem 6rem 0; /* Ogroman desni padding do matrice */
+    }
+}
+
+.editorialHeader {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.monospaceLabel {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4A4A4A;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.architecturalLine {
+    flex: 1;
+    height: 1px;
+    background-color: #E5E5E5;
+}
+
+.contentAndImage {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+@media (min-width: 1024px) {
+    .contentAndImage {
+        flex-direction: row;
+        align-items: center; /* Slika i tekst centrirani horizontalno jedno uz drugo */
+        gap: 5rem;
+    }
+}
+
+.textContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.heroTitle {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(3.2rem, 7vw, 6.5rem); /* Znatno veci naslov */
+    font-weight: 700;
+    line-height: 0.95;
+    color: #000000;
+    margin: 0 0 2rem 0;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+}
+
+.outlineText {
+    -webkit-text-stroke: 1.5px #000000;
+    color: transparent;
+}
+
+.qualifierText {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem; /* Mnogo smanjeno po zahtevu */
+    line-height: 1.8;
+    color: #666666;
+    margin-bottom: 4rem;
+    max-width: 480px;
+    font-weight: 500;
+}
+
+/* CTA: THE GRAVITY BUTTON */
+.gravityButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000000;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.05rem; /* Povecan font u dugmetu */
+    font-weight: 700; /* Podebljano */
+    letter-spacing: 0.2em; /* Prosiren razmak slova */
+    padding: 1.8rem 4rem; /* Mnogo vece paddinge za vece dugme */
+    border: none;
+    border-radius: 50px;
+    text-transform: uppercase;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+    text-align: center;
+}
+
+@media (min-width: 640px) {
+    .gravityButton {
+        width: fit-content;
+    }
+}
+
+.gravityButton:hover {
+    background-color: #333333;
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.imageBox {
+    flex: 1.2; /* Slika dobija vise mesta od teksta! */
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .imageBox {
+        height: 650px; /* Ogromna slika po visini */
+    }
+}
+
+.sideImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    filter: grayscale(100%) contrast(1.15) brightness(0.9);
+    transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.imageBox:hover .sideImage {
+    transform: scale(1.04);
+}
+
+.imageOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(255,255,255,0.05), transparent);
+    z-index: 1;
+}
+
+/* =========================================
+   📞 DESNA KOLONA: KONTAKT (The Matrix) Smanjeno na 25%
+   ========================================= */
+.rightMatrixColumn {
+    width: 100%;
+    border-top: 1px solid #E5E5E5;
+}
+
+@media (min-width: 1024px) {
+    .rightMatrixColumn {
+        width: 25%; /* Matrix je uzi, povucen skroz desno */
+        border-top: none;
+        border-left: 1px solid #E5E5E5;
+        padding-left: 4rem; /* Smanjili padding unutar njega kako bi ostao kompaktan */
+    }
+}
+
+.matrixContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.matrixRow {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem 0;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.matrixRow:last-child {
+    border-bottom: none;
+}
+
+.tinyLabel {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #888888;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+}
+
+.matrixValueLink {
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1rem, 1.5vw, 1.4rem); /* Vrednosti su takodje malo skalirane zbog uzeg prostora */
+    font-weight: 700;
+    color: #000000;
+    transition: color 0.3s ease;
+    width: fit-content;
+}
+
+.matrixValueInstagram {
+    text-decoration: none;
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+    font-weight: 700;
+    color: #000000;
+    transition: transform 0.3s ease, color 0.3s ease;
+    display: inline-block;
+}
+
+.matrixValueInstagram:hover {
+    color: #666666;
+    transform: translateX(10px);
+}
+
+.kineticText {
+    position: relative;
+    display: inline-block;
+}
+
+.kineticText::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #000000;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.matrixValueLink:hover .kineticText::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Mobile Touch Target & Sizing Adjustments */
+@media (max-width: 1023px) {
+    .gravityButton {
+        padding: 1.4rem 2rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.15em;
+    }
+
+    /* MATRICA ORGANIZOVANA U GRID 2x2 ZA UŠTEDU PROSTORA */
+    .matrixContainer {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2.5rem 1rem;
+        padding: 4rem 0 2rem 0;
+        border-top: 1px solid #F0F0F0; /* Razdvajanje od prethodnog bloka */
+    }
+
+    .matrixRow {
+        padding: 0;
+        border-bottom: none;
+        justify-content: flex-start;
+    }
+    
+    .tinyLabel {
+        font-size: 0.55rem;
+        margin-bottom: 0.5rem;
+        color: #BBBBBB;
+    }
+
+    .matrixValueLink {
+        font-size: 0.85rem; /* Smanjeno da stane u grid */
+        line-height: 1.4;
+    }
+
+    .matrixValueInstagram {
+        font-size: 1.1rem; /* Smanjeno instagram dugme za grid */
+    }
+}

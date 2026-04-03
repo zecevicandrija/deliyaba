@@ -13,6 +13,7 @@ const Navbar = () => {
     const { isDarkTheme } = useContext(ThemeContext);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [currentLang, setCurrentLang] = useState('BA'); // Predpostavljamo BA kao početni
     const location = useLocation();
 
     useEffect(() => {
@@ -107,6 +108,19 @@ const Navbar = () => {
                             </Link>
                         </>
                     )}
+
+                    {/* Language Switcher */}
+                    <div className="navbar-lang-switcher">
+                        <button
+                            className={`lang-btn ${currentLang === 'EN' ? 'active' : ''}`}
+                            onClick={() => setCurrentLang('EN')}
+                        >EN</button>
+                        <span className="lang-divider"></span>
+                        <button
+                            className={`lang-btn ${currentLang === 'BA' ? 'active' : ''}`}
+                            onClick={() => setCurrentLang('BA')}
+                        >BA</button>
+                    </div>
 
                     <button
                         className={`navbar-hamburger ${isMenuOpen ? 'open' : ''}`}

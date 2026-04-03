@@ -13,6 +13,7 @@ const Rezultati = lazy(() => import('../pocetna/Rezultati'));
 const Proces = lazy(() => import('../pocetna/Proces'));
 const CTA = lazy(() => import('../pocetna/CTA'));
 const Jedan = lazy(() => import('../pocetna/Jedan'));
+const Konsultacije = lazy(() => import('../pocetna/Konsultacije'));
 
 const AnimateOnScroll = ({ children }) => {
     const { ref, inView } = useInView({
@@ -36,25 +37,16 @@ const Pocetna = () => {
     return (
         <div className="pocetna-wrapper">
             <main className="pocetna-page">
-                {/* HERO — NEMA AnimateOnScroll niti Suspense, mora biti odmah vidljiv */}
                 <Hero navigate={navigate} />
 
-                {/* SVE ISPOD HERO BLOKA UHVATIĆE SUSPENSE */}
                 <Suspense fallback={<SectionLoader />}>
                     <ONama navigate={navigate} />
                     <Rezultati navigate={navigate} />
-                    {/* REZULTATI - Sadrze sopstvene scroll pins i triggere, pa nema wrapper */}
                     <Program navigate={navigate} />
                     <Proces navigate={navigate} />
-
-                    <CTA navigate={navigate} />
+                    <Konsultacije navigate={navigate} />
                     <Jedan navigate={navigate} />
-
-                    {/* Ako ih vratiš, koristi ih ovako: */}
-                    {/* <AnimateOnScroll>
-                        <Motion navigate={navigate} />
-                    </AnimateOnScroll>
-                    */}
+                    <CTA navigate={navigate} />
                 </Suspense>
             </main>
         </div>
