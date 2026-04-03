@@ -29,8 +29,7 @@ const createKursSchema = z.object({
 
     slika: z.string()
         .trim()
-        .url('Slika mora biti validan URL.')
-        .max(255, 'URL slike ne sme biti duži od 255 karaktera.'),
+        .max(5000, 'Putanja do slike ne sme biti duža od 5000 karaktera.'),
 
     is_subscription: z.union([z.literal(0), z.literal(1)])
         .optional()
@@ -69,8 +68,7 @@ const updateKursSchema = z.object({
 
     slika: z.string()
         .trim()
-        .url('Slika mora biti validan URL.')
-        .max(255)
+        .max(5000, 'Putanja do slike ne sme biti duža od 5000 karaktera.')
         .optional(),
 
     is_subscription: z.union([z.literal(0), z.literal(1)])

@@ -12,7 +12,6 @@ router.get('/', cacheMiddleware(300), async (req, res) => {
     try {
         const query = 'SELECT * FROM kursevi';
         const [results] = await db.query(query);
-        res.set('Cache-Control', 'public, max-age=300'); // Browser keš 5 minuta
         res.status(200).json(results);
     } catch (err) {
         console.error('Database error:', err);
@@ -29,7 +28,6 @@ router.get('/:id', cacheMiddleware(300), async (req, res) => {
         if (results.length === 0) {
             return res.status(404).json({ error: 'Kurs nije pronađen' });
         }
-        res.set('Cache-Control', 'public, max-age=300'); // Browser keš 5 minuta
         res.status(200).json(results[0]);
     } catch (err) {
         console.error('Database error:', err);
@@ -54,13 +52,13 @@ router.get('/instruktor/:id', async (req, res) => {
 router.post('/', authMiddleware, requireAdmin, validate(createKursSchema), async (req, res) => {
     const connection = await db.getConnection();
     try {
-        const { naziv, opis, instruktor_id, cena, slika, is_subscription, payhip_product_id, sekcije } = req.body;
+        const { naziv, opis, instruktor_id, cena, slika, is_subscription, sekcije } = req.body;
         const parsedSekcije = typeof sekcije === 'string' ? JSON.parse(sekcije) : (sekcije || []);
 
         await connection.beginTransaction();
 
-        const kursQuery = 'INSERT INTO kursevi (naziv, opis, instruktor_id, cena, slika, is_subscription, payhip_product_id) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        const [kursResult] = await connection.query(kursQuery, [naziv, opis, instruktor_id, cena, slika, is_subscription || 0, payhip_product_id]);
+        const kursQuery = 'INSERT INTO kursevi (naziv, opis, instruktor_id, cena, slika, is_subscription) VALUES (?, ?, ?, ?, ?, ?)';
+        const [kursResult] = await connection.query(kursQuery, [naziv, opis, instruktor_id, cena, slika, is_subscription || 0]);
         const noviKursId = kursResult.insertId;
 
         if (Array.isArray(parsedSekcije) && parsedSekcije.length > 0) {
@@ -85,7 +83,7 @@ router.post('/', authMiddleware, requireAdmin, validate(createKursSchema), async
 router.put('/:id', authMiddleware, requireAdmin, validate(updateKursSchema), async (req, res) => {
     try {
         const courseId = req.params.id;
-        const { naziv, opis, cena, instruktor_id, slika, is_subscription, payhip_product_id } = req.body;
+        const { naziv, opis, cena, instruktor_id, slika, is_subscription } = req.body;
 
         const fieldsToUpdate = {};
         if (naziv) fieldsToUpdate.naziv = naziv;
@@ -93,7 +91,6 @@ router.put('/:id', authMiddleware, requireAdmin, validate(updateKursSchema), asy
         if (cena) fieldsToUpdate.cena = cena;
         if (instruktor_id) fieldsToUpdate.instruktor_id = instruktor_id;
         if (is_subscription !== undefined) fieldsToUpdate.is_subscription = is_subscription;
-        if (payhip_product_id) fieldsToUpdate.payhip_product_id = payhip_product_id;
         if (slika) fieldsToUpdate.slika = slika;
 
         if (Object.keys(fieldsToUpdate).length === 0) {

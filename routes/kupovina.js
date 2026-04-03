@@ -97,17 +97,27 @@ router.get('/studenti/:kursId', authMiddleware, requireAdmin, async (req, res) =
 // Endpoint to get revenue grouped by date (SAMO ADMIN)
 router.get('/zarada-po-danu', authMiddleware, requireAdmin, async (req, res) => {
     try {
-        const query = `
+        const { startDate, endDate } = req.query;
+        let params = [];
+        let query = `
             SELECT 
                 DATE(p.datum_kupovine) AS dan, 
                 SUM(k.cena * (1 - IFNULL(pop.procenat / 100, 0))) AS dnevna_zarada
             FROM kupovina p
             INNER JOIN kursevi k ON p.kurs_id = k.id
             LEFT JOIN popusti pop ON p.popust_id = pop.id
+        `;
+
+        if (startDate && endDate) {
+            query += ` WHERE p.datum_kupovine BETWEEN ? AND ? `;
+            params.push(startDate, `${endDate} 23:59:59`);
+        }
+
+        query += `
             GROUP BY DATE(p.datum_kupovine)
             ORDER BY dan ASC
         `;
-        const [results] = await db.query(query);
+        const [results] = await db.query(query, params);
         res.status(200).json(results);
     } catch (err) {
         console.error('Database error:', err);

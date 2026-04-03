@@ -14,11 +14,8 @@ const kurseviRouter = require('./routes/kursevi');
 const lekcijeRouter = require('./routes/lekcije');
 
 const kupovinaRouter = require('./routes/kupovina');
-const ratingsRouter = require('./routes/ratings');
-const komentariRouter = require('./routes/komentari');
 const kompletirane_lekcijeRouter = require('./routes/kompletirane_lekcije');
 const popustiRouter = require('./routes/popusti');
-const rezultatiKvizaRouter = require('./routes/rezultati_kviza');
 const sekcijeRouter = require('./routes/sekcije');
 const adminRouter = require('./routes/admin');
 const msuPaymentRouter = require('./routes/msuPayment');
@@ -36,8 +33,7 @@ app.set('trust proxy', 1);
 
 // 1. CORS se primenjuje na sve zahteve, pa ide prvi
 const allowedOrigins = [
-    'https://test-api.zecevicdev.com',
-    'https://localhost:5000',
+    'http://localhost:5000',
     'http://localhost:3000'
 ];
 app.use(cors({ origin: allowedOrigins, credentials: true }));
@@ -69,11 +65,8 @@ app.use('/api/kursevi', kurseviRouter);
 app.use('/api/lekcije', lekcijeRouter);
 
 app.use('/api/kupovina', kupovinaRouter);
-app.use('/api/ratings', ratingsRouter);
-app.use('/api/komentari', komentariRouter);
 app.use('/api/kompletirane_lekcije', kompletirane_lekcijeRouter);
 app.use('/api/popusti', popustiRouter);
-app.use('/api/rezultati_kviza', rezultatiKvizaRouter);
 app.use('/api/sekcije', sekcijeRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/msu', msuPaymentRouter);
