@@ -72,7 +72,18 @@ const updateKorisnikSchema = z.object({
     sifra: z.string()
         .min(6, 'Šifra mora imati najmanje 6 karaktera.')
         .max(255, 'Šifra ne sme biti duža od 255 karaktera.')
-        .optional()
+        .optional(),
+
+    subscription_expires_at: z.string()
+        .refine((val) => !isNaN(new Date(val).getTime()), {
+            message: 'Neispravan datum format za subscription_expires_at.'
+        })
+        .nullable()
+        .optional(),
+
+    subscription_status: z.enum(['active', 'expired', 'cancelled', 'payment_failed'], {
+        errorMap: () => ({ message: 'Status mora biti "active", "expired", "cancelled" ili "payment_failed".' })
+    }).optional()
 }).strict();
 
 module.exports = {

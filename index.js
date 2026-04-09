@@ -21,6 +21,7 @@ const adminRouter = require('./routes/admin');
 const msuPaymentRouter = require('./routes/msuPayment');
 const subscriptionStatusRouter = require('./routes/subscriptionStatus');
 const subscriptionRenewalRouter = require('./routes/subscriptionRenewal');
+const blogRouter = require('./routes/blog');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -72,6 +73,7 @@ app.use('/api/admin', adminRouter);
 app.use('/api/msu', msuPaymentRouter);
 app.use('/api/subscription', subscriptionStatusRouter);
 app.use('/api/subscription', subscriptionRenewalRouter);
+app.use('/api/blog', blogRouter);
 
 // === Global Error Handler (Express middleware) ===
 app.use((err, req, res, next) => {
