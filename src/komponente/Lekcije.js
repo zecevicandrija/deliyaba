@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as tus from 'tus-js-client';
 import api from '../login/api';
 import { useAuth } from '../login/auth';
-import './Lekcije.css';
+import styles from './Lekcije.module.css';
 
 const Lekcije = () => {
     const [lekcije, setLekcije] = useState([]);
@@ -70,10 +70,6 @@ const Lekcije = () => {
 
     // Funkcija za direktan upload na Bunny putem TUS protokola
     const uploadVideoDirectly = (file, credentials) => {
-        console.log('=== TUS UPLOAD DEBUG ===');
-        console.log('File name:', file.name, 'File size:', file.size, 'File type:', file.type);
-        console.log('Credentials:', JSON.stringify(credentials));
-
         return new Promise((resolve, reject) => {
             const upload = new tus.Upload(file, {
                 endpoint: 'https://video.bunnycdn.com/tusupload',
@@ -88,34 +84,21 @@ const Lekcije = () => {
                     filetype: file.type,
                     title: newLekcija.title,
                 },
-                onBeforeRequest: (req) => {
-                    console.log(`TUS Request: ${req._method} ${req._url}`);
-                    console.log('TUS Request headers:', JSON.stringify(req._headers));
-                },
-                onAfterResponse: (req, res) => {
-                    console.log(`TUS Response: ${res.getStatus()} for ${req._method} ${req._url}`);
-                    console.log('TUS Response headers - Upload-Offset:', res.getHeader('Upload-Offset'));
-                    console.log('TUS Response headers - Location:', res.getHeader('Location'));
-                },
                 onError: (error) => {
                     console.error('TUS upload error:', error);
                     reject(error);
                 },
                 onProgress: (bytesUploaded, bytesTotal) => {
                     const percentage = Math.round((bytesUploaded / bytesTotal) * 100);
-                    console.log(`TUS Progress: ${bytesUploaded}/${bytesTotal} (${percentage}%)`);
                     setUploadProgress(percentage);
-                    setUploadStatus(`Uploading video: ${percentage}%`);
+                    setUploadStatus(`Uploading: ${percentage}%`);
                 },
                 onSuccess: () => {
-                    console.log('Video upload successful! Upload URL:', upload.url);
                     setUploadStatus('Video uspešno uploadovan!');
                     resolve(credentials.videoId);
                 }
             });
 
-            // Direktno započni upload (svaki upload ima novi video ID,
-            // pa nema smisla tražiti prethodne uploadove)
             upload.start();
         });
     };
@@ -133,18 +116,15 @@ const Lekcije = () => {
         setUploadProgress(0);
 
         try {
-            // FAZA 1: Dobij kredencijale za direktan upload
             setUploadStatus('Priprema uploada...');
             const credentialsResponse = await api.post('/api/lekcije/prepare-upload', {
                 title: newLekcija.title
             });
             const credentials = credentialsResponse.data;
 
-            // FAZA 2: Direktan upload videa na Bunny
-            setUploadStatus('Započinjem upload videa...');
+            setUploadStatus('Uploadujem video...');
             const videoGuid = await uploadVideoDirectly(video, credentials);
 
-            // FAZA 3: Sačuvaj metadata u bazu
             setUploadStatus('Čuvanje lekcije...');
             await api.post('/api/lekcije', {
                 course_id: newLekcija.course_id,
@@ -163,7 +143,6 @@ const Lekcije = () => {
             setUploadProgress(0);
             setUploadStatus('');
 
-            // Reset file input
             const fileInput = document.getElementById('video');
             if (fileInput) fileInput.value = '';
 
@@ -176,99 +155,111 @@ const Lekcije = () => {
     };
 
     return (
-        <div className="lekcije-container">
-            <h3 className='lekcijenaslov1'>Napravite Lekcije</h3>
-
-            <form onSubmit={handleAddLekcija} className="add-lekcija-form">
-                <div>
-                    <label htmlFor="course_id">Izaberite kurs:</label>
-                    <select
-                        id="course_id"
-                        name="course_id"
-                        value={newLekcija.course_id}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="">-- Izaberite kurs --</option>
-                        {courses.map((course) => (
-                            <option key={course.id} value={course.id}>
-                                {course.naziv}
-                            </option>
-                        ))}
-                    </select>
+        <div className={styles.wrapper}>
+            <div className={styles.container}>
+                <div className={styles.header}>
+                    <span className={styles.badge}>Lesson Creator</span>
+                    <h1 className={styles.title}>Napravite Lekciju</h1>
                 </div>
 
-                <div>
-                    <label htmlFor="sekcija_id">Sekcija:</label>
-                    <select
-                        id="sekcija_id"
-                        name="sekcija_id"
-                        value={newLekcija.sekcija_id}
-                        onChange={handleInputChange}
-                        required
-                        disabled={!newLekcija.course_id || sections.length === 0}
-                    >
-                        <option value="">-- Izaberite sekciju --</option>
-                        {sections.map((sekcija) => (
-                            <option key={sekcija.id} value={sekcija.id}>
-                                {sekcija.naziv}
-                            </option>
-                        ))}
-                    </select>
-                    {newLekcija.course_id && sections.length === 0 && <small>Ovaj kurs nema definisane sekcije. Dodajte ih prvo u admin panelu.</small>}
-                </div>
+                <form onSubmit={handleAddLekcija} className={styles.form}>
+                    <div className={styles.formGroup}>
+                        <label htmlFor="course_id">Izaberite kurs</label>
+                        <select
+                            id="course_id"
+                            name="course_id"
+                            value={newLekcija.course_id}
+                            onChange={handleInputChange}
+                            required
+                        >
+                            <option value="">-- Odaberite kurs na kom želite dodati lekciju --</option>
+                            {courses.map((course) => (
+                                <option key={course.id} value={course.id}>
+                                    {course.naziv}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
-                <div>
-                    <label htmlFor="title">Naslov lekcije:</label>
-                    <input
-                        type="text"
-                        id="title"
-                        name="title"
-                        value={newLekcija.title}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="content">Sadržaj lekcije:</label>
-                    <textarea
-                        id="content"
-                        name="content"
-                        value={newLekcija.content}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
+                    <div className={styles.formGroup}>
+                        <label htmlFor="sekcija_id">Sekcija</label>
+                        <select
+                            id="sekcija_id"
+                            name="sekcija_id"
+                            value={newLekcija.sekcija_id}
+                            onChange={handleInputChange}
+                            required
+                            disabled={!newLekcija.course_id || sections.length === 0}
+                        >
+                            <option value="">-- Odaberite sekciju --</option>
+                            {sections.map((sekcija) => (
+                                <option key={sekcija.id} value={sekcija.id}>
+                                    {sekcija.naziv}
+                                </option>
+                            ))}
+                        </select>
+                        {newLekcija.course_id && sections.length === 0 && (
+                            <small>Ovaj kurs nema definisane sekcije. Morate ih prvo dodati u uređivanju kursa.</small>
+                        )}
+                    </div>
 
-                <div>
-                    <label htmlFor="video">Izaberite Video:</label>
-                    <input
-                        type="file"
-                        id="video"
-                        name="video"
-                        accept="video/*"
-                        onChange={handleVideoChange}
-                        required
-                    />
-                </div>
+                    <div className={styles.formGroup}>
+                        <label htmlFor="title">Naslov lekcije</label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            value={newLekcija.title}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="npr. Lekcija 01 - Uvod u kurs"
+                        />
+                    </div>
 
-                {/* Progress bar za upload */}
-                {loading && (
-                    <div className="upload-progress-container">
-                        <div className="upload-progress-bar">
-                            <div
-                                className="upload-progress-fill"
-                                style={{ width: `${uploadProgress}%` }}
+                    <div className={styles.formGroup}>
+                        <label htmlFor="content">Sadržaj (Opis)</label>
+                        <textarea
+                            id="content"
+                            name="content"
+                            value={newLekcija.content}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Unesite kratak opis ili sadržaj lekcije..."
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label htmlFor="video">Video fajl</label>
+                        <div className={styles.fileInputWrapper}>
+                            <input
+                                type="file"
+                                id="video"
+                                name="video"
+                                accept="video/*"
+                                onChange={handleVideoChange}
+                                required
+                                className={styles.fileInput}
                             />
                         </div>
-                        <p className="upload-status">{uploadStatus}</p>
                     </div>
-                )}
 
-                <button type="submit" disabled={loading}>
-                    {loading ? 'Dodavanje...' : 'Dodaj Lekciju'}
-                </button>
-            </form>
+                    {loading && (
+                        <div className={styles.progressContainer}>
+                            <div className={styles.progressBar}>
+                                <div
+                                    className={styles.progressFill}
+                                    style={{ width: `${uploadProgress}%` }}
+                                />
+                            </div>
+                            <p className={styles.statusText}>{uploadStatus}</p>
+                        </div>
+                    )}
+
+                    <button type="submit" className={styles.submitBtn} disabled={loading}>
+                        {loading ? 'Slanje na server...' : 'Objavi Lekciju'}
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

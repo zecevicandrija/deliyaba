@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../login/api.js';
 import { useAuth } from '../login/auth.js';
-import './KursDetalj.css';
+import styles from './KursDetalj.module.css';
 import Komentari from '../Instruktori/Komentari.js';
 import Editor from '@monaco-editor/react';
 import Hls from 'hls.js';
@@ -63,7 +63,6 @@ const KursDetalj = () => {
                 setSekcije(sekcijeResponse.data);
 
                 // === NOVA, POBOLJŠANA LOGIKA ===
-                // === NOVA, POBOLJŠANA LOGIKA ===
                 const sekcijaIdFromUrl = searchParams.get('sekcija'); // Čitamo ID iz "?sekcija=..."
 
                 if (sekcijaIdFromUrl) {
@@ -80,8 +79,6 @@ const KursDetalj = () => {
 
                 if (user) {
                     // OPTIMIZOVANO: Svi user-specifični pozivi idu PARALELNO umesto sekvencijalno
-                    // Pre: ~1.5s (4 poziva jedan za drugim)
-                    // Posle: ~400ms (svi odjednom)
                     const [
                         _subscriptionRes,
                         kupovinaResponse,
@@ -120,8 +117,6 @@ const KursDetalj = () => {
         return Math.round(progress);
     }, [completedLessons, lekcije]);
 
-
-    // UKLONJENO: handleRatingSubmit funkcija više nije potrebna
 
     const handleLessonClick = async (lekcijaId) => {
         // Provera da li je lekcija dostupna (da li je korisnik kupio kurs i ima aktivnu pretplatu)
@@ -308,11 +303,7 @@ const KursDetalj = () => {
         }
     };
 
-    if (!kurs) return <div className="loading">Učitavanje...</div>;
-
-    if (!kurs) return <div className="loading">Učitavanje...</div>;
-
-    // const isCourseAccessible was moved up
+    if (!kurs) return <div style={{ padding: '5rem', textAlign: 'center', fontFamily: 'Montserrat' }}>Učitavanje...</div>;
 
     const renderContentWithLinks = (text) => {
         if (!text) return null;
@@ -331,7 +322,7 @@ const KursDetalj = () => {
                         href={part}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="lesson-link"
+                        className={styles.lessonLink}
                         onClick={(e) => e.stopPropagation()}
                     >
                         {part}
@@ -343,185 +334,192 @@ const KursDetalj = () => {
     };
 
     return (
-        <div className="course-detail-page">
-            <div className="course-header">
-                <div className="header-content">
-                    <h1 className="course-title-header">{kurs.naziv}</h1>
-                    <p className="course-subtitle">{kurs.opis}</p>
+        <div className={styles.page}>
+            <div className={styles.header}>
+                <div className={styles.badge}>
+                    <span className={styles.editorialLine} />
+                    Kurs Pristup
                 </div>
+                <h1 className={styles.title}>{kurs.naziv}</h1>
+                <p className={styles.subtitle}>{kurs.opis}</p>
             </div>
 
-            <div className="course-layout-wrapper">
-                <aside className="sidebar-left">
-                    <div className="sidebar-sticky-content">
-                        <div className="course-actions-card">
+            <div className={styles.layoutWrapper}>
+                <aside className={styles.sidebarLeft}>
+                    <div className={styles.sidebarSticky}>
+                        <div className={styles.actionCard}>
                             {!kupioKurs ? (
                                 <>
-                                    <div className="price-tag">{kurs.cena} €</div>
-                                    <button onClick={handleAddToCart} className="btn btn-purchase">Dodaj u korpu</button>
+                                    <div className={styles.priceTag}>{kurs.cena} €</div>
+                                    <button onClick={handleAddToCart} className={styles.btnPrimary}>Dodaj u korpu</button>
                                 </>
                             ) : (
-                                // IZMENJENO: Umesto rating sekcije, prikazujemo progress bar widget
-                                <div className="course-progress-widget">
+                                <div className={styles.progressWidget}>
                                     <h4>Ukupan Progres</h4>
-                                    <div className="progres-container">
-                                        <div className="progres-info">
+                                    <div>
+                                        <div className={styles.progressInfo}>
                                             <span>Završeno lekcija</span>
-                                            <span className="procenti-broj">
+                                            <span>
                                                 {`${completedLessons.size} / ${lekcije.length}`}
                                             </span>
                                         </div>
-                                        <div className="progres-bar">
+                                        <div className={styles.progressBar}>
                                             <div
-                                                className="progres-popunjeno"
+                                                className={styles.progressFill}
                                                 style={{ width: `${totalProgress}%` }}
                                             ></div>
                                         </div>
                                     </div>
-                                    <div className="procenti-broj-large">{`${totalProgress}%`}</div>
+                                    <div className={styles.progressPercentLarge}>{`${totalProgress}%`}</div>
                                 </div>
                             )}
                         </div>
 
-                        <div className="lessons-list-card">
+                        <div className={styles.lessonsCard}>
                             <h4>Sadržaj</h4>
-                            {sekcije.map(sekcija => (
-                                <div key={sekcija.id} className="lesson-section">
-                                    <h5
-                                        className="section-header"
-                                        onClick={() => setActiveSection(activeSection === sekcija.id ? null : sekcija.id)}
-                                    >
-                                        {sekcija.naziv}
-                                        <span className={`chevron ${activeSection === sekcija.id ? 'expanded' : ''}`} />
-                                    </h5>
-                                    {activeSection === sekcija.id && (
-                                        <ul className="lessons-list">
-                                            {lekcije
-                                                .filter(l => l.sekcija_id === sekcija.id)
-                                                .map(lekcija => (
-                                                    <li
-                                                        key={lekcija.id}
-                                                        className={`lesson-item ${otvorenaLekcija?.id === lekcija.id ? 'active' : ''} ${!isCourseAccessible ? 'disabled' : ''}`}
-                                                        onClick={() => isCourseAccessible && handleLessonClick(lekcija.id)}
-                                                    >
-                                                        <div className="lesson-item-title">
-                                                            {lekcija.assignment ? <AssignmentIcon /> : <PlayIcon />}
-                                                            <span>{lekcija.title}</span>
-                                                        </div>
-                                                        {isCourseAccessible && (
-                                                            <label className="custom-checkbox-wrapper" title="Označi kao završeno">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={completedLessons.has(lekcija.id)}
-                                                                    onChange={e => {
-                                                                        e.stopPropagation();
-                                                                        handleCompletionToggle(lekcija.id);
-                                                                    }}
-                                                                    className="lesson-complete-checkbox"
-                                                                />
-                                                                <span className="custom-checkmark"></span>
-                                                            </label>
-                                                        )}
-                                                    </li>
-                                                ))}
-                                        </ul>
-                                    )}
-                                </div>
-                            ))}
+                            <div className={styles.lessonsScrollable}>
+                                {sekcije.map(sekcija => (
+                                    <div key={sekcija.id}>
+                                        <h5
+                                            className={styles.sectionHeader}
+                                            onClick={() => setActiveSection(activeSection === sekcija.id ? null : sekcija.id)}
+                                        >
+                                            {sekcija.naziv}
+                                            <span className={`${styles.chevron} ${activeSection === sekcija.id ? styles.chevronExpanded : ''}`} />
+                                        </h5>
+                                        {activeSection === sekcija.id && (
+                                            <ul className={styles.lessonsList}>
+                                                {lekcije
+                                                    .filter(l => l.sekcija_id === sekcija.id)
+                                                    .map(lekcija => {
+                                                        const isActive = otvorenaLekcija?.id === lekcija.id;
+                                                        const isDisabled = !isCourseAccessible;
+                                                        
+                                                        return (
+                                                            <li
+                                                                key={lekcija.id}
+                                                                className={`${styles.lessonItem} ${isActive ? styles.lessonItemActive : ''} ${isDisabled ? styles.lessonItemDisabled : ''}`}
+                                                                onClick={() => isCourseAccessible && handleLessonClick(lekcija.id)}
+                                                            >
+                                                                <div className={styles.lessonTitle}>
+                                                                    {lekcija.assignment ? <AssignmentIcon /> : <PlayIcon />}
+                                                                    <span>{lekcija.title}</span>
+                                                                </div>
+                                                                {isCourseAccessible && (
+                                                                    <label className={styles.checkboxWrapper} title="Označi kao završeno">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            checked={completedLessons.has(lekcija.id)}
+                                                                            onChange={e => {
+                                                                                e.stopPropagation();
+                                                                                handleCompletionToggle(lekcija.id);
+                                                                            }}
+                                                                            className={styles.hiddenCheckbox}
+                                                                        />
+                                                                        <span className={styles.checkmark}></span>
+                                                                    </label>
+                                                                )}
+                                                            </li>
+                                                        );
+                                                    })}
+                                            </ul>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </aside>
 
-                <div className="main-content-right">
+                <div className={styles.mainRight}>
                     {!kupioKurs ? (
-                        <div className="welcome-card state-cta">
-                            <h2>Učlanite se da biste pristupili sadržaju.</h2>
-                            <p>Dodajte ga u korpu i započnite učenje danas!</p>
-                            <button onClick={handleAddToCart} className="btn-purchase large">Dodaj u korpu</button>
+                        <div className={`${styles.welcomeCard} ${styles.stateCta}`}>
+                            <h2>Učlanite se da biste pristupili</h2>
+                            <p>Dodajte kurs u korpu i započnite učenje danas!</p>
+                            <button onClick={handleAddToCart} className={styles.btnPrimary} style={{ maxWidth: '300px', marginTop: '2rem' }}>Dodaj u korpu</button>
                         </div>
                     ) : !isCourseAccessible ? (
-                        <div className="welcome-card state-expired">
+                        <div className={`${styles.welcomeCard} ${styles.stateExpired}`}>
                             <h2>Vaša pretplata je istekla!</h2>
                             <p>Da biste nastavili sa pristupom ovom kursu, molimo Vas da produžite svoju pretplatu.</p>
-                            <button onClick={() => navigate('/produzivanje')} className="btn-purchase large">Produži Pretplatu</button>
+                            <button onClick={() => navigate('/produzivanje')} className={styles.btnPrimary} style={{ maxWidth: '300px', marginTop: '2rem' }}>Produži Pretplatu</button>
                         </div>
                     ) : !otvorenaLekcija ? (
-                        <div className="welcome-card state-info">
+                        <div className={styles.welcomeCard}>
                             <h2>Dobro došli nazad!</h2>
-                            <p>Izaberite lekciju iz sadržaja da biste nastavili sa učenjem.</p>
+                            <p>Izaberite lekciju iz uvodne sekcije ili liste sa strane da biste nastavili sa učenjem.</p>
                         </div>
                     ) : (
                         <>
-                            <div className="content-display-area">
-                                <div className="lesson-player-card">
-                                    <h3>{otvorenaLekcija.title}</h3>
-                                    {otvorenaLekcija.video_url && (
-                                        <div className='player-wrapper'>
-                                            {!currentStreamUrl && <div className="player-placeholder">Učitavanje videa...</div>}
-                                            {currentStreamUrl === 'error' && <div className="player-placeholder">Greška pri učitavanju videa.</div>}
-                                            {currentStreamUrl === 'subscription_expired' && (
-                                                <div className="welcome-card state-expired" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', margin: 0, borderRadius: 0 }}>
-                                                    <h2>Vaša pretplata je istekla!</h2>
-                                                    <p>Da biste nastavili sa pristupom ovom kursu, molimo Vas da produžite svoju pretplatu.</p>
-                                                    <button onClick={() => navigate('/produzivanje')} className="btn-purchase large">Produži Pretplatu</button>
-                                                </div>
-                                            )}
-                                            {currentStreamUrl && currentStreamUrl !== 'error' && currentStreamUrl !== 'subscription_expired' && (
-                                                <iframe
-                                                    src={currentStreamUrl}
-                                                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-                                                    allowFullScreen={true}
-                                                    style={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        border: 'none',
-                                                    }}
-                                                ></iframe>
-                                            )}
-                                        </div>
-                                    )}
+                            <div className={styles.playerCard}>
+                                <div className={styles.playerCardHeader}>
+                                    <h3 className={styles.playerCardTitle}>{otvorenaLekcija.title}</h3>
+                                </div>
+                                
+                                {otvorenaLekcija.video_url && (
+                                    <div className={styles.playerWrapper}>
+                                        {!currentStreamUrl && <div className={styles.playerPlaceholder}>Učitavanje videa...</div>}
+                                        {currentStreamUrl === 'error' && <div className={styles.playerPlaceholder}>Greška pri učitavanju videa.</div>}
+                                        {currentStreamUrl === 'subscription_expired' && (
+                                            <div className={`${styles.welcomeCard} ${styles.stateExpired}`} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', padding: '2rem', border: 'none' }}>
+                                                <h2>Pretplata istekla</h2>
+                                                <button onClick={() => navigate('/produzivanje')} className={styles.btnPrimary} style={{ maxWidth: '200px', marginTop: '1rem' }}>Produži</button>
+                                            </div>
+                                        )}
+                                        {currentStreamUrl && currentStreamUrl !== 'error' && currentStreamUrl !== 'subscription_expired' && (
+                                            <iframe
+                                                src={currentStreamUrl}
+                                                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                                                allowFullScreen={true}
+                                                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                                                title={otvorenaLekcija.title}
+                                            ></iframe>
+                                        )}
+                                    </div>
+                                )}
 
-                                    {/* DUGMAD ZA NAVIGACIJU */}
-                                    <div className="lesson-navigation">
-                                        <button
-                                            className="nav-btn"
-                                            onClick={handlePrevLesson}
-                                            disabled={lekcije.findIndex(l => l.id === otvorenaLekcija.id) <= 0}
-                                        >
-                                            <i className="ri-arrow-left-s-line"></i> Prethodna
-                                        </button>
+                                <div className={styles.navigationControls}>
+                                    <button
+                                        className={styles.btnSecondary}
+                                        style={{ width: 'auto' }}
+                                        onClick={handlePrevLesson}
+                                        disabled={lekcije.findIndex(l => l.id === otvorenaLekcija.id) <= 0}
+                                    >
+                                        <i className="ri-arrow-left-s-line"></i> Prethodna
+                                    </button>
 
-                                        <div className="current-lesson-name">
-                                            {otvorenaLekcija.title}
-                                        </div>
-
-                                        <button
-                                            className="nav-btn"
-                                            onClick={handleNextLesson}
-                                            disabled={lekcije.findIndex(l => l.id === otvorenaLekcija.id) >= lekcije.length - 1}
-                                        >
-                                            Sledeca <i className="ri-arrow-right-s-line"></i>
-                                        </button>
+                                    <div className={styles.currentLessonName}>
+                                        {otvorenaLekcija.title}
                                     </div>
 
-                                    <div className="lesson-content-text">
-                                        {renderContentWithLinks(otvorenaLekcija.content)}
-                                    </div>
+                                    <button
+                                        className={styles.btnSecondary}
+                                        style={{ width: 'auto' }}
+                                        onClick={handleNextLesson}
+                                        disabled={lekcije.findIndex(l => l.id === otvorenaLekcija.id) >= lekcije.length - 1}
+                                    >
+                                        Sledeca <i className="ri-arrow-right-s-line"></i>
+                                    </button>
+                                </div>
+
+                                <div className={styles.textContent}>
+                                    {renderContentWithLinks(otvorenaLekcija.content)}
                                 </div>
                             </div>
 
                             {otvorenaLekcija.assignment && (
-                                <div className="assignment-card">
+                                <div className={styles.assignmentCard}>
                                     <h3>Zadatak</h3>
-                                    <p className="assignment-text">{otvorenaLekcija.assignment}</p>
+                                    <p className={styles.assignmentText}>{otvorenaLekcija.assignment}</p>
                                     {showEditor && (
-                                        <div className="code-editor-wrapper">
-                                            <div className="editor-header">
+                                        <div className={styles.editorWrapper}>
+                                            <div className={styles.editorHeader}>
                                                 <h4>Code Editor</h4>
-                                                <select value={language} onChange={e => setLanguage(e.target.value)}>
+                                                <select 
+                                                    className={styles.editorSelect}
+                                                    value={language} 
+                                                    onChange={e => setLanguage(e.target.value)}
+                                                >
                                                     <option value="javascript">JavaScript</option>
                                                     <option value="html">HTML</option>
                                                     <option value="css">CSS</option>
@@ -530,17 +528,17 @@ const KursDetalj = () => {
                                             <Editor
                                                 height="400px"
                                                 language={language}
-                                                theme="vs-dark"
+                                                theme="light"
                                                 value={code}
                                                 onChange={setCode}
-                                                options={{ minimap: { enabled: false }, fontSize: 14, wordWrap: 'on' }}
+                                                options={{ minimap: { enabled: false }, fontSize: 14, wordWrap: 'on', padding: { top: 16 } }}
                                             />
-                                            <div className="editor-actions">
-                                                <button className="btn btn-secondary" onClick={handleSaveCode}>Sačuvaj Kod</button>
-                                                <button className="btn btn-primary" onClick={handleReviewCode}>Proveri Kod (AI)</button>
+                                            <div className={styles.editorActions}>
+                                                <button className={styles.btnSecondary} onClick={handleSaveCode} style={{ width: 'auto' }}>Sačuvaj Kod</button>
+                                                <button className={styles.btnPrimary} onClick={handleReviewCode} style={{ width: 'auto' }}>Proveri Kod (AI)</button>
                                             </div>
                                             {reviewFeedback && (
-                                                <div className="ai-feedback">
+                                                <div className={styles.aiFeedback}>
                                                     <h4>AI Povratna Informacija:</h4>
                                                     <pre>{reviewFeedback.message}</pre>
                                                 </div>
@@ -549,7 +547,6 @@ const KursDetalj = () => {
                                     )}
                                 </div>
                             )}
-
                         </>
                     )}
                 </div>

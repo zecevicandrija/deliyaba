@@ -33,6 +33,9 @@ const Informacije = lazy(() => import('./komponente/Informacije'));
 const Tos = lazy(() => import('./komponente/Tos'));
 const RefundPolicy = lazy(() => import('./komponente/RefundPolicy'));
 const PrivacyPolicy = lazy(() => import('./komponente/PrivacyPolicy'));
+const BlogList = lazy(() => import('./blog/BlogList'));
+const BlogDetails = lazy(() => import('./blog/BlogDetails'));
+const Zarada = lazy(() => import('./Instruktori/Zarada'));
 
 // Kreiramo jednostavan loader komponentu (možeš ga zameniti svojim spinnerom)
 const Loader = () => <div className="page-loader">Učitavanje...</div>;
@@ -44,7 +47,7 @@ const App = () => {
         <ThemeProvider>
           {/* Navbar se učitava odmah */}
           <Navbar />
-          
+
           {/* Suspense hvata sve lazy rute i renderuje loader dok se chunk ne skine */}
           <Suspense fallback={<Loader />}>
             <Routes>
@@ -73,6 +76,9 @@ const App = () => {
               <Route path="/tos" element={<Tos />} />
               <Route path="/refund-policy" element={<RefundPolicy />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/blog" element={<BlogList />} />
+              <Route path="/blog/:slug" element={<BlogDetails />} />
+              <Route path="/zarada" element={<ProtectedRoute element={<Zarada />} allowedRoles={['admin']} />} />
               <Route path="/nevazeca" element={<Nepostojeca />} />
             </Routes>
             <Footer />

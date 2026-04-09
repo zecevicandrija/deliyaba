@@ -3,7 +3,7 @@
 import React from 'react';
 import { FiInstagram, FiYoutube, FiArrowUp, FiMail } from 'react-icons/fi';
 import styles from './Footer.module.css';
-import deliyaLogo from '../images/deliyalogos/White_AC.png';
+import deliyaLogo from '../images/deliyalogos/White_AC.webp';
 
 const Footer = () => {
 

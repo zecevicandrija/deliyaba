@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "./api";
-import {
-  MDBModal,
-  MDBModalHeader,
-  MDBModalBody,
-  MDBModalFooter,
-  MDBBtn,
-} from "mdb-react-ui-kit";
 
 const AuthContext = React.createContext();
 
@@ -106,9 +99,6 @@ export const AuthProvider = ({ children }) => {
       <AuthContext.Provider value={value}>
         {!loading && children}
       </AuthContext.Provider>
-      <MDBModal show={showModal} tabIndex="-1" centered>
-        {/* ... ostatak modala ... */}
-      </MDBModal>
     </>
   );
 };

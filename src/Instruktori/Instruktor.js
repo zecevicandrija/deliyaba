@@ -12,7 +12,7 @@ const Instruktor = () => {
     const [editingCourse, setEditingCourse] = useState(null);
     const [courseToDelete, setCourseToDelete] = useState(null);
 
-    const [editCourseForm, setEditCourseForm] = useState({ naziv: '', opis: '', cena: '' });
+    const [editCourseForm, setEditCourseForm] = useState({ naziv: '', opis: '', cena: '', slika: '' });
     const [courseImageFile, setCourseImageFile] = useState(null);
 
     const { user } = useAuth();
@@ -41,7 +41,7 @@ const Instruktor = () => {
     // --- Logika za Izmenu Kursa ---
     const openEditCourseModal = (course) => {
         setEditingCourse(course);
-        setEditCourseForm({ naziv: course.naziv, opis: course.opis, cena: course.cena });
+        setEditCourseForm({ naziv: course.naziv, opis: course.opis, cena: course.cena, slika: course.slika || '' });
         setCourseImageFile(null); // Resetuj fajl
         setIsEditCourseModalOpen(true);
     };
@@ -53,27 +53,42 @@ const Instruktor = () => {
         e.preventDefault();
         if (!editingCourse) return;
 
-        const formData = new FormData();
-        formData.append('naziv', editCourseForm.naziv);
-        formData.append('opis', editCourseForm.opis);
-        formData.append('cena', editCourseForm.cena);
-
-        // Ako je admin, zadrži originalnog instruktora. Ako je instruktor, koristi njegov ID.
         const originalInstructorId = user.uloga === 'admin' ? editingCourse.instruktor_id : instructorId;
-        formData.append('instruktor_id', originalInstructorId);
 
-        if (courseImageFile) {
-            formData.append('slika', courseImageFile);
+        const payload = {
+            naziv: editCourseForm.naziv,
+            opis: editCourseForm.opis
+        };
+
+        const parsedCena = parseFloat(editCourseForm.cena);
+        if (!isNaN(parsedCena)) {
+            payload.cena = parsedCena;
+        }
+
+        const parsedInstrId = parseInt(originalInstructorId, 10);
+        if (!isNaN(parsedInstrId)) {
+            payload.instruktor_id = parsedInstrId;
+        }
+
+        if (editCourseForm.slika && editCourseForm.slika.trim() !== '') {
+            payload.slika = editCourseForm.slika;
         }
 
         try {
-            await api.put(`/api/kursevi/${editingCourse.id}`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            await fetchKursevi(); // Osveži listu da prikaže izmene
+            await api.put(`/api/kursevi/${editingCourse.id}`, payload);
+            await fetchKursevi();
             setIsEditCourseModalOpen(false);
         } catch (error) {
             console.error('Greška pri ažuriranju kursa:', error);
+            if (error.response && error.response.data) {
+                console.error('Detalji greške (backend):', error.response.data);
+                const errorMsg = error.response.data.detalji
+                    ? JSON.stringify(error.response.data.detalji, null, 2)
+                    : error.response.data.error;
+                alert('Greška pri izmeni:\n' + errorMsg);
+            } else {
+                alert('Greška pri izmeni. Proveri konzolu za detalje.');
+            }
         }
     };
 
@@ -114,7 +129,7 @@ const Instruktor = () => {
                 </div>
                 <h1 className={styles.title}>Dobrodošli, {user?.ime}!</h1>
                 <p className={styles.subtitle}>Upravljajte svojim kursevima i pratite zaradu kroz centralizovanu administrativnu platformu.</p>
-                
+
                 <div className={styles.actionButtons}>
                     <button className={styles.primaryBtn} onClick={() => navigate('/zarada')}>
                         <i className="ri-bar-chart-line"></i> Statistika
@@ -151,9 +166,7 @@ const Instruktor = () => {
                                 <div className={styles.kursActions}>
                                     <button className={styles.actionBtn} onClick={() => openEditCourseModal(kurs)} title="Izmeni Kurs"><i className="ri-edit-line"></i></button>
                                     <button className={styles.actionBtn} onClick={() => viewLessons(kurs.id)} title="Uredi Lekcije"><i className="ri-list-check"></i></button>
-                                    <button className={styles.actionBtn} onClick={() => viewStudents(kurs.id)} title="Pregled Studenata"><i className="ri-group-line"></i></button>
-                                    <button className={styles.actionBtn} onClick={() => viewStatistics(kurs.id)} title="Statistika Kursa"><i className="ri-bar-chart-line"></i></button>
-                                    <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => openDeleteModal(kurs)} title="Obriši Kurs"><i className="ri-delete-bin-line"></i></button>
+                                    {/* <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => openDeleteModal(kurs)} title="Obriši Kurs"><i className="ri-delete-bin-line"></i></button> */}
                                 </div>
                             </div>
                         )) : <p>Trenutno nemate kreiranih kurseva.</p>}
@@ -172,7 +185,7 @@ const Instruktor = () => {
                             <label>Naziv: <input type="text" name="naziv" value={editCourseForm.naziv} onChange={handleEditCourseChange} required /></label>
                             <label>Opis: <textarea name="opis" value={editCourseForm.opis} onChange={handleEditCourseChange} required></textarea></label>
                             <label>Cena: <input type="number" name="cena" value={editCourseForm.cena} onChange={handleEditCourseChange} required /></label>
-                            <label>Nova Slika (opciono): <input type="file" accept="image/*" onChange={handleCourseImageChange} /></label>
+                            <label>Slika (URL): <input type="text" name="slika" value={editCourseForm.slika} onChange={handleEditCourseChange} /></label>
                             <button type="submit" className={styles.saveBtn}>Sačuvaj Izmene</button>
                         </form>
                     </div>
@@ -196,4 +209,4 @@ const Instruktor = () => {
     );
 };
 
-export default Instruktor;
+export default Instruktor;

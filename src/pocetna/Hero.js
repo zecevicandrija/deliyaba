@@ -17,7 +17,6 @@ const Hero = ({ navigate }) => {
     const ctaBlockRef = useRef(null);
     const mobileStickyCtaRef = useRef(null);
 
-    // Ref za čuvanje matchMedia instance
     const mmRef = useRef(null);
 
     useEffect(() => {
@@ -34,29 +33,16 @@ const Hero = ({ navigate }) => {
                 if (!isMounted) return;
                 gsap.registerPlugin(ScrollTrigger);
 
-                // 1. ULAZNA ANIMACIJA
-                const entranceTl = gsap.timeline({ delay: 0.1 });
-                entranceTl
-                    .fromTo(titleSolidRef.current,
-                        { y: 80, opacity: 0 },
-                        { y: 0, opacity: 1, duration: 1.1, ease: 'expo.out' }
-                    )
-                    .fromTo(titleOutlineRef.current,
-                        { y: 80, opacity: 0 },
-                        { y: 0, opacity: 1, duration: 1.1, ease: 'expo.out' },
-                        '-=0.9'
-                    )
-                    .fromTo(mirzaRef.current,
-                        { y: 60, opacity: 0 },
-                        { y: 0, opacity: 1, duration: 1.2, ease: 'expo.out' },
-                        '-=0.8'
-                    );
+                // Osigurava da GSAP ne krije elemente pri inicijalizaciji
+                gsap.set([titleSolidRef.current, titleOutlineRef.current, mirzaRef.current], {
+                    opacity: 1,
+                    y: 0,
+                    visibility: 'visible'
+                });
 
-                // 2. GSAP MATCH MEDIA 
                 mmRef.current = gsap.matchMedia();
 
                 mmRef.current.add("(min-width: 769px)", () => {
-                    // DESKTOP SCROLLYTELLING
                     const tl = gsap.timeline({
                         scrollTrigger: {
                             trigger: containerRef.current,
@@ -105,7 +91,6 @@ const Hero = ({ navigate }) => {
                 });
 
                 mmRef.current.add("(max-width: 768px)", () => {
-                    // MOBILE SCROLLYTELLING
                     const tl = gsap.timeline({
                         scrollTrigger: {
                             trigger: containerRef.current,
@@ -164,27 +149,26 @@ const Hero = ({ navigate }) => {
     }, []);
 
     return (
-        <div className={styles.scrollContainer} ref={containerRef}>
+        <div id="hero" className={styles.scrollContainer} ref={containerRef}>
             <div className={styles.canvasWrapper}>
 
-                {/* ── LAYER 1: DEEP BACKGROUND (Slika uklonjena, ostaju efekti) ── */}
                 <div className={styles.deepBg}>
                     <div className={styles.bgDimmer} />
                     <div className={styles.noiseOverlay} />
                     <div className={styles.mobileBgGlow} ref={mobileBgGlowRef} />
                 </div>
 
-                {/* ── LAYER 2: SOLID TITLE "OVLADAJ" ── */}
+                {/* Sklonjena klasa animateSolid, tekst vidljiv odmah */}
                 <div className={styles.titleSolidWrapper} ref={titleSolidRef}>
                     <span className={styles.titleSolid}>OVLADAJ</span>
                 </div>
 
-                {/* ── LAYER 3: MIRZA PNG CUTOUT ── */}
+                {/* Sklonjena klasa animateMirza, slika vidljiva odmah */}
                 <div className={styles.mirzaCenterAnchor}>
                     <div className={styles.mirzaWrapper} ref={mirzaRef}>
                         <img
-                            src="/delijaa.webp"
-                            srcSet="/delijaa.webp 1200w"
+                            src="/deliyapocetna.webp"
+                            srcSet="/deliyapocetna.webp 1200w"
                             sizes="(max-width: 768px) 100vw, 864px"
                             alt="Mirza Deliya"
                             className={styles.mirzaImg}
@@ -196,12 +180,11 @@ const Hero = ({ navigate }) => {
                     </div>
                 </div>
 
-                {/* ── LAYER 4: OUTLINE TITLE "ZANATOM" ── */}
+                {/* Sklonjena klasa animateOutline, tekst vidljiv odmah */}
                 <div className={styles.titleOutlineWrapper} ref={titleOutlineRef}>
                     <span className={styles.titleOutline}>ZANATOM</span>
                 </div>
 
-                {/* ── LAYER 5: GLOSSY CARDS ── */}
                 <div
                     className={`${styles.glossyCard} ${styles.cardLeft} ${styles.desktopOnly}`}
                     ref={cardLeftRef}
@@ -232,7 +215,6 @@ const Hero = ({ navigate }) => {
                     </div>
                 </div>
 
-                {/* Mobile: horizontal snap carousel track */}
                 <div
                     className={styles.mobileCardsTrack}
                     ref={mobileCardsTrackRef}
@@ -262,7 +244,6 @@ const Hero = ({ navigate }) => {
                     </div>
                 </div>
 
-                {/* ── LAYER 6: CTA BLOCK ── */}
                 <div className={styles.ctaBlock} ref={ctaBlockRef}>
                     <span className={styles.ctaLabel}>[ TVOJA KARIJERA POKREĆE SE OVDE ]</span>
                     <h2 className={styles.ctaHeading}>PODIGNI SVOJ<br />STANDARD.</h2>
@@ -277,7 +258,6 @@ const Hero = ({ navigate }) => {
                     </button>
                 </div>
 
-                {/* ── MOBILE STICKY CTA BUTTON ── */}
                 <div className={styles.mobileStickyCtaBar} ref={mobileStickyCtaRef}>
                     <button
                         className={styles.mobileStickyBtn}
@@ -287,14 +267,12 @@ const Hero = ({ navigate }) => {
                     </button>
                 </div>
 
-                {/* ── SCROLL ARROW ── */}
                 <div className={styles.scrollArrowWrapper}>
                     <div className={styles.bouncingArrow}>
                         <FiChevronDown />
                     </div>
                 </div>
 
-                {/* Decorative frame corners */}
                 <div className={styles.frameDecoration}>
                     <div className={`${styles.frameCorner} ${styles.topLeft}`} />
                     <div className={`${styles.frameCorner} ${styles.topRight}`} />

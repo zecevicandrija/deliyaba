@@ -4,7 +4,7 @@ import deliyaImage from '../images/deliyaslike/deliya18.webp';
 
 const Konsultacije = () => {
     return (
-        <section className={styles.sectionContainer}>
+        <section id="konsultacije" className={styles.sectionContainer}>
             {/* Top Space for Reset (requested) */}
             <div className={styles.spaceReset} />
 

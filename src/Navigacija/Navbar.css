@@ -9,9 +9,12 @@
     left: 0;
     width: 100%;
     z-index: 1000;
-    padding: 1.4rem 0;
-    background: transparent;
-    border-bottom: 1px solid transparent;
+    padding: 0.9rem 0;
+    background: rgba(6, 6, 6, 1);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(20, 94, 173, 0.15);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
     transition:
         padding 0.5s cubic-bezier(0.16, 1, 0.3, 1),
         background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
@@ -19,15 +22,7 @@
         box-shadow 0.5s ease;
 }
 
-/* ---- SCROLLED STATE ---- */
-.navbar.scrolled {
-    padding: 0.9rem 0;
-    background: rgba(6, 6, 6, 0.88);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-bottom: 1px solid rgba(20, 94, 173, 0.08);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-}
+/* ---- SCROLLED STATE REMOVED (ALWAYS DARK) ---- */
 
 /* ---- 3-COLUMN CONTAINER ---- */
 /*
@@ -35,13 +30,13 @@
    Equal 1fr on both sides keeps links perfectly centered.
 */
 .navbar-container {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    max-width: 1500px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 0 3rem;
-    gap: 2rem;
+    padding: 0 4rem;
+    gap: 1.5rem;
 }
 
 /* ---- LOGO (left column) ---- */
@@ -82,7 +77,7 @@
     padding: 0;
     display: flex;
     align-items: center;
-    gap: 3rem;
+    gap: 2.5rem; /* Smanjeno sa 3rem da ne gura akcije */
 }
 
 /* Thin decorative separators flanking the link group */
@@ -107,9 +102,9 @@
     text-decoration: none;
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
-    font-size: 0.75rem;
+    font-size: 0.7rem; /* Malo smanjen font na desktopu */
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2.5px; /* Smanjen sa 3px */
     white-space: nowrap;
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
     display: flex;
@@ -164,7 +159,14 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 2rem;
+    gap: 1.5rem; /* Smanjeno sa 2rem */
+    flex-shrink: 0; /* Ne dajemo akcijama da se skupljaju */
+}
+
+.action-group {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 /* "Prijava" plain text link — same hover as center nav links */
@@ -350,7 +352,11 @@
     }
 
     .navbar-actions {
-        gap: 1.25rem;
+        gap: 1.5rem;
+        display: flex;
+        align-items: center;
+        z-index: 2001;
+        position: relative;
     }
 
     /* ---- LUXURY SCI-FI FULL-SCREEN OVERLAY ---- */
@@ -374,6 +380,8 @@
             transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
             visibility 0.7s ease;
         z-index: 1000;
+        overflow-x: hidden; /* Sprečava horizontalno skrolovanje */
+        box-sizing: border-box;
 
         /* Sci-Fi Grid + Radial Glow for light theme */
         background-image:
@@ -403,13 +411,14 @@
         left: 50%;
         transform: translate(-50%, -50%);
         font-family: 'Clash Display', sans-serif;
-        font-size: 28vw;
+        font-size: 25vw;
         font-weight: 700;
         color: rgba(0, 0, 0, 0.03);
         pointer-events: none;
         letter-spacing: -0.05em;
         white-space: nowrap;
         z-index: -1;
+        overflow: hidden; /* Dodatna sigurnost */
     }
 
     .navbar-menu.active {
@@ -436,48 +445,18 @@
         position: relative;
     }
 
-    /* Dynamic Stagger Delays when Active */
-    .navbar-menu.active .navbar-item:nth-child(1) {
-        opacity: 1;
-        filter: blur(0px);
-        transform: translateY(0);
-        transition-delay: 0.15s;
-    }
-
-    .navbar-menu.active .navbar-item:nth-child(2) {
-        opacity: 1;
-        filter: blur(0px);
-        transform: translateY(0);
-        transition-delay: 0.25s;
-    }
-
-    .navbar-menu.active .navbar-item:nth-child(3) {
-        opacity: 1;
-        filter: blur(0px);
-        transform: translateY(0);
-        transition-delay: 0.35s;
-    }
-
-    .navbar-menu.active .navbar-item:nth-child(4) {
-        opacity: 1;
-        filter: blur(0px);
-        transform: translateY(0);
-        transition-delay: 0.45s;
-    }
-
-    .navbar-menu.active .navbar-item:nth-child(5) {
-        opacity: 1;
-        filter: blur(0px);
-        transform: translateY(0);
-        transition-delay: 0.55s;
-    }
-
-    .navbar-menu.active .navbar-item:nth-child(6) {
-        opacity: 1;
-        filter: blur(0px);
-        transform: translateY(0);
-        transition-delay: 0.65s;
-    }
+    /* Dynamic Stagger Delays for all potential items */
+    .navbar-menu.active .navbar-item:nth-child(1) { opacity: 1; filter: blur(0px); transform: translateY(0); transition-delay: 0.1s; }
+    .navbar-menu.active .navbar-item:nth-child(2) { opacity: 1; filter: blur(0px); transform: translateY(0); transition-delay: 0.15s; }
+    .navbar-menu.active .navbar-item:nth-child(3) { opacity: 1; filter: blur(0px); transform: translateY(0); transition-delay: 0.2s; }
+    .navbar-menu.active .navbar-item:nth-child(4) { opacity: 1; filter: blur(0px); transform: translateY(0); transition-delay: 0.25s; }
+    .navbar-menu.active .navbar-item:nth-child(5) { opacity: 1; filter: blur(0px); transform: translateY(0); transition-delay: 0.3s; }
+    .navbar-menu.active .navbar-item:nth-child(6) { opacity: 1; filter: blur(0px); transform: translateY(0); transition-delay: 0.35s; }
+    .navbar-menu.active .navbar-item:nth-child(7) { opacity: 1; filter: blur(0px); transform: translateY(0); transition-delay: 0.4s; }
+    .navbar-menu.active .navbar-item:nth-child(8) { opacity: 1; filter: blur(0px); transform: translateY(0); transition-delay: 0.45s; }
+    .navbar-menu.active .navbar-item:nth-child(9) { opacity: 1; filter: blur(0px); transform: translateY(0); transition-delay: 0.5s; }
+    .navbar-menu.active .navbar-item:nth-child(10) { opacity: 1; filter: blur(0px); transform: translateY(0); transition-delay: 0.55s; }
+    .navbar-menu.active .navbar-item:nth-child(n+11) { opacity: 1; filter: blur(0px); transform: translateY(0); transition-delay: 0.6s; }
 
     /* The Link Styles themselves */
     .navbar-link {
@@ -554,5 +533,156 @@
     .mobile-cta-btn:active {
         transform: translateY(4px) scale(0.96);
         box-shadow: 0 5px 15px rgba(20, 94, 173, 0.3);
+    }
+}
+
+/* --- Desktop Dropdown & Menu Hidden States --- */
+.desktop-hidden {
+    display: none !important;
+}
+
+.dropdown-container {
+    position: relative;
+}
+
+.dropdown-trigger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+}
+
+.dropdown-plus {
+    font-size: 1.1rem;
+    font-weight: 300;
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.dropdown-trigger.active .dropdown-plus {
+    transform: rotate(45deg);
+    color: #3a7fd5;
+}
+
+.nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(6, 6, 6, 0.98); /* Moguće malo tamnije za bolju čitljivost */
+    border: 1px solid rgba(58, 127, 213, 0.2);
+    backdrop-filter: blur(25px);
+    padding: 1.2rem 0;
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+    margin-top: 10px; /* Smanjeno za lakši prelaz mišem */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+}
+
+.dropdown-container:hover .nav-dropdown,
+.nav-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.dropdown-container:hover .dropdown-trigger .dropdown-plus {
+    transform: rotate(45deg);
+    color: #3a7fd5;
+}
+
+.dropdown-link {
+    display: block;
+    padding: 0.9rem 2.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.dropdown-link:hover {
+    color: #3a7fd5;
+    background: rgba(255, 255, 255, 0.05);
+    padding-left: 2.8rem;
+}
+
+/* Highlighted link for Zakaži Termin */
+.navbar-link.highlight {
+    color: #3a7fd5;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .desktop-only {
+        display: none !important;
+    }
+
+    .desktop-hidden {
+        display: flex !important;
+    }
+
+    .action-group {
+        display: none;
+    }
+
+    /* Better organization for Mobile Full-Screen Overlay */
+    .navbar-menu {
+        padding: 8vh 0 12vh; /* Veći top i bottom padding za prostranost */
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch; /* Tečniji skrol na iOS */
+    }
+
+    .navbar-lang-switcher {
+        display: flex !important;
+        position: relative;
+        z-index: 2001;
+    }
+
+    .navbar-item {
+        padding: 1rem 0;
+    }
+
+    .navbar-link {
+        font-size: clamp(1.2rem, 5vw, 1.4rem); /* Dinamičniji font da ne bi prelazio ivice */
+        letter-spacing: 0.1em;
+        max-width: 90vw; /* Osigurava da dugi tekstovi ne guraju ivicu */
+        margin: 0 auto;
+        word-break: break-all;
+    }
+
+    .mobile-cta-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        margin-top: 3rem;
+        width: 100%;
+        padding: 0 10vw;
+    }
+
+    .mobile-secondary-btn {
+        font-family: 'Clash Display', sans-serif;
+        font-size: 1.8rem;
+        color: #1c1c1c;
+        text-decoration: none;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .mobile-secondary-btn:active {
+        color: #3a7fd5;
     }
 }

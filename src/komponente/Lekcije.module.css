@@ -1,0 +1,200 @@
+/* Lekcije.module.css - Premium Editorial Theme */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+.wrapper {
+    min-height: 100vh;
+    background-color: #FFFFFF;
+    width: 100%;
+}
+
+.container {
+    color: #111827;
+    font-family: 'Montserrat', sans-serif;
+    padding: 6rem 1.5rem 2rem 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding: 8rem 0 4rem 0;
+    }
+}
+
+.header {
+    margin-bottom: 4rem;
+    position: relative;
+    border-bottom: 1px solid #E5E7EB;
+    padding-bottom: 2rem;
+}
+
+.badge {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    color: #4B5563;
+}
+
+.badge::before {
+    content: "";
+    display: inline-block;
+    width: 40px;
+    height: 2px;
+    background-color: #111827;
+}
+
+.title {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    line-height: 1;
+    margin: 0;
+    color: #111827;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background-color: #FFFFFF;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.formGroup label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #111827;
+}
+
+.formGroup input[type="text"],
+.formGroup textarea,
+.formGroup select {
+    padding: 1.2rem;
+    border: 1px solid #D1D5DB;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    background-color: #F9FAFB;
+    transition: all 0.3s ease;
+    border-radius: 0;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+    outline: none;
+    border-color: #0047AB;
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.formGroup textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.formGroup select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234B5563'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.5em;
+}
+
+.formGroup small {
+    font-size: 0.8rem;
+    color: #6B7280;
+    margin-top: 0.25rem;
+    font-style: italic;
+}
+
+.fileInputWrapper {
+    margin-top: 1rem;
+    padding: 2rem;
+    border: 2px dashed #D1D5DB;
+    background-color: #F9FAFB;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.fileInputWrapper:hover {
+    border-color: #0047AB;
+    background-color: rgba(0, 71, 171, 0.02);
+}
+
+.fileInput {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.submitBtn {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background-color: #0047AB;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.submitBtn:hover:not(:disabled) {
+    background-color: #111827;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.submitBtn:disabled {
+    background-color: #9CA3AF;
+    cursor: not-allowed;
+}
+
+.progressContainer {
+    margin-top: 2rem;
+}
+
+.progressBar {
+    height: 8px;
+    background-color: #F3F4F6;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background-color: #0047AB;
+    transition: width 0.3s ease;
+}
+
+.statusText {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4B5563;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-top: 4rem;
+    }
+}

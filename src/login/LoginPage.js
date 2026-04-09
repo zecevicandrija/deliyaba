@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from './auth';
 import { motion } from 'framer-motion';
 import { FiMail, FiLock, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
-import './LoginPage.css'
-
-import animatedbanner from '../images/deliyaslike/deliya2.webp';
+import styles from './Login.module.css';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -12,6 +10,10 @@ const LoginPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const { login } = useAuth();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -31,38 +33,30 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="lpage-wrapper">
+        <div className={styles.wrapper}>
+            <div className={styles.watermark}>DELIYABA</div>
+            
             <motion.div
-                className="lpage-container"
+                className={styles.container}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: "easeOut" }}
             >
-                {/* Glow Effect */}
-                <div className="lpage-glow" />
-
-                {/* Banner */}
-                <motion.div
-                    className="lpage-banner-wrapper"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2, duration: 0.6 }}
-                >
-                    <img src={animatedbanner} alt="Deliya Barber Academy" className="lpage-banner" />
-                    <div className="lpage-banner-overlay" />
-                </motion.div>
-
                 {/* Header */}
                 <motion.div
-                    className="lpage-header"
+                    className={styles.header}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3, duration: 0.5 }}
                 >
-                    <h1 className="lpage-title">
-                        Dobro <span className="lpage-gradient-text">došli</span>
+                    <div className={styles.badge}>
+                        <span className={styles.editorialLine} />
+                        Premium Academy
+                    </div>
+                    <h1 className={styles.title}>
+                        Dobro <span className={styles.gradientText}>došli</span>
                     </h1>
-                    <p className="lpage-subtitle">
+                    <p className={styles.subtitle}>
                         Uđite u svet premium frizerstva
                     </p>
                 </motion.div>
@@ -70,97 +64,86 @@ const LoginPage = () => {
                 {/* Form */}
                 <motion.form
                     onSubmit={handleSubmit}
-                    className="lpage-form"
+                    className={styles.form}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.6 }}
                 >
-                    <div className="lpage-input-group">
-                        <label htmlFor="email" className="lpage-label">
-                            <FiMail className="lpage-label-icon" />
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="email" className={styles.label}>
+                            <FiMail className={styles.labelIcon} />
                             Email Adresa
                         </label>
-                        <div className="lpage-input-wrapper">
+                        <div className={styles.inputWrapper}>
                             <input
                                 id="email"
                                 name="email"
                                 type="email"
-                                className="lpage-input"
+                                className={styles.input}
                                 placeholder="vas@email.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
-                            <div className="lpage-input-focus-line" />
                         </div>
                     </div>
 
-                    <div className="lpage-input-group">
-                        <label htmlFor="password" className="lpage-label">
-                            <FiLock className="lpage-label-icon" />
+                    <div className={styles.inputGroup}>
+                        <label htmlFor="password" className={styles.label}>
+                            <FiLock className={styles.labelIcon} />
                             Lozinka
                         </label>
-                        <div className="lpage-input-wrapper">
+                        <div className={styles.inputWrapper}>
                             <input
                                 id="password"
                                 name="password"
                                 type="password"
-                                className="lpage-input"
+                                className={styles.input}
                                 placeholder="••••••••"
                                 value={sifra}
                                 onChange={(e) => setSifra(e.target.value)}
                                 required
                             />
-                            <div className="lpage-input-focus-line" />
                         </div>
                     </div>
 
                     <motion.button
                         type="submit"
-                        className="lpage-submit-btn"
+                        className={styles.submitBtn}
                         disabled={isLoading}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
                     >
                         <span>{isLoading ? 'Prijava...' : 'Prijavi se'}</span>
-                        <FiArrowRight className="lpage-btn-icon" />
-                        <div className="lpage-btn-shine" />
+                        <FiArrowRight className={styles.btnIcon} />
                     </motion.button>
                 </motion.form>
-
-                {/* Bottom Accent */}
-                <motion.div
-                    className="lpage-bottom-accent"
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ delay: 0.8, duration: 0.6 }}
-                />
             </motion.div>
 
             {/* Error Modal */}
             {showModal && (
                 <motion.div
-                    className="lpage-modal-overlay"
+                    className={styles.modalOverlay}
                     onClick={closeModal}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                 >
                     <motion.div
-                        className="lpage-modal-content"
+                        className={styles.modalContent}
                         onClick={(e) => e.stopPropagation()}
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <div className="lpage-modal-icon-box">
-                            <FiAlertCircle className="lpage-modal-icon" />
+                        <div className={styles.modalIconBox}>
+                            <FiAlertCircle className={styles.modalIcon} />
                         </div>
-                        <h3 className="lpage-modal-title">Greška pri prijavi</h3>
-                        <p className="lpage-modal-text">
+                        <h3 className={styles.modalTitle}>Greška pri prijavi</h3>
+                        <p className={styles.modalText}>
                             Podaci za prijavu nisu ispravni. Molimo Vas da proverite email i lozinku.
                         </p>
-                        <button onClick={closeModal} className="lpage-modal-btn">
+                        <button onClick={closeModal} className={styles.modalBtn}>
                             Pokušaj ponovo
                         </button>
                     </motion.div>

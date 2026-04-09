@@ -154,12 +154,30 @@
 .mirzaImg {
     /* PNG should be transparent (webp from a cutout) */
     display: block;
-    height: 95%;
+    height: 82%;
+    /* Smanjeno sa 95% */
     width: auto;
     object-fit: contain;
     object-position: bottom center;
     /* Slight drop shadow to root him in scene */
     filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 120px rgba(0, 0, 0, 0.6));
+    position: relative;
+    z-index: 1;
+}
+
+/* Fade overlay for the bottom edge */
+.mirzaWrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200%;
+    /* Cover wider than image to be safe */
+    height: 25%;
+    background: linear-gradient(to top, #050505 5%, rgba(5, 5, 5, 0.7) 40%, transparent 100%);
+    pointer-events: none;
+    z-index: 2;
 }
 
 /* =========================================
@@ -468,6 +486,7 @@
     border-bottom-right-radius: 4px;
 }
 
+
 /* =========================================
    UTILITY: desktop-only / mobile-only
    ========================================= */
@@ -596,7 +615,8 @@
     }
 
     .mirzaImg {
-        height: 100%;
+        height: 88%;
+        /* Smanjeno sa 100% */
         width: auto;
         margin-right: 0;
         max-width: none;

@@ -6,7 +6,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 
 const Jedan = () => {
     return (
-        <section className={styles.sectionContainer}>
+        <section id="jedan" className={styles.sectionContainer}>
             {/* Premium radijalni prelaz (noise/grid vibe) */}
             <div className={styles.premiumOverlay}></div>
 

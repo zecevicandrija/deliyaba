@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import img1 from '../images/deliyaslike/deliya15.webp';
 import img2 from '../images/deliyaslike/deliya7.webp';
-import img3 from '../images/deliyaslike/deliya20.jpeg';
+import img3 from '../images/deliyaslike/deliya20.webp';
 import img4 from '../images/deliyaslike/deliya23.webp';
 
 const programs = [
@@ -155,7 +155,7 @@ const Program = () => {
   }, []);
 
   return (
-    <section className={styles.programsSection} ref={sectionRef}>
+    <section id="program" className={styles.programsSection} ref={sectionRef}>
       <div className={styles.container}>
         <div className={styles.sectionHeader} ref={headerRef}>
           <h2 className={styles.sectionTitle}>Programi Edukacije</h2>

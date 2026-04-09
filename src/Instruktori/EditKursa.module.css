@@ -1,0 +1,562 @@
+/* EditKursa.module.css - Premium Editorial Theme */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+.wrapper {
+    min-height: 100vh;
+    background-color: #FFFFFF;
+    width: 100%;
+    margin: 0;
+    margin-top: 2%;
+}
+
+.container {
+    color: #111827;
+    font-family: 'Montserrat', sans-serif;
+    padding: 6rem 1.5rem 2rem 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding: 5rem 8vw 4rem 8vw;
+    }
+}
+
+.header {
+    margin-bottom: 4rem;
+    position: relative;
+    border-bottom: 1px solid #E5E7EB;
+    padding-bottom: 2rem;
+}
+
+.badge {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    color: #4B5563;
+}
+
+.badge::before {
+    content: "";
+    display: inline-block;
+    width: 40px;
+    height: 2px;
+    background-color: #111827;
+}
+
+.title {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    line-height: 1;
+    margin: 0;
+    color: #111827;
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background-color: #FFFFFF;
+    color: #111827;
+    border: 1px solid #D1D5DB;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 0;
+    margin-bottom: 3rem;
+    width: fit-content;
+}
+
+.backButton:hover {
+    background-color: #111827;
+    color: #FFFFFF;
+    border-color: #111827;
+}
+
+/* Management Panels */
+.managementPanel {
+    background-color: #FFFFFF;
+    padding: 3rem;
+    border: 1px solid #E5E7EB;
+    margin-bottom: 4rem;
+}
+
+.sectionTitle {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #111827;
+    margin-bottom: 2.5rem;
+}
+
+.saveOrderBtn {
+    background-color: #0047AB;
+    color: #FFFFFF;
+    padding: 1rem 2rem;
+    border: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    margin-bottom: 2.5rem;
+    width: fit-content;
+    display: block;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.saveOrderBtn:hover {
+    background-color: #111827;
+}
+
+.sekcijeList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.sekcijaCardEdit {
+    background-color: #F9FAFB;
+    padding: 1.5rem 2rem;
+    border: 1px solid #E5E7EB;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.sekcijaCardEdit:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    background-color: #FFFFFF;
+    border-color: #D1D5DB;
+}
+
+.sekcijaCardEdit h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.editSekcijaForm {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-right: 2rem;
+}
+
+.editSekcijaForm label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #6B7280;
+}
+
+.sekcijaEditInput {
+    padding: 0.8rem;
+    border: 1px solid #D1D5DB;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #FFFFFF;
+}
+
+.sekcijaActions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.actionBtn {
+    padding: 0.6rem 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+/* Cleaner, outline buttons */
+.editBtn {
+    background-color: #FFFFFF;
+    color: #111827;
+    border-color: #D1D5DB;
+}
+
+.editBtn:hover {
+    background-color: #111827;
+    color: #FFFFFF;
+    border-color: #111827;
+}
+
+.deleteBtn {
+    background-color: #FFFFFF;
+    color: #EF4444;
+    border-color: #FECACA;
+}
+
+.deleteBtn:hover {
+    background-color: #EF4444;
+    color: #FFFFFF;
+    border-color: #EF4444;
+}
+
+.saveBtn {
+    background-color: #0047AB;
+    color: #FFFFFF;
+    border-color: #0047AB;
+}
+
+.saveBtn:hover {
+    background-color: #003380;
+    border-color: #003380;
+}
+
+.cancelBtn {
+    background-color: #F3F4F6;
+    color: #4B5563;
+    border-color: #D1D5DB;
+}
+
+.cancelBtn:hover {
+    background-color: #E5E7EB;
+    color: #111827;
+}
+
+.actionBtn:active {
+    transform: scale(0.95);
+}
+
+.orderControls {
+    display: flex;
+    gap: 0.25rem;
+    margin-left: 1rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid #D1D5DB;
+}
+
+.arrowBtn {
+    background-color: #FFFFFF;
+    border: 1px solid #D1D5DB;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #4B5563;
+}
+
+.arrowBtn:hover:not(:disabled) {
+    background-color: #F3F4F6;
+    color: #111827;
+    border-color: #9CA3AF;
+}
+
+.arrowBtn:disabled {
+    opacity: 0.3;
+}
+
+/* Lessons Grid */
+.lessonsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.lessonCardEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.lessonCardEdit:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+    border-color: #D1D5DB;
+}
+
+.lessonCardEdit h4 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 1.35rem;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.lessonCardEdit p {
+    font-size: 0.9rem;
+    color: #6B7280;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.lessonCardEdit p:first-of-type {
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #0047AB;
+}
+
+.lessonActions {
+    display: flex;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 2rem;
+    border-top: 1px dashed #E5E7EB;
+}
+
+.lessonActions button {
+    flex: 1;
+}
+
+/* Add Section Panel */
+.addSekcijaPanel {
+    margin-top: 3rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid #E5E7EB;
+}
+
+.addSekcijaBtn {
+    width: 100%;
+    padding: 1.2rem;
+    background: #F9FAFB;
+    border: 1px dashed #D1D5DB;
+    color: #4B5563;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.addSekcijaBtn:hover {
+    border-color: #0047AB;
+    color: #0047AB;
+    background-color: #FFFFFF;
+}
+
+.addSekcijaForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.sekcijaAddInput {
+    padding: 1rem;
+    border: 1px solid #E5E7EB;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+}
+
+.dugmici {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(17, 24, 39, 0.85);
+    /* Darker backdrop */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.modalContent {
+    background-color: #FFFFFF;
+    padding: 4rem;
+    width: 90%;
+    max-width: 650px;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.closeModalButton {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    cursor: pointer;
+    color: #9CA3AF;
+    transition: color 0.2s;
+}
+
+.closeModalButton:hover {
+    color: #111827;
+}
+
+.modalForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.modalForm label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #4B5563;
+    letter-spacing: 0.05em;
+}
+
+.modalForm input,
+.modalForm textarea,
+.modalForm select {
+    padding: 1.2rem;
+    border: 1px solid #D1D5DB;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    background-color: #F9FAFB;
+    transition: border-color 0.2s;
+}
+
+.modalForm input:focus,
+.modalForm textarea:focus,
+.modalForm select:focus {
+    outline: none;
+    border-color: #0047AB;
+    background-color: #FFFFFF;
+}
+
+.modalForm textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.saveButton {
+    background-color: #0047AB;
+    color: #FFFFFF;
+    padding: 1.2rem;
+    border: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.saveButton:hover:not(:disabled) {
+    background-color: #111827;
+}
+
+.saveButton:disabled {
+    background-color: #9CA3AF;
+    cursor: not-allowed;
+}
+
+.uploadProgressContainer {
+    margin: 1rem 0;
+}
+
+.uploadProgressBar {
+    height: 6px;
+    background-color: #F3F4F6;
+    width: 100%;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.uploadProgressFill {
+    height: 100%;
+    background-color: #0047AB;
+    transition: width 0.3s ease;
+}
+
+.uploadStatus {
+    font-size: 0.8rem;
+    color: #6B7280;
+    margin-top: 0.75rem;
+    font-weight: 600;
+}
+
+.separator {
+    border: none;
+    height: 1px;
+    background-color: #E5E7EB;
+    margin: 5rem 0;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-top: 6rem;
+    }
+
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .sekcijaCardEdit {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .orderControls {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .sekcijaActions {
+        flex-wrap: wrap;
+    }
+
+    .actionBtn {
+        flex-grow: 1;
+        text-align: center;
+    }
+
+    .modalContent {
+        padding: 2rem;
+    }
+
+    .managementPanel {
+        padding: 1.5rem;
+    }
+}

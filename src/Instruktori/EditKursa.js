@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import * as tus from 'tus-js-client';
 import api from '../login/api';
-import './EditKursa.css';
+import styles from './EditKursa.module.css';
 
 const EditKursa = () => {
     const { kursId } = useParams();
@@ -240,29 +240,33 @@ const EditKursa = () => {
         }
     };
 
-    if (isLoading) return <div className="edit-kurs-container"><h2>Učitavanje...</h2></div>;
+    if (isLoading) return <div className={styles.wrapper}><div className={styles.container}><h2>Učitavanje...</h2></div></div>;
 
     return (
-        <div className="edit-kurs-container">
-            <button onClick={() => navigate('/instruktor')} className="back-button">Nazad na Tablu</button>
-            <h1>Uređivanje Kursa: {course?.naziv}</h1>
+        <div className={styles.wrapper}>
+            <div className={styles.container}>
+            <button onClick={() => navigate('/instruktor')} className={styles.backButton}>Nazad na Tablu</button>
+            <div className={styles.header}>
+                <span className={styles.badge}>Uređivanje Kursa</span>
+                <h1 className={styles.title}>{course?.naziv}</h1>
+            </div>
 
-            <div className="management-panel">
-                <h2>Upravljanje Sekcijama</h2>
+            <div className={styles.managementPanel}>
+                <h2 className={styles.sectionTitle}>Upravljanje Sekcijama</h2>
                 {isOrderChanged && (
-                    <button onClick={handleSaveOrder} className="save-order-btn">Sačuvaj novi redosled</button>
+                    <button onClick={handleSaveOrder} className={styles.saveOrderBtn}>Sačuvaj novi redosled</button>
                 )}
-                <div className="sekcije-list">
+                <div className={styles.sekcijeList}>
                     {sekcije.map((sekcija, index) => (
-                        <div key={sekcija.id} className="sekcija-card-edit">
+                        <div key={sekcija.id} className={styles.sekcijaCardEdit}>
                             {editingSekcijaId === sekcija.id ? (
-                                <div className="edit-sekcija-form">
+                                <div className={styles.editSekcijaForm}>
                                     <label>Naziv sekcije:</label>
                                     <input
                                         type="text"
                                         value={noviNazivSekcije}
                                         onChange={(e) => setNoviNazivSekcije(e.target.value)}
-                                        className="sekcija-edit-input"
+                                        className={styles.sekcijaEditInput}
                                     />
                                     <label>URL slike (thumbnail):</label>
                                     <input
@@ -270,40 +274,40 @@ const EditKursa = () => {
                                         placeholder="https://primer.com/slika.png"
                                         value={noviThumbnailUrl}
                                         onChange={(e) => setNoviThumbnailUrl(e.target.value)}
-                                        className="sekcija-edit-input"
+                                        className={styles.sekcijaEditInput}
                                     />
                                 </div>
                             ) : (
                                 <h4>{sekcija.redosled}. {sekcija.naziv}</h4>
                             )}
-                            <div className="sekcija-actions">
+                            <div className={styles.sekcijaActions}>
                                 {editingSekcijaId === sekcija.id ? (
                                     <>
-                                        <button onClick={() => handleSaveSekcija(sekcija.id)} className="action-btn save-btn">Sačuvaj</button>
-                                        <button onClick={() => setEditingSekcijaId(null)} className="action-btn cancel-btn">Odustani</button>
+                                        <button onClick={() => handleSaveSekcija(sekcija.id)} className={`${styles.actionBtn} ${styles.saveBtn}`}>Sačuvaj</button>
+                                        <button onClick={() => setEditingSekcijaId(null)} className={`${styles.actionBtn} ${styles.cancelBtn}`}>Odustani</button>
                                     </>
                                 ) : (
-                                    <button onClick={() => handleEditSekcijaClick(sekcija)} className="action-btn edit-btn">Izmeni</button>
+                                    <button onClick={() => handleEditSekcijaClick(sekcija)} className={`${styles.actionBtn} ${styles.editBtn}`}>Izmeni</button>
                                 )}
-                                <button onClick={() => handleDeleteSekcija(sekcija.id)} className="action-btn delete-btn">Obriši</button>
-                                <div className="order-controls">
-                                    <button onClick={() => handleMoveSekcija(index, -1)} disabled={index === 0} className="arrow-btn">▲</button>
-                                    <button onClick={() => handleMoveSekcija(index, 1)} disabled={index === sekcije.length - 1} className="arrow-btn">▼</button>
+                                <button onClick={() => handleDeleteSekcija(sekcija.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`}>Obriši</button>
+                                <div className={styles.orderControls}>
+                                    <button onClick={() => handleMoveSekcija(index, -1)} disabled={index === 0} className={styles.arrowBtn}>▲</button>
+                                    <button onClick={() => handleMoveSekcija(index, 1)} disabled={index === sekcije.length - 1} className={styles.arrowBtn}>▼</button>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                <div className="add-sekcija-panel">
+                <div className={styles.addSekcijaPanel}>
                     {isAddingSekcija ? (
-                        <form onSubmit={handleAddNewSekcija} className="add-sekcija-form">
+                        <form onSubmit={handleAddNewSekcija} className={styles.addSekcijaForm}>
                             <input
                                 type="text"
                                 placeholder="Unesite naziv nove sekcije"
                                 value={novaSekcijaNaziv}
                                 onChange={(e) => setNovaSekcijaNaziv(e.target.value)}
-                                className="sekcija-add-input"
+                                className={styles.sekcijaAddInput}
                                 autoFocus
                             />
                             <input
@@ -311,45 +315,45 @@ const EditKursa = () => {
                                 placeholder="URL slike (opciono)"
                                 value={novaSekcijaThumbnailUrl}
                                 onChange={(e) => setNovaSekcijaThumbnailUrl(e.target.value)}
-                                className="sekcija-add-input"
+                                className={styles.sekcijaAddInput}
                             />
-                            <div className='dugmici'>
-                                <button type="submit" className="action-btn save-btn">Dodaj</button>
-                                <button type="button" onClick={() => setIsAddingSekcija(false)} className="action-btn cancel-btn">Odustani</button>
+                            <div className={styles.dugmici}>
+                                <button type="submit" className={`${styles.actionBtn} ${styles.saveBtn}`}>Dodaj</button>
+                                <button type="button" onClick={() => setIsAddingSekcija(false)} className={`${styles.actionBtn} ${styles.cancelBtn}`}>Odustani</button>
                             </div>
                         </form>
                     ) : (
-                        <button onClick={() => setIsAddingSekcija(true)} className="add-sekcija-btn">
+                        <button onClick={() => setIsAddingSekcija(true)} className={styles.addSekcijaBtn}>
                             + Dodaj Novu Sekciju
                         </button>
                     )}
                 </div>
             </div>
 
-            <hr className="separator" />
+            <hr className={styles.separator} />
 
-            <h2>Uređivanje Lekcija</h2>
-            <div className="lessons-grid">
+            <h2 className={styles.sectionTitle}>Uređivanje Lekcija</h2>
+            <button onClick={() => navigate('/lekcije')} className={styles.backButton}>Dodaj Lekcije</button>
+            <div className={styles.lessonsGrid}>
                 {lessons.map(lesson => (
-                    <div className="lesson-card-edit" key={lesson.id}>
+                    <div className={styles.lessonCardEdit} key={lesson.id}>
                         <h4>{lesson.title}</h4>
                         <p>Sekcija: {sekcije.find(s => s.id === lesson.sekcija_id)?.naziv || 'Nije dodeljena'}</p>
                         <p>{lesson.content.substring(0, 100)}...</p>
-                        <div className="lesson-actions">
-                            <button onClick={() => handleOpenEditModal(lesson)} className="edit-btn">Izmeni</button>
-                            <button onClick={() => handleDeleteLesson(lesson.id)} className="delete-btn">Obriši</button>
+                        <div className={styles.lessonActions}>
+                            <button onClick={() => handleOpenEditModal(lesson)} className={`${styles.actionBtn} ${styles.editBtn}`}>Izmeni</button>
+                            <button onClick={() => handleDeleteLesson(lesson.id)} className={`${styles.actionBtn} ${styles.deleteBtn}`}>Obriši</button>
                         </div>
                     </div>
                 ))}
-                <button onClick={() => navigate('/lekcije')} className="back-button">Dodaj Lekcije</button>
             </div>
 
             {isEditModalOpen && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <button className="close-modal-button" onClick={() => setIsEditModalOpen(false)}>&times;</button>
-                        <h2>Izmeni Lekciju: {editingLesson?.title}</h2>
-                        <form onSubmit={handleEditSubmit} className="modal-form">
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <button className={styles.closeModalButton} onClick={() => setIsEditModalOpen(false)}>&times;</button>
+                        <h2 className={styles.sectionTitle}>Izmeni: {editingLesson?.title}</h2>
+                        <form onSubmit={handleEditSubmit} className={styles.modalForm}>
                             <label>Naslov: <input type="text" name="title" value={editForm.title} onChange={handleEditFormChange} required /></label>
                             <label>Sadržaj: <textarea name="content" value={editForm.content} onChange={handleEditFormChange} required></textarea></label>
                             <label>
@@ -363,20 +367,21 @@ const EditKursa = () => {
                             </label>
                             <label>Zameni Video (opciono): <input type="file" accept="video/*" onChange={handleVideoChange} /></label>
                             {isUploading && (
-                                <div className="upload-progress-container">
-                                    <div className="upload-progress-bar">
-                                        <div className="upload-progress-fill" style={{ width: `${uploadProgress}%` }} />
+                                <div className={styles.uploadProgressContainer}>
+                                    <div className={styles.uploadProgressBar}>
+                                        <div className={styles.uploadProgressFill} style={{ width: `${uploadProgress}%` }} />
                                     </div>
-                                    <p className="upload-status">{uploadStatus}</p>
+                                    <p className={styles.uploadStatus}>{uploadStatus}</p>
                                 </div>
                             )}
-                            <button type="submit" className="save-button" disabled={isUploading}>
+                            <button type="submit" className={styles.saveButton} disabled={isUploading}>
                                 {isUploading ? 'Čuvanje...' : 'Sačuvaj Izmene'}
                             </button>
                         </form>
                     </div>
                 </div>
             )}
+        </div>
         </div>
     );
 };

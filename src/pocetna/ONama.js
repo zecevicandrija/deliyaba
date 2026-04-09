@@ -98,7 +98,7 @@ const ONama = () => {
   }, []);
 
   return (
-    <section className={styles.scrollContainer} ref={containerRef}>
+    <section id="onama" className={styles.scrollContainer} ref={containerRef}>
       <div className={styles.stickyWrapper}>
 
         {/* Vodeni Zig */}

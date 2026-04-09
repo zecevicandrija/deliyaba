@@ -125,7 +125,7 @@ const Proces = () => {
 
     return (
         <div ref={triggerRef} className={styles.triggerWrapper}>
-            <section className={styles.scrollContainer} ref={containerRef}>
+            <section id="proces" className={styles.scrollContainer} ref={containerRef}>
                 <div className={styles.sectionHeader}>
                     <span className={styles.sectionLabel}>SISTEM RADA</span>
                     <h2 className={styles.mainTitle}>PROCES UČENJA.</h2>

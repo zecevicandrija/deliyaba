@@ -1,0 +1,265 @@
+/* Login.module.css */
+
+.wrapper {
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  color: #111827;
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  background-color: #FFFFFF;
+  padding: 4rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  color: #4B5563;
+}
+
+.editorialLine {
+  display: inline-block;
+  width: 30px;
+  height: 2px;
+  background-color: #111827;
+}
+
+.title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.gradientText {
+  color: #0047AB;
+}
+
+.subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #6B7280;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #111827;
+}
+
+.labelIcon {
+  font-size: 1rem;
+  color: #0047AB;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  padding: 1.25rem;
+  border: 1px solid #E5E7EB;
+  font-family: 'Montserrat', sans-serif;
+  border-radius: 0;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background-color: #F9FAFB;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #0047AB;
+  background-color: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(0, 71, 171, 0.05);
+}
+
+.submitBtn {
+  padding: 1.25rem 2rem;
+  background-color: #0047AB;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background-color: #111827;
+  transform: translateY(-2px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btnIcon {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.submitBtn:hover:not(:disabled) .btnIcon {
+  transform: translateX(5px);
+}
+
+/* Modal Styling */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modalContent {
+  background-color: #FFFFFF;
+  width: 90%;
+  max-width: 450px;
+  padding: 3.5rem;
+  position: relative;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.modalIconBox {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.modalIcon {
+  font-size: 1.5rem;
+  color: #EF4444;
+}
+
+.modalTitle {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.modalText {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #4B5563;
+  margin-bottom: 2.5rem;
+}
+
+.modalBtn {
+  width: 100%;
+  padding: 1.25rem;
+  background-color: #111827;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modalBtn:hover {
+  background-color: #0047AB;
+}
+
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Clash Display', sans-serif;
+  font-size: 15vw;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.03);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: -1;
+  letter-spacing: -0.05em;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 2.5rem 1.5rem;
+  }
+  
+  .title {
+    font-size: 2.5rem;
+  }
+}

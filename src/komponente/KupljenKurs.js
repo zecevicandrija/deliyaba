@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../login/api";
 import { useAuth } from "../login/auth";
-import "./KupljenKurs.css";
+import styles from "./KupljenKurs.module.css";
 import keyikonica from '../icons/key.png';
 import moneybag from '../icons/money-bag.png';
 import wave from '../icons/wave-sound.png';
@@ -91,100 +91,90 @@ const KupljenKurs = () => {
 
     if (isLoading) {
         return (
-            <div className="kupljeni-kursevi-container1">
-                <p>Učitavanje kursa...</p>
+            <div className={styles.wrapper}>
+                <p className={styles.loadingText}>Učitavanje kursa...</p>
             </div>
         );
     }
 
     return (
-        <div className="kupljeni-kursevi-container1">
-            <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-                <filter id="water-effect">
-                    <feTurbulence
-                        type="fractalNoise"
-                        baseFrequency="0.02 0.1"
-                        numOctaves="2"
-                        result="turbulence"
-                    />
-                    <feDisplacementMap
-                        in="SourceGraphic"
-                        in2="turbulence"
-                        scale="15"
-                        xChannelSelector="R"
-                        yChannelSelector="G"
-                    />
-                </filter>
-            </svg>
-            <h2 className="naslovkupljeni1">LEKCIJE</h2>
+        <div className={styles.wrapper}>
+            <div className={styles.watermark}>LEKCIJE</div>
+            
+            <div className={styles.header}>
+                <div className={styles.badge}>
+                    <span className={styles.editorialLine} />
+                    Vaša Edukacija
+                </div>
+                <h1 className={styles.title}>Lekcije</h1>
+            </div>
 
-            {isLoadingSekcija && <p style={{ textAlign: 'center', marginTop: '2rem' }}>Učitavanje sekcija...</p>}
+            {isLoadingSekcija && <p className={styles.loadingText}>Učitavanje sekcija...</p>}
 
             {!isLoadingSekcija && progresPoSekcijama.length > 0 && (
-                <div className="kurs-timeline">
+                <div className={styles.gridContainer}>
                     {progresPoSekcijama.map((sekcija, index) => {
                         const iconClass = sectionIcons[index % sectionIcons.length];
+                        const isStarted = sekcija.progres > 0;
 
                         return (
-                            <div key={sekcija.sekcija_id} className="timeline-item">
-                                <div className="timeline-dot"></div>
-                                <div className="timeline-content kurs-card1">
-
+                            <div key={sekcija.sekcija_id} className={styles.card}>
+                                <div className={styles.imageWrapper}>
+                                    <div className={styles.cardHeader}>
+                                        <div className={styles.iconContainer}>
+                                            {typeof iconClass === 'string' && iconClass.startsWith('ri-') ? (
+                                                <i className={iconClass}></i>
+                                            ) : typeof iconClass === 'function' ? (
+                                                React.createElement(iconClass)
+                                            ) : (
+                                                <img src={iconClass} alt="ikona" className={styles.pngIcon} />
+                                            )}
+                                        </div>
+                                    </div>
                                     <img
                                         src={sekcija.thumbnail}
                                         alt={`Sekcija ${sekcija.naziv_sekcije}`}
-                                        className="card-image"
+                                        className={styles.cardImage}
                                     />
+                                </div>
 
-                                    <div className="card-body">
-                                        <div className="card-header">
-                                            <div className="timeline-icon-container">
-                                                {typeof iconClass === 'string' && iconClass.startsWith('ri-') ? (
-                                                    <i className={iconClass}></i>
-                                                ) : typeof iconClass === 'function' ? (
-                                                    React.createElement(iconClass)
-                                                ) : (
-                                                    <img src={iconClass} alt="ikona" className="timeline-png-icon" />
-                                                )}
-                                            </div>
-                                            <h3>{sekcija.naziv_sekcije}</h3>
+                                <div className={styles.cardBody}>
+                                    <h3 className={styles.sectionTitle}>{sekcija.naziv_sekcije}</h3>
+                                    
+                                    <div className={styles.progressContainer}>
+                                        <div className={styles.progressInfo}>
+                                            <h4 className={styles.progressLabel}>Progres</h4>
+                                            <span className={styles.progressPercentage}>
+                                                {`${sekcija.progres || 0}%`}
+                                            </span>
                                         </div>
-                                        <div className="progres-container">
-                                            <div className="progres-info">
-                                                <h4>Progres</h4>
-                                                <span className="procenti-broj">
-                                                    {`${sekcija.progres || 0}%`}
-                                                </span>
-                                            </div>
-                                            <div className="progres-bar">
-                                                <div
-                                                    className="progres-popunjeno"
-                                                    style={{ width: `${sekcija.progres || 0}%` }}
-                                                ></div>
-                                            </div>
-                                        </div>
-
-                                        <div className="button-group1">
-                                            <button
-                                                onClick={() => navigate(`/kurs/${selektovaniKursId}?sekcija=${sekcija.sekcija_id}`)}
-                                                className="kurs-link1"
-                                            >
-                                                {sekcija.progres > 0 ? 'NASTAVI UČENJE' : 'ZAPOČNI'}
-                                            </button>
+                                        <div className={styles.progressBar}>
+                                            <div
+                                                className={styles.progressFill}
+                                                style={{ width: `${sekcija.progres || 0}%` }}
+                                            ></div>
                                         </div>
                                     </div>
+
+                                    <button
+                                        onClick={() => navigate(`/kurs/${selektovaniKursId}?sekcija=${sekcija.sekcija_id}`)}
+                                        className={`${styles.actionBtn} ${isStarted ? styles.primaryAction : ''}`}
+                                    >
+                                        {isStarted ? 'NASTAVI UČENJE' : 'ZAPOČNI SEKCIJU'}
+                                    </button>
                                 </div>
                             </div>
                         );
                     })}
                 </div>
             )}
+            
             {!isLoading && !isLoadingSekcija && selektovaniKursId && progresPoSekcijama.length === 0 && (
-                <p style={{ textAlign: 'center', marginTop: '2rem' }}>Ovaj kurs trenutno nema definisane sekcije.</p>
+                <p className={styles.emptyStateText}>Ovaj kurs trenutno nema definisane sekcije.</p>
             )}
 
             {!isLoading && sviKupljeniKursevi.length === 0 && (
-                <p style={{ textAlign: 'center', marginTop: '2rem' }}>Nemate kupljenih kurseva.</p>
+                <p className={styles.emptyStateText}>Nemate kupljenih kurseva.</p>
             )}
         </div>
     );

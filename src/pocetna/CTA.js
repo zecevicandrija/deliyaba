@@ -63,7 +63,7 @@ const CTA = ({ navigate }) => {
     }, []);
 
     return (
-        <section className={styles.ctaSection}>
+        <section id="cta" className={styles.ctaSection}>
             <div className={styles.container}>
                 <div className={styles.statusBadge}>
                     [ STATUS PRIJAVA: STROGO OGRANIČEN KAPACITET ]

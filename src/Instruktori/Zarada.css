@@ -1,54 +1,439 @@
-.zarada-widget-container {
-    display: flex;
+/* Zarada.css - Refactored to match Instruktor.module.css aesthetic */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+/* Typography Note: Clash Display is expected to be loaded in the main layout, 
+   following the pattern in Instruktor.module.css */
+
+.za-full-page-container {
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  color: #111827;
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Base Layout */
+.za-zarada-inner {
+  padding: 6rem 1.5rem 2rem 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+@media (min-width: 1024px) {
+  .za-zarada-inner {
+    padding: 8rem 8vw 4rem 8vw;
+  }
+}
+
+/* Background Overlays - Simplified for cleaner Look */
+.za-noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/feTurbulence%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* za-grid-overlay removed as requested */
+
+/* Header & Back Button */
+.za-top-nav {
+  margin-bottom: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.za-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background-color: #111827;
+  color: #FFFFFF;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.za-back-btn:hover {
+  background-color: #0047AB;
+  transform: translateX(-5px);
+}
+
+.za-page-title-box {
+  position: relative;
+}
+
+.za-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  color: #4B5563;
+}
+
+.za-badge::before {
+  content: "";
+  display: inline-block;
+  width: 40px;
+  height: 2px;
+  background-color: #111827;
+}
+
+.za-main-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+  color: #111827;
+}
+
+/* Filters & Panels */
+.za-glass-panel {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.za-filter-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  background-color: #F9FAFB;
+}
+
+.za-date-selection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.za-picker-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #FFFFFF;
+  padding: 0.75rem 1rem;
+  border: 1px solid #E5E7EB;
+  min-width: 180px;
+}
+
+.za-date-input {
+  border: none;
+  outline: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  color: #111827;
+  background: transparent;
+}
+
+.za-to-separator {
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #4B5563;
+}
+
+.za-presets {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.za-preset-btn {
+  padding: 0.6rem 1rem;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  color: #111827;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.za-preset-btn:hover, .za-preset-btn.active {
+  background-color: #111827;
+  color: #FFFFFF;
+  border-color: #111827;
+}
+
+/* Stats Cards */
+.za-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+@media (max-width: 640px) {
+  .za-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.za-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.za-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  border-color: #0047AB;
+}
+
+.za-stat-icon {
+  font-size: 2rem;
+  color: #0047AB;
+}
+
+.za-stat-info .za-stat-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #6B7280;
+  margin-bottom: 0.5rem;
+}
+
+.za-stat-value {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: #111827;
+}
+
+.za-stat-trend {
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.za-stat-trend.positive {
+  color: #10B981;
+}
+
+/* Main Dashboard Layout */
+.za-main-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .za-main-dashboard-grid {
+    grid-template-columns: 1fr 380px;
+  }
+}
+
+.za-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.za-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.za-section-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.za-section-desc {
+  font-size: 0.9rem;
+  color: #6B7280;
+  margin-bottom: 2rem;
+}
+
+.za-chart-full-container {
+  height: 450px;
+  width: 100%;
+  margin-top: 1rem;
+  min-height: 300px;
+}
+
+@media (max-width: 768px) {
+  .za-chart-full-container {
+    height: 350px;
+  }
+}
+
+/* Popular Courses / Products */
+.za-popular-courses {
+  height: fit-content;
+}
+
+.za-courses-table {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.za-course-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  background-color: #F9FAFB;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.za-course-row:hover {
+  background-color: #FFFFFF;
+  border-color: #0047AB;
+  transform: scale(1.02);
+}
+
+.za-course-rank {
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #E5E7EB;
+}
+
+.za-course-row:hover .za-course-rank {
+  color: #0047AB;
+}
+
+.za-course-name-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.za-course-name {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  color: #111827;
+}
+
+.za-course-price {
+  font-size: 0.8rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+/* Utilities */
+.za-loader, .za-no-data {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #9CA3AF;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 1024px) {
+  .za-filter-wrapper {
     flex-direction: column;
-    height: 100%;
-    color: #f0f0f0;
-    font-family: 'Outfit', sans-serif;
+    align-items: stretch;
+  }
+  
+  .za-main-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-.zarada-title {
-    font-size: 1.5rem;
-    color: #f0f0f0;
-    margin-top: 0;
-    margin-bottom: 1.5rem;
+@media (max-width: 768px) {
+  .za-zarada-inner {
+    padding-top: 4rem;
+  }
+
+  .za-top-nav {
+    margin-bottom: 2.5rem;
+  }
+
+  .za-main-title {
+    font-size: 2.5rem;
+  }
+  
+  .za-date-selection {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .za-to-separator {
     text-align: center;
-    border-bottom: 1px solid #444;
-    padding-bottom: 1rem;
-}
-
-.zarada-summary {
+    padding: 0.5rem 0;
+  }
+  
+  .za-presets {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .za-preset-btn {
+    flex: 0 0 auto;
+    min-width: 60px;
     text-align: center;
-    margin-bottom: 1.5rem;
-    font-family: 'Outfit', sans-serif;
+  }
+
+  .za-header-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
-.zarada-summary p {
-    margin: 0;
-    color: #ccc;
-    font-size: 1rem;
-    font-family: 'Outfit', sans-serif;
-}
-
-.zarada-total {
-    margin: 0.5rem 0 0 0;
-    font-size: 2.2rem;
-    font-weight: bold;
-    color: #ffa500; /* Narandžasta boja */
-}
-
-.chart-container {
-    flex-grow: 1;
-    position: relative;
-    height: 300px; /* Definišemo visinu za kontejner grafikona */
+@media (max-width: 480px) {
+  .za-back-btn {
     width: 100%;
-    font-family: 'Outfit', sans-serif;
-}
-
-.chart-container p {
-    display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100%;
-    color: #888;
-    font-family: 'Outfit', sans-serif;
+  }
+  
+  .za-stat-value {
+    font-size: 2rem;
+  }
 }

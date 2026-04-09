@@ -1,0 +1,144 @@
+.container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #FFFFFF;
+    color: #000000;
+    padding: 15vh 0 8rem 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.mainWrapper {
+    max-width: 1000px; /* Sila za fokusiran tekst */
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.header {
+    margin-bottom: 5rem;
+}
+
+.label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    color: #888888;
+}
+
+.title {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 0 0 2rem 0;
+    letter-spacing: -0.02em;
+}
+
+.meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #E5E5E5;
+    border-bottom: 1px solid #E5E5E5;
+    padding: 2rem 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.coverImageWrapper {
+    margin: 4rem 0;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.coverImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.1);
+}
+
+.contentBody {
+    margin-top: 4rem;
+    line-height: 1.8;
+    font-size: 1.15rem;
+    color: #333333;
+}
+
+/* markdown-specific overrides */
+
+.contentBody h2 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    line-height: 1.1;
+}
+
+.contentBody h3 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.contentBody p {
+    margin-bottom: 2rem;
+}
+
+.contentBody ul, .contentBody ol {
+    margin-bottom: 2.5rem;
+    padding-left: 1.5rem;
+}
+
+.contentBody li {
+    margin-bottom: 0.75rem;
+}
+
+.contentBody blockquote {
+    border-left: 4px solid #000;
+    padding: 2rem;
+    margin: 4rem 0;
+    font-style: italic;
+    background: #F9F9F9;
+    font-size: 1.3rem;
+    line-height: 1.5;
+}
+
+.contentBody img {
+    margin: 4rem 0;
+    width: 100%;
+    height: auto;
+}
+
+.backLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    color: #000000;
+    font-size: 0.85rem;
+}
+
+.backLink:hover span {
+    transform: translateX(-10px);
+}
+
+.backArrow {
+    transition: transform 0.3s ease;
+}
+
+/* Animations for scroll appearance can be added here or in global */

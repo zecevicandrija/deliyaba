@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from './Rezultati.module.css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -29,7 +29,7 @@ import imgBA_After from '../images/deliyaslike/deliya11.webp';
 
 // Video
 import videoSource from '../images/deliyaslike/deliyav1.mp4';
-import videoPoster from '../images/deliyaslike/deliya30.webp';
+import videoPoster from '../images/deliyaslike/videopreview.webp';
 
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
@@ -57,15 +57,38 @@ const Rezultati = () => {
     const visibleImages = isExpanded ? allImages : allImages.slice(0, initialCount);
 
     // Refresh GSAP kada se promeni broj slika
-    React.useEffect(() => {
+    useEffect(() => {
         ScrollTrigger.refresh();
-        // Šaljemo još jedan refresh malo kasnije za slučaj da se slike još uvek učitavaju/renderuju
         const timer = setTimeout(() => ScrollTrigger.refresh(), 500);
         return () => clearTimeout(timer);
     }, [isExpanded]);
 
+    // LAZY AUTOPLAY ZA VIDEO (INTERSECTION OBSERVER)
+    const videoRef = useRef(null);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    // Puštamo video tek kad je na ekranu
+                    video.play().catch(err => console.log("Video play error:", err));
+                } else {
+                    // Pauziramo ga kad nije vidljiv radi uštede resursa
+                    video.pause();
+                }
+            },
+            { threshold: 0.1 } // 10% vidljivosti je dovoljno da krene
+        );
+
+        observer.observe(video);
+        return () => observer.disconnect();
+    }, []);
+
     return (
-        <section className={styles.rezultatiWrapper}>
+        <section id="rezultati" className={styles.rezultatiWrapper}>
             {/* NASLOV SEKCIJE */}
             <div className={styles.sectionHeader}>
                 <span className={styles.sectionLabel}>
@@ -85,11 +108,11 @@ const Rezultati = () => {
                     {/* Hero Video - Zauzima veći prostor i uvek je prisutan */}
                     <div className={`${styles.galleryItem} ${styles.videoFeature}`}>
                         <video
+                            ref={videoRef}
                             key="hero-video"
                             className={styles.mediaElement}
                             src={videoSource}
                             poster={videoPoster}
-                            autoPlay
                             loop
                             muted
                             playsInline
