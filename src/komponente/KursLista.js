@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './KursLista.css';
 import ReactStars from 'react-stars'; // Import the ReactStars component
+import { RiCloseLine, RiUserFill, RiGroupFill } from 'react-icons/ri';
 
 const KursLista = () => {
     const [kursevi, setKursevi] = useState([]);
@@ -143,7 +144,7 @@ const KursLista = () => {
                     Popularnost ↿⇂
                 </button>
                 <button onClick={() => setSortOrder('none')}>
-                    <i class="ri-close-large-line"></i>
+                    <RiCloseLine />
                 </button>
             </div>
             <div className="kurs-lista">
@@ -157,7 +158,7 @@ const KursLista = () => {
                         <div className="kurs-card-content">
                             <p className="kurs-naziv">{kurs.naziv}</p>
                             <p className="kurs-instruktor">
-                                <i className="ri-user-fill"></i> {instruktori[String(kurs.instruktor_id)] || 'Nepoznat'}
+                                <RiUserFill /> {instruktori[String(kurs.instruktor_id)] || 'Nepoznat'}
                             </p>
 
                             {/* Ovaj div gura cenu i ocenu na dno kartice */}
@@ -175,7 +176,7 @@ const KursLista = () => {
                                         />
                                     </div>
                                     <p className="kurs-popularity">
-                                        <i className="ri-group-fill"></i> {popularity[kurs.id] || 0} studenata
+                                        <RiGroupFill /> {popularity[kurs.id] || 0} studenata
                                     </p>
                                 </div>
                             </div>

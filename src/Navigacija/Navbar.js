@@ -44,7 +44,7 @@ const Navbar = () => {
                 {/* LEFT — Logo */}
                 <div className="navbar-brand">
                     <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
-                        <img src="/White_AC.webp" alt="Deliya Barber Academy" className="logo-img" width="169" height="70" fetchPriority="high" />
+                        <img src="/White_AC_small.webp" alt="Deliya Barber Academy" className="logo-img" width="169" height="70" fetchPriority="low" />
                     </Link>
                 </div>
 

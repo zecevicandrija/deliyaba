@@ -1,3 +1,31 @@
+/* CSS Fade-In animations (replaces framer-motion) */
+@keyframes fadeInUpKF {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fadeInUp {
+    animation: fadeInUpKF 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-play-state: paused;
+}
+
+.fadeInUpDelay {
+    animation-delay: 0.2s;
+}
+
+/* Use IntersectionObserver hack via @starting-style not supported broadly;
+   instead we trigger via CSS scroll-driven or just run on load since these
+   sections are below the fold and lazy-loaded anyway */
+.fadeInUp {
+    animation-play-state: running;
+}
+
 /* Container padding i tamna pozadina */
 .sectionContainer {
     width: 100%;

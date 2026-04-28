@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../login/api';
 import styles from './PopustDashboard.module.css';
+import { RiArrowLeftLine, RiErrorWarningLine, RiCheckLine, RiAddLine, RiSearchLine, RiEditLine, RiDeleteBinLine, RiPercentLine, RiPriceTag3Line, RiCalendarEventLine, RiToggleLine, RiSaveLine, RiAlertLine } from 'react-icons/ri';
 
 const PopustDashboard = () => {
     const navigate = useNavigate();
@@ -141,7 +142,7 @@ const PopustDashboard = () => {
 
             <div className={styles.container}>
                 <button className={styles.backBtn} onClick={() => navigate('/instruktor')}>
-                    <i className="ri-arrow-left-line"></i> Nazad na Tablu
+                    <RiArrowLeftLine /> Nazad na Tablu
                 </button>
 
                 <header className={styles.header}>
@@ -155,7 +156,7 @@ const PopustDashboard = () => {
 
                 {feedback.message && (
                     <div className={`${styles.feedback} ${styles[feedback.type]}`}>
-                        <i className={feedback.type === 'error' ? 'ri-error-warning-line' : 'ri-check-line'}></i>
+                        {feedback.type === 'error' ? <RiErrorWarningLine /> : <RiCheckLine />}
                         {feedback.message}
                     </div>
                 )}
@@ -204,14 +205,14 @@ const PopustDashboard = () => {
                             </select>
                         </div>
                         <button type="submit" className={styles.createBtn}>
-                            Dodaj Kod <i className="ri-add-line"></i>
+                            Dodaj Kod <RiAddLine />
                         </button>
                     </form>
                 </div>
 
                 <div className={styles.searchContainer}>
                     <div className={styles.searchBox}>
-                        <i className={`ri-search-line ${styles.searchIcon}`}></i>
+                        <RiSearchLine className={styles.searchIcon} />
                         <input
                             type="text"
                             placeholder="Pretraži aktivne kodove..."
@@ -248,10 +249,10 @@ const PopustDashboard = () => {
                                     </td>
                                     <td className={styles.actions}>
                                         <button className={`${styles.actionBtn} ${styles.editBtn}`} onClick={() => openEditModal(p)} title="Izmeni popust">
-                                            <i className="ri-edit-line"></i>
+                                            <RiEditLine />
                                         </button>
                                         <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => openDeleteModal(p)} title="Obriši popust">
-                                            <i className="ri-delete-bin-line"></i>
+                                            <RiDeleteBinLine />
                                         </button>
                                     </td>
                                 </tr>
@@ -274,26 +275,26 @@ const PopustDashboard = () => {
 
                         <form onSubmit={handleEditSubmit} className={styles.modalForm}>
                             <div className={styles.modalField}>
-                                <label><i className="ri-percent-line"></i> Kod Popusta</label>
+                                <label><RiPercentLine /> Kod Popusta</label>
                                 <input type="text" name="code" value={editForm.code} onChange={handleEditChange} required />
                             </div>
                             <div className={styles.modalField}>
-                                <label><i className="ri-price-tag-3-line"></i> Procenat (%)</label>
+                                <label><RiPriceTag3Line /> Procenat (%)</label>
                                 <input type="number" name="discountPercent" value={editForm.discountPercent} onChange={handleEditChange} required min="1" max="100" />
                             </div>
                             <div className={styles.modalField}>
-                                <label><i className="ri-calendar-event-line"></i> Datum Isteka</label>
+                                <label><RiCalendarEventLine /> Datum Isteka</label>
                                 <input type="date" name="datum_isteka" value={editForm.datum_isteka} onChange={handleEditChange} />
                             </div>
                             <div className={styles.modalField}>
-                                <label><i className="ri-toggle-line"></i> Status</label>
+                                <label><RiToggleLine /> Status</label>
                                 <select name="status" value={editForm.status} onChange={handleEditChange}>
                                     <option value="aktivan">Aktivan</option>
                                     <option value="neaktivan">Neaktivan</option>
                                 </select>
                             </div>
                             <button type="submit" className={styles.submitBtn}>
-                                <i className="ri-save-line"></i> Autorizuj Izmene
+                                <RiSaveLine /> Autorizuj Izmene
                             </button>
                         </form>
                     </div>
@@ -307,7 +308,7 @@ const PopustDashboard = () => {
                         <button className={styles.closeBtn} onClick={() => setIsDeleteModalOpen(false)}>&times;</button>
                         <div className={styles.deleteModal}>
                             <div className={styles.warningIcon}>
-                                <i className="ri-alert-line"></i>
+                                <RiAlertLine />
                             </div>
                             <h2 className={styles.modalTitle}>Potvrda Brisanja</h2>
                             <h3 style={{ textTransform: 'uppercase', color: '#111827', margin: '1rem 0' }}>{discountToDelete.kod} ({discountToDelete.procenat}%)</h3>
@@ -319,7 +320,7 @@ const PopustDashboard = () => {
                             <div className={styles.modalActions}>
                                 <button onClick={() => setIsDeleteModalOpen(false)} className={styles.cancelBtn}>Prekini</button>
                                 <button onClick={confirmDelete} className={styles.confirmDeleteBtn}>
-                                    <i className="ri-delete-bin-line"></i> Obriši Kod
+                                    <RiDeleteBinLine /> Obriši Kod
                                 </button>
                             </div>
                         </div>

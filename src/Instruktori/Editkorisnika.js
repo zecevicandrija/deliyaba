@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../login/api';
 import styles from './Editkorisnika.module.css';
+import { RiArrowLeftLine, RiSearchLine, RiEditLine, RiDeleteBinLine, RiUserSmileLine, RiErrorWarningLine, RiMailLine, RiLockPasswordLine, RiCalendarLine, RiSaveLine, RiAlertLine } from 'react-icons/ri';
 
 const Editkorisnika = () => {
     const navigate = useNavigate();
@@ -116,7 +117,7 @@ const Editkorisnika = () => {
 
             <div className={styles.container}>
                 <button className={styles.backBtn} onClick={() => navigate('/instruktor')}>
-                    <i className="ri-arrow-left-line"></i> Nazad na Tablu
+                    <RiArrowLeftLine /> Nazad na Tablu
                 </button>
 
                 <header className={styles.header}>
@@ -131,7 +132,7 @@ const Editkorisnika = () => {
                 {/* Search Bar */}
                 <div className={styles.searchContainer}>
                     <div className={styles.searchBox}>
-                        <i className={`ri-search-line ${styles.searchIcon}`}></i>
+                        <RiSearchLine className={styles.searchIcon} />
                         <input
                             type="text"
                             placeholder="Pretraži protokol po email adresi..."
@@ -171,10 +172,10 @@ const Editkorisnika = () => {
                                     </td>
                                     <td className={styles.actions}>
                                         <button className={`${styles.actionBtn} ${styles.editBtn}`} onClick={() => openEditUserModal(k)} title="Izmeni mejl/šifru">
-                                            <i className="ri-edit-line"></i>
+                                            <RiEditLine />
                                         </button>
                                         <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => openDeleteUserModal(k)} title="Obriši korisnika">
-                                            <i className="ri-delete-bin-line"></i>
+                                            <RiDeleteBinLine />
                                         </button>
                                     </td>
                                 </tr>
@@ -196,7 +197,7 @@ const Editkorisnika = () => {
                         <h2 className={styles.modalTitle}>Izmeni Korisnika</h2>
                         
                         <div className={styles.modalHeaderInfo}>
-                            <div className={styles.avatar}><i className="ri-user-smile-line"></i></div>
+                            <div className={styles.avatar}><RiUserSmileLine /></div>
                             <div>
                                 <h3>{userToEdit.ime} {userToEdit.prezime}</h3>
                                 <span>Primarni: {userToEdit.email}</span>
@@ -205,25 +206,25 @@ const Editkorisnika = () => {
 
                         {editFeedback.message && (
                             <div className={`${styles.feedback} ${styles.error}`}>
-                                <i className="ri-error-warning-line"></i> {editFeedback.message}
+                                <RiErrorWarningLine /> {editFeedback.message}
                             </div>
                         )}
 
                         <form onSubmit={handleEditUserSubmit} className={styles.form}>
                             <div className={styles.field}>
-                                <label htmlFor="email"><i className="ri-mail-line"></i> Protokol Email</label>
+                                <label htmlFor="email"><RiMailLine /> Protokol Email</label>
                                 <input type="email" name="email" id="email" value={editUserForm.email} onChange={handleEditUserChange} required />
                             </div>
                             <div className={styles.field}>
-                                <label htmlFor="sifra"><i className="ri-lock-password-line"></i> Nova Pristupna Šifra</label>
+                                <label htmlFor="sifra"><RiLockPasswordLine /> Nova Pristupna Šifra</label>
                                 <input type="password" name="sifra" id="sifra" value={editUserForm.sifra} onChange={handleEditUserChange} placeholder="Unesite novu lozinku (opcionalno)" />
                             </div>
                             <div className={styles.field}>
-                                <label htmlFor="pretplata"><i className="ri-calendar-line"></i> Validnost Pretplate</label>
+                                <label htmlFor="pretplata"><RiCalendarLine /> Validnost Pretplate</label>
                                 <input type="date" name="pretplata" id="pretplata" value={editUserForm.pretplata} onChange={handleEditUserChange} />
                             </div>
                             <button type="submit" className={styles.submitBtn}>
-                                <i className="ri-save-line"></i> Autorizuj Izmene
+                                <RiSaveLine /> Autorizuj Izmene
                             </button>
                         </form>
                     </div>
@@ -237,7 +238,7 @@ const Editkorisnika = () => {
                         <button className={styles.closeBtn} onClick={() => setIsDeleteUserModalOpen(false)}>&times;</button>
                         <div className={styles.deleteModal}>
                             <div className={styles.warningIcon}>
-                                <i className="ri-alert-line"></i>
+                                <RiAlertLine />
                             </div>
                             <h2 className={styles.modalTitle}>Potvrda Brisanja</h2>
                             <p>Da li ste sigurni da želite trajno da uklonite polaznika:</p>
@@ -249,14 +250,14 @@ const Editkorisnika = () => {
 
                             {deleteFeedback.message && (
                                 <div className={`${styles.feedback} ${styles.error}`}>
-                                    <i className="ri-error-warning-line"></i> {deleteFeedback.message}
+                                    <RiErrorWarningLine /> {deleteFeedback.message}
                                 </div>
                             )}
 
                             <div className={styles.modalActions}>
                                 <button onClick={() => setIsDeleteUserModalOpen(false)} className={styles.cancelBtn}>Prekini</button>
                                 <button onClick={confirmDeleteUser} className={styles.confirmDeleteBtn}>
-                                    <i className="ri-delete-bin-line"></i> Finalizuj Brisanje
+                                    <RiDeleteBinLine /> Finalizuj Brisanje
                                 </button>
                             </div>
                         </div>

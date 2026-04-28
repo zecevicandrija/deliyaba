@@ -1,13 +1,7 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './Rezultati.module.css';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-
-
-
-// Importi slika
 import img1 from '../images/deliyaslike/deliya2.webp';
 import img2 from '../images/deliyaslike/deliya3.webp';
 import img3 from '../images/deliyaslike/deliya4.webp';
@@ -23,17 +17,12 @@ import img12 from '../images/deliyaslike/deliya15.webp';
 import img13 from '../images/deliyaslike/deliya16.webp';
 import img14 from '../images/deliyaslike/deliya17.webp';
 
-// Pre/Posle slike integrisane u grid
 import imgBA_Before from '../images/deliyaslike/deliya10.webp';
 import imgBA_After from '../images/deliyaslike/deliya11.webp';
 
-// Video
 import videoSource from '../images/deliyaslike/deliyav1.mp4';
 import videoPoster from '../images/deliyaslike/videopreview.webp';
 
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-}
 
 // Sastavljamo jedan čist niz za grid
 const allImages = [
@@ -56,10 +45,13 @@ const Rezultati = () => {
     // Isecamo niz na osnovu stanja
     const visibleImages = isExpanded ? allImages : allImages.slice(0, initialCount);
 
-    // Refresh GSAP kada se promeni broj slika
+    // Refresh GSAP kada se promeni broj slika (lazy)
     useEffect(() => {
-        ScrollTrigger.refresh();
-        const timer = setTimeout(() => ScrollTrigger.refresh(), 500);
+        let timer;
+        import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+            ScrollTrigger.refresh();
+            timer = setTimeout(() => ScrollTrigger.refresh(), 500);
+        });
         return () => clearTimeout(timer);
     }, [isExpanded]);
 

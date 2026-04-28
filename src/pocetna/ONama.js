@@ -1,10 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Onama.module.css';
 import slika from '../images/deliyaslike/deliya23.webp'
-
-gsap.registerPlugin(ScrollTrigger);
 
 const ONama = () => {
   const containerRef = useRef(null);
@@ -22,79 +18,63 @@ const ONama = () => {
   const imageParallaxRef = useRef(null);
 
   useEffect(() => {
-    let ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.5,
+    let isMounted = true;
+    let ctx;
+    let observer;
+
+    const loadGSAP = async () => {
+      const { default: gsap } = await import('gsap');
+      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+      if (!isMounted) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      ctx = gsap.context(() => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1.5,
+          }
+        });
+
+        gsap.set(block1Ref.current, { autoAlpha: 1, y: 0 });
+        gsap.set([block2Ref.current, block3Ref.current], { autoAlpha: 0, y: 100 });
+
+        tl.to(progressBarRef.current, { height: '100%', ease: 'none' }, 0);
+        tl.to(imageParallaxRef.current, { yPercent: -20, ease: 'none', duration: 0.3 }, 0);
+        tl.to(block1Ref.current, { autoAlpha: 0, y: -150, duration: 0.25, ease: 'power2.in' }, 0);
+        tl.to(block2Ref.current, { autoAlpha: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 0.2);
+        tl.to(block2Ref.current, { autoAlpha: 0, y: -150, duration: 0.2, ease: 'power2.in' }, 0.45);
+        tl.to(block3Ref.current, { autoAlpha: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 0.6);
+        tl.fromTo(stat500Ref.current, { innerHTML: 0 }, { innerHTML: 500, snap: { innerHTML: 1 }, duration: 0.2, ease: 'none' }, 0.6);
+        tl.fromTo(stat50Ref.current, { innerHTML: 0 }, { innerHTML: 50, snap: { innerHTML: 1 }, duration: 0.2, ease: 'none' }, 0.6);
+        tl.fromTo(stat10Ref.current, { innerHTML: 0 }, { innerHTML: 10, snap: { innerHTML: 1 }, duration: 0.2, ease: 'none' }, 0.6);
+        tl.fromTo(stat10000Ref.current, { innerHTML: 0 }, { innerHTML: 10000, snap: { innerHTML: 1 }, duration: 0.2, ease: 'none' }, 0.6);
+        tl.to(block3Ref.current, { autoAlpha: 0, y: -150, duration: 0.2, ease: 'power2.in' }, 0.85);
+      }, containerRef);
+    };
+
+    // GSAP se inicijalizuje tek kada se sekcija priblizi viewportu (400px ranije)
+    observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          observer.disconnect();
+          loadGSAP();
         }
-      });
+      },
+      { rootMargin: '400px 0px' }
+    );
 
-      // ---- INICIJALNA STANJA ----
-      gsap.set(block1Ref.current, { autoAlpha: 1, y: 0 });
-      gsap.set([block2Ref.current, block3Ref.current], { autoAlpha: 0, y: 100 });
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
 
-      // Progres bara se puni
-      tl.to(progressBarRef.current, { height: '100%', ease: 'none' }, 0);
-
-      // UNUTRAŠNJI PARALLAX SLIKE (Sada ide odmah nagore)
-      tl.to(imageParallaxRef.current, {
-        yPercent: -20,
-        ease: 'none',
-        duration: 0.3
-      }, 0);
-
-      // FAZA 1 -> Sklanjanje slike (odmah ide nagore)
-      tl.to(block1Ref.current, {
-        autoAlpha: 0,
-        y: -150,
-        duration: 0.25,
-        ease: 'power2.in',
-      }, 0);
-
-      // FAZA 2 -> Dolazi tekst sa desne strane (ubrzano/skraćeno)
-      tl.to(block2Ref.current, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.2,
-        ease: 'power2.out'
-      }, 0.2);
-
-      // Sklanja se tekst
-      tl.to(block2Ref.current, {
-        autoAlpha: 0,
-        y: -150,
-        duration: 0.2,
-        ease: 'power2.in',
-      }, 0.45);
-
-      // FAZA 3 -> Dolaze rezultati
-      tl.to(block3Ref.current, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.2,
-        ease: 'power2.out'
-      }, 0.6);
-
-      // Kineticka animacija za brojeve (uskladjeno sa FAZA 3)
-      tl.fromTo(stat500Ref.current, { innerHTML: 0 }, { innerHTML: 500, snap: { innerHTML: 1 }, duration: 0.2, ease: 'none' }, 0.6);
-      tl.fromTo(stat50Ref.current, { innerHTML: 0 }, { innerHTML: 50, snap: { innerHTML: 1 }, duration: 0.2, ease: 'none' }, 0.6);
-      tl.fromTo(stat10Ref.current, { innerHTML: 0 }, { innerHTML: 10, snap: { innerHTML: 1 }, duration: 0.2, ease: 'none' }, 0.6);
-      tl.fromTo(stat10000Ref.current, { innerHTML: 0 }, { innerHTML: 10000, snap: { innerHTML: 1 }, duration: 0.2, ease: 'none' }, 0.6);
-
-      // FAZA 4 -> Krajnji izlaz rezultata
-      tl.to(block3Ref.current, {
-        autoAlpha: 0,
-        y: -150,
-        duration: 0.2,
-        ease: 'power2.in'
-      }, 0.85);
-
-    }, containerRef);
-
-    return () => ctx.revert();
+    return () => {
+      isMounted = false;
+      observer?.disconnect();
+      if (ctx) ctx.revert();
+    };
   }, []);
 
   return (

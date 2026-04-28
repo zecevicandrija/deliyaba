@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import styles from './Jedan.module.css';
 import slikaLevo from '../images/deliyaslike/deliya1.webp';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -11,12 +10,8 @@ const Jedan = () => {
             <div className={styles.premiumOverlay}></div>
 
             <div className={styles.splitLayout}>
-                <motion.div
-                    className={styles.leftColumn}
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                <div
+                    className={`${styles.leftColumn} ${styles.fadeInUp}`}
                 >
                     <div className={styles.imageWrapper}>
                         <img src={slikaLevo} alt="Fokus i zanat - Mirza" className={styles.moodyImage} />
@@ -26,14 +21,10 @@ const Jedan = () => {
                             <span className={styles.cornerText}>1:1</span>
                         </div>
                     </div>
-                </motion.div>
+                </div>
 
-                <motion.div
-                    className={styles.rightColumn}
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                <div
+                    className={`${styles.rightColumn} ${styles.fadeInUp} ${styles.fadeInUpDelay}`}
                 >
                     <div className={styles.contentWrapper}>
                         <div className={styles.badgeWrapper}>
@@ -80,7 +71,7 @@ const Jedan = () => {
                             </span>
                         </a>
                     </div>
-                </motion.div>
+                </div>
             </div>
         </section>
     );

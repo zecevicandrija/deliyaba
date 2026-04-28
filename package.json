@@ -39,7 +39,6 @@
     "react-router-dom": "^6.26.1",
     "react-scripts": "5.0.1",
     "react-stars": "^2.2.5",
-    "remixicon": "^4.3.0",
     "tus-js-client": "^4.3.1",
     "web-vitals": "^2.1.4"
   },

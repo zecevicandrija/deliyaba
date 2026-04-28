@@ -2,9 +2,6 @@
 import React, { useEffect, useRef, useState, useCallback, memo } from 'react';
 import styles from './Program.module.css';
 
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
 import img1 from '../images/deliyaslike/deliya15.webp';
 import img2 from '../images/deliyaslike/deliya7.webp';
 import img3 from '../images/deliyaslike/deliya20.webp';
@@ -131,11 +128,11 @@ const Program = () => {
     let timeoutId;
 
     const resizeObserver = new ResizeObserver(() => {
-      // Koristimo kratak debounce (100ms) da ne bismo preopteretili procesor 
-      // i oborili FPS pozivajući ScrollTrigger.refresh() 60 puta u sekundi tokom css tranzicije.
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
-        ScrollTrigger.refresh();
+        import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+          ScrollTrigger.refresh();
+        });
       }, 100);
     });
 

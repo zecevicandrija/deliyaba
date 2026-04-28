@@ -21,6 +21,7 @@ const Hero = ({ navigate }) => {
 
     useEffect(() => {
         let isMounted = true;
+        let idleCallbackId = null;
 
         const loadGSAP = async () => {
             try {
@@ -32,13 +33,6 @@ const Hero = ({ navigate }) => {
 
                 if (!isMounted) return;
                 gsap.registerPlugin(ScrollTrigger);
-
-                // Osigurava da GSAP ne krije elemente pri inicijalizaciji
-                gsap.set([titleSolidRef.current, titleOutlineRef.current, mirzaRef.current], {
-                    opacity: 1,
-                    y: 0,
-                    visibility: 'visible'
-                });
 
                 mmRef.current = gsap.matchMedia();
 
@@ -138,10 +132,20 @@ const Hero = ({ navigate }) => {
             }
         };
 
-        loadGSAP();
+        // On mobile: defer GSAP until browser is idle (after FCP/LCP)
+        // On desktop: load immediately for snappy scroll animations
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        if (isMobile && 'requestIdleCallback' in window) {
+            idleCallbackId = window.requestIdleCallback(loadGSAP, { timeout: 2000 });
+        } else {
+            loadGSAP();
+        }
 
         return () => {
             isMounted = false;
+            if (idleCallbackId) {
+                window.cancelIdleCallback(idleCallbackId);
+            }
             if (mmRef.current) {
                 mmRef.current.revert();
             }
@@ -254,7 +258,7 @@ const Hero = ({ navigate }) => {
                         className={`${styles.ctaButton} ${styles.desktopOnly}`}
                         onClick={() => navigate('/paket')}
                     >
-                        POČNI DANAS
+                        PRIJAVI SE NA AKADEMIJU
                     </button>
                 </div>
 

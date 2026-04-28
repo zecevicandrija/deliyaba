@@ -7,14 +7,15 @@ import styles from './KursDetalj.module.css';
 import Komentari from '../Instruktori/Komentari.js';
 import Editor from '@monaco-editor/react';
 import Hls from 'hls.js';
+import { RiPlayCircleLine, RiFileTextLine, RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 
 if (typeof window !== "undefined" && !window.Hls) {
     window.Hls = Hls;
 }
 
 // Preporuka: Zamenite klase sa Remix Icon klasama radi konzistentnosti
-const PlayIcon = () => <i className="ri-play-circle-line"></i>;
-const AssignmentIcon = () => <i className="ri-file-text-line"></i>;
+const PlayIcon = () => <RiPlayCircleLine />;
+const AssignmentIcon = () => <RiFileTextLine />;
 
 
 const KursDetalj = () => {
@@ -485,7 +486,7 @@ const KursDetalj = () => {
                                         onClick={handlePrevLesson}
                                         disabled={lekcije.findIndex(l => l.id === otvorenaLekcija.id) <= 0}
                                     >
-                                        <i className="ri-arrow-left-s-line"></i> Prethodna
+                                        <RiArrowLeftSLine /> Prethodna
                                     </button>
 
                                     <div className={styles.currentLessonName}>
@@ -498,7 +499,7 @@ const KursDetalj = () => {
                                         onClick={handleNextLesson}
                                         disabled={lekcije.findIndex(l => l.id === otvorenaLekcija.id) >= lekcije.length - 1}
                                     >
-                                        Sledeca <i className="ri-arrow-right-s-line"></i>
+                                        Sledeca <RiArrowRightSLine />
                                     </button>
                                 </div>
 

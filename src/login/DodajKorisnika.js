@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../login/api';
 import styles from './DodajKorisnika.module.css';
+import { RiArrowLeftLine, RiUserLine, RiMailLine, RiLockLine, RiShieldUserLine, RiCalendarLine, RiBookOpenLine, RiCheckLine, RiErrorWarningLine, RiLoader4Line, RiUserAddLine } from 'react-icons/ri';
 
 const DodajKorisnika = () => {
     const navigate = useNavigate();
@@ -108,7 +109,7 @@ const DodajKorisnika = () => {
             
             <div className={styles.container}>
                 <button className={styles.backBtn} onClick={() => navigate('/instruktor')}>
-                    <i className="ri-arrow-left-line"></i> Nazad na Tablu
+                    <RiArrowLeftLine /> Nazad na Tablu
                 </button>
 
                 <header className={styles.header}>
@@ -125,7 +126,7 @@ const DodajKorisnika = () => {
                         {/* Ime */}
                         <div className={styles.field}>
                             <label htmlFor="ime">
-                                <i className="ri-user-line"></i> Ime *
+                                <RiUserLine /> Ime *
                             </label>
                             <input
                                 id="ime"
@@ -141,7 +142,7 @@ const DodajKorisnika = () => {
                         {/* Prezime */}
                         <div className={styles.field}>
                             <label htmlFor="prezime">
-                                <i className="ri-user-line"></i> Prezime *
+                                <RiUserLine /> Prezime *
                             </label>
                             <input
                                 id="prezime"
@@ -157,7 +158,7 @@ const DodajKorisnika = () => {
                         {/* Email */}
                         <div className={`${styles.field} ${styles.fullWidth}`}>
                             <label htmlFor="email">
-                                <i className="ri-mail-line"></i> Protokol Email *
+                                <RiMailLine /> Protokol Email *
                             </label>
                             <input
                                 id="email"
@@ -173,7 +174,7 @@ const DodajKorisnika = () => {
                         {/* Šifra */}
                         <div className={styles.field}>
                             <label htmlFor="sifra">
-                                <i className="ri-lock-line"></i> Pristupna Šifra *
+                                <RiLockLine /> Pristupna Šifra *
                             </label>
                             <input
                                 id="sifra"
@@ -189,7 +190,7 @@ const DodajKorisnika = () => {
                         {/* Uloga */}
                         <div className={styles.field}>
                             <label htmlFor="uloga">
-                                <i className="ri-shield-user-line"></i> Nivo Pristupa
+                                <RiShieldUserLine /> Nivo Pristupa
                             </label>
                             <select id="uloga" name="uloga" value={form.uloga} onChange={handleChange}>
                                 <option value="korisnik">Korisnik (Student)</option>
@@ -201,7 +202,7 @@ const DodajKorisnika = () => {
                         {/* Datum isteka pretplate */}
                         <div className={styles.field}>
                             <label htmlFor="subscription_expires_at">
-                                <i className="ri-calendar-line"></i> Expiration Date *
+                                <RiCalendarLine /> Expiration Date *
                             </label>
                             <input
                                 id="subscription_expires_at"
@@ -216,7 +217,7 @@ const DodajKorisnika = () => {
                         {/* Kurs */}
                         <div className={styles.field}>
                             <label htmlFor="kurs_id">
-                                <i className="ri-book-open-line"></i> Dodeljeni Kurs
+                                <RiBookOpenLine /> Dodeljeni Kurs
                             </label>
                             <select id="kurs_id" name="kurs_id" value={form.kurs_id} onChange={handleChange}>
                                 {kursevi.map(k => (
@@ -230,7 +231,7 @@ const DodajKorisnika = () => {
                     {/* Feedback */}
                     {feedback.message && (
                         <div className={`${styles.feedback} ${styles[feedback.type]}`}>
-                            <i className={feedback.type === 'success' ? 'ri-check-line' : 'ri-error-warning-line'}></i>
+                            {feedback.type === 'success' ? <RiCheckLine /> : <RiErrorWarningLine />}
                             {feedback.message}
                         </div>
                     )}
@@ -238,11 +239,11 @@ const DodajKorisnika = () => {
                     <button type="submit" className={styles.submitBtn} disabled={isSubmitting}>
                         {isSubmitting ? (
                             <>
-                                <i className={`ri-loader-4-line ${styles.spin}`}></i> Autorizacija...
+                                <RiLoader4Line className={styles.spin} /> Autorizacija...
                             </>
                         ) : (
                             <>
-                                <i className="ri-user-add-line"></i> Finalizuj Dodavanje
+                                <RiUserAddLine /> Finalizuj Dodavanje
                             </>
                         )}
                     </button>

@@ -3,6 +3,7 @@ import { useAuth } from '../login/auth';
 import { useNavigate } from 'react-router-dom';
 import api from '../login/api';
 import styles from './Instruktor.module.css';
+import { RiBarChartLine, RiUserAddLine, RiGroupLine, RiPercentLine, RiEditLine, RiListCheck } from 'react-icons/ri';
 
 const Instruktor = () => {
     const [kursevi, setKursevi] = useState([]);
@@ -132,18 +133,18 @@ const Instruktor = () => {
 
                 <div className={styles.actionButtons}>
                     <button className={styles.primaryBtn} onClick={() => navigate('/zarada')}>
-                        <i className="ri-bar-chart-line"></i> Statistika
+                        <RiBarChartLine /> Statistika
                     </button>
                     <button className={styles.primaryBtn} onClick={() => navigate('/dodajkorisnika')}>
-                        <i className="ri-user-add-line"></i> Dodaj Korisnika
+                        <RiUserAddLine /> Dodaj Korisnika
                     </button>
                     {user?.uloga === 'admin' && (
                         <>
                             <button className={styles.secondaryBtn} onClick={() => navigate('/edit-korisnika')}>
-                                <i className="ri-group-line"></i> Upravljaj Korisnicima
+                                <RiGroupLine /> Upravljaj Korisnicima
                             </button>
                             <button className={styles.secondaryBtn} onClick={() => navigate('/popusti')} style={{ backgroundColor: '#0047AB' }}>
-                                <i className="ri-percent-line"></i> Upravljaj Popustima
+                                <RiPercentLine /> Upravljaj Popustima
                             </button>
                         </>
                     )}
@@ -164,8 +165,8 @@ const Instruktor = () => {
                                     <p className={styles.kursPrice}>{kurs.cena} €</p>
                                 </div>
                                 <div className={styles.kursActions}>
-                                    <button className={styles.actionBtn} onClick={() => openEditCourseModal(kurs)} title="Izmeni Kurs"><i className="ri-edit-line"></i></button>
-                                    <button className={styles.actionBtn} onClick={() => viewLessons(kurs.id)} title="Uredi Lekcije"><i className="ri-list-check"></i></button>
+                                    <button className={styles.actionBtn} onClick={() => openEditCourseModal(kurs)} title="Izmeni Kurs"><RiEditLine /></button>
+                                    <button className={styles.actionBtn} onClick={() => viewLessons(kurs.id)} title="Uredi Lekcije"><RiListCheck /></button>
                                     {/* <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => openDeleteModal(kurs)} title="Obriši Kurs"><i className="ri-delete-bin-line"></i></button> */}
                                 </div>
                             </div>

@@ -31,24 +31,21 @@ const Proces = () => {
     const ctxRef = useRef(null);
 
     useEffect(() => {
-        let isMounted = true; // Zastavica da proverimo da li je komponenta i dalje na ekranu
+        let isMounted = true;
+        let observer;
 
         const loadGSAP = async () => {
             try {
-                // 3. Dinamički importujemo GSAP i ScrollTrigger tek kada se komponenta montira
                 const gsapModule = await import('gsap');
                 const scrollTriggerModule = await import('gsap/ScrollTrigger');
 
-                // Podrška za različite module bundler-e (izvlačimo default export)
                 const gsap = gsapModule.default || gsapModule;
                 const ScrollTrigger = scrollTriggerModule.ScrollTrigger || scrollTriggerModule.default;
 
-                // Ako je korisnik u međuvremenu napustio stranicu (pre nego što se GSAP učitao), prekidamo
                 if (!isMounted) return;
 
                 gsap.registerPlugin(ScrollTrigger);
 
-                // Kreiramo kontekst i čuvamo ga u ref-u
                 ctxRef.current = gsap.context(() => {
                     const tl = gsap.timeline({
                         scrollTrigger: {
@@ -62,7 +59,6 @@ const Proces = () => {
                         }
                     });
 
-                    // Zadržane su sve prethodne optimizacije (samo opacity, bez maski)
                     gsap.set(stepRefs.current, { opacity: 0, y: 50 });
                     gsap.set(stepRefs.current[0], { opacity: 1, y: 0 });
 
@@ -111,12 +107,24 @@ const Proces = () => {
             }
         };
 
-        // Pozivamo asinhronu funkciju
-        loadGSAP();
+        // GSAP se inicijalizuje tek kada se sekcija priblizi viewportu (400px ranije)
+        observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    observer.disconnect();
+                    loadGSAP();
+                }
+            },
+            { rootMargin: '400px 0px' }
+        );
 
-        // 4. Cleanup funkcija sada čisti preko sačuvanog ref-a
+        if (triggerRef.current) {
+            observer.observe(triggerRef.current);
+        }
+
         return () => {
             isMounted = false;
+            observer?.disconnect();
             if (ctxRef.current) {
                 ctxRef.current.revert();
             }

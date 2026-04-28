@@ -12,10 +12,11 @@ import potion from '../icons/potion.png';
 import sword from '../icons/sword.png';
 import krunica from '../icons/krunica.png';
 import { SiBlender } from "react-icons/si";
+import { RiHandHeartLine, RiLightbulbFlashLine, RiToolsLine } from "react-icons/ri";
 
 // Niz sa klasama za ikonice.
 const sectionIcons = [
-    'ri-hand-heart-line',
+    RiHandHeartLine,
     keyikonica,    // Ključ (za uvodne koncepte)
     potion,        // Napitak (za osnove)
     SiBlender,     // Blender sekcija
@@ -25,8 +26,8 @@ const sectionIcons = [
     sword,         // Mač (za napredne tehnike)
     startup,       // Raketa (za eksportovanje)
     krunica,
-    'ri-lightbulb-flash-line', // Sijalica (za ideje)
-    'ri-tools-line'  // Alati (za tehničke veštine)
+    RiLightbulbFlashLine, // Sijalica (za ideje)
+    RiToolsLine  // Alati (za tehničke veštine)
 ];
 
 const KupljenKurs = () => {
@@ -124,7 +125,7 @@ const KupljenKurs = () => {
                                         <div className={styles.iconContainer}>
                                             {typeof iconClass === 'string' && iconClass.startsWith('ri-') ? (
                                                 <i className={iconClass}></i>
-                                            ) : typeof iconClass === 'function' ? (
+                                            ) : typeof iconClass === 'function' || typeof iconClass === 'object' ? (
                                                 React.createElement(iconClass)
                                             ) : (
                                                 <img src={iconClass} alt="ikona" className={styles.pngIcon} />
